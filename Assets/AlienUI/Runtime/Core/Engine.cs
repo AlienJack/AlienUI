@@ -1,3 +1,4 @@
+using AlienUI.Core;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
@@ -78,11 +79,24 @@ namespace AlienUI
             {
                 if (att.Name.StartsWith("xmlns")) continue; //xml±£Áô×Ö·ûÌø¹ý
 
-                AttParser.Begin(node, xNode, att);
-                if (!AttParser.ParseType()) continue;
-                if (!AttParser.ParseValue()) continue;
+                if (BindUtility.IsBindingString(att.Value))
+                {
+                    BindUtility.ParseBindParam(att.Value, out string propName, out string converterName, out string modeName);
+                    node.DataContext.BeginBind()
+                        .SetSourceProperty(propName)
+                        .SetTarget(node)
+                        .SetTargetProperty(att.Name)
+                        .Apply(converterName, modeName);
+                }
+                else
+                {
+                    AttParser.Begin(node, xNode, att);
+                    if (!AttParser.ParseType()) continue;
+                    if (!AttParser.ParseValue()) continue;
 
-                node.SetValue(att.Name, AttParser.ResultValue, false);                
+                    node.SetValue(att.Name, AttParser.ResultValue, false);
+                }
+
             }
         }
 

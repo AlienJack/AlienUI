@@ -1,8 +1,11 @@
-<Grid xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*,2*)|(100px,1*)" Padding="(20,20,100,40)">
-	<Button Text="Button"/>
-	<Image Color="#FF3200FF"/>
-	<Image Color="#1f2300FF"/>
-	<Image Color="#df11dd88" Padding="(10,10,20,20)">
-		<Label Content="Hello World!" Horizontal="Stretch" Vertical="Stretch"/>
-	</Image>
-</Grid>
+<Image xmlns="AlienUI.UIElements" Width="300" Height="300">
+	<Grid Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*,2*)|(100px,1*)" Padding="(20,20,100,40)">
+		<Button Text="I'm Button"/>
+		<Image Color="#FF3200FF"/>
+		<Image Color="#1f2300FF"/>
+		<Image Color="#df11dd88" Padding="(10,10,20,20)">
+			<Label Content="Hello World!" Horizontal="Stretch" Vertical="Stretch"/>
+		</Image>
+	</Grid>
+	<Button Width="100" Height="100"/>
+</Image>

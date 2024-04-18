@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using UnityEngine;
 
-namespace AlienUI
+namespace AlienUI.Core
 {
     public class XmlAttributeParser
     {

@@ -1,3 +1,3 @@
 <Image xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
-	<Label Content="Button"/>
+	<Label Content="{Binding Text,Convert=aaa,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch"/>
 </Image>

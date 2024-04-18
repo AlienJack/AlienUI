@@ -16,7 +16,5 @@ namespace AlienUI.UIElements
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(Button), "BUTTON_TEXT");
-
-
     }
 }
