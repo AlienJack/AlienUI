@@ -1,9 +1,14 @@
 using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using UnityEngine;
 
 namespace AlienUI
 {
+    public class TestAttribute : Attribute
+    {
+        public Action<DependencyObject, object, object> OnChange;
+    }
     public static class Utility
     {
         public static void PerformRectTransform(this UIElement uiElement)
@@ -48,7 +53,6 @@ namespace AlienUI
             rectTransform.pivot = pivot;                            // change the pivot
             rectTransform.localPosition -= deltaPosition;           // reverse the position change
         }
-
         public static void SetStretchModeOffsets(this RectTransform rectTransform, float top, float bottom, float left, float right)
         {
             rectTransform.anchorMin = new Vector2(0, 0);
@@ -56,11 +60,59 @@ namespace AlienUI
             rectTransform.offsetMin = new Vector2(left, bottom);
             rectTransform.offsetMax = new Vector2(-right, -top);
         }
-
         public static void SetStretchModeOffsets(this RectTransform rectTransform, Border borderInfo)
         {
             rectTransform.SetStretchModeOffsets(borderInfo.top, borderInfo.bottom, borderInfo.left, borderInfo.right);
         }
+        public static TextAnchor ConvertToTextAnchor(TextAlignHorizontal hori, TextAlignVertical verti)
+        {
+            if (verti == TextAlignVertical.Top)
+            {
+                if (hori == TextAlignHorizontal.Left)
+                {
+                    return TextAnchor.UpperLeft;
+                }
+                else if (hori == TextAlignHorizontal.Middle)
+                {
+                    return TextAnchor.UpperCenter;
+                }
+                else if (hori == TextAlignHorizontal.Right)
+                {
+                    return TextAnchor.LowerRight;
+                }
+            }
+            else if (verti == TextAlignVertical.Middle)
+            {
+                if (hori == TextAlignHorizontal.Left)
+                {
+                    return TextAnchor.MiddleLeft;
+                }
+                else if (hori == TextAlignHorizontal.Middle)
+                {
+                    return TextAnchor.MiddleCenter;
+                }
+                else if (hori == TextAlignHorizontal.Right)
+                {
+                    return TextAnchor.MiddleRight;
+                }
+            }
+            else if (verti == TextAlignVertical.Bottom)
+            {
+                if (hori == TextAlignHorizontal.Left)
+                {
+                    return TextAnchor.LowerLeft;
+                }
+                else if (hori == TextAlignHorizontal.Middle)
+                {
+                    return TextAnchor.LowerCenter;
+                }
+                else if (hori == TextAlignHorizontal.Right)
+                {
+                    return TextAnchor.LowerRight;
+                }
+            }
 
+            return default;
+        }
     }
 }

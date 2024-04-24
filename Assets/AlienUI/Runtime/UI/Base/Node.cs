@@ -99,6 +99,7 @@ namespace AlienUI.UIElements
             return go;
         }
 
+
         public override void RefreshPropertyNotify()
         {
             base.RefreshPropertyNotify();

@@ -7,5 +7,4 @@
 			<Label Content="Hello World!" Horizontal="Stretch" Vertical="Stretch"/>
 		</Image>
 	</Grid>
-	<Button Width="100" Height="100"/>
 </Image>

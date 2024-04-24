@@ -140,6 +140,11 @@ namespace AlienUI.UIElements
             }
         }
 
+        protected void SetLayoutDirty()
+        {
+            Engine?.SetDirty(this);
+        }
+
         protected abstract Float2 CalcDesireSize();
     }
 }

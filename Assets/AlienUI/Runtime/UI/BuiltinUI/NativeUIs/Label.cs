@@ -1,6 +1,6 @@
 using AlienUI.Models;
 using System;
-using TMPro;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +20,24 @@ namespace AlienUI.UIElements
             set { SetValue(ColorProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Color.  This enables animation, styling, binding, etc...
+        public TextAlignHorizontal AlignHorizontal
+        {
+            get { return (TextAlignHorizontal)GetValue(AlignHorizontalProperty); }
+            set { SetValue(AlignHorizontalProperty, value); }
+        }
+        public static readonly DependencyProperty AlignHorizontalProperty =
+            DependencyProperty.Register("AlignHorizontal", typeof(TextAlignHorizontal), typeof(Label), TextAlignHorizontal.Middle, OnAlignChanged);
+
+        public TextAlignVertical AlignVertical
+        {
+            get { return (TextAlignVertical)GetValue(AlignVerticalProperty); }
+            set { SetValue(AlignVerticalProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AlignVertical.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AlignVerticalProperty =
+            DependencyProperty.Register("AlignVertical", typeof(TextAlignVertical), typeof(Label), TextAlignVertical.Middle, OnAlignChanged);
+
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register("Color", typeof(Color), typeof(Label), Color.black, OnColorChange);
 
@@ -28,10 +45,18 @@ namespace AlienUI.UIElements
         {
             (sender as Label).m_text.color = (Color)newValue;
         }
-
-        // Using a DependencyProperty as the backing store for Font.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FontProperty =
             DependencyProperty.Register("Font", typeof(Font), typeof(Label), null, OnFontChanged);
+
+        public bool AutoWarp
+        {
+            get { return (bool)GetValue(AutoWarpProperty); }
+            set { SetValue(AutoWarpProperty, value); }
+        }
+
+        public static readonly DependencyProperty AutoWarpProperty =
+            DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), true, OnAutoWarpChanged);
+
 
         private Text m_text;
 
@@ -56,6 +81,24 @@ namespace AlienUI.UIElements
         protected override void OnContentChanged(string oldValue, string newValue)
         {
             m_text.text = Content;
+        }
+
+        private static void OnAlignChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Label;
+
+            self.m_text.alignment = Utility.ConvertToTextAnchor(self.AlignHorizontal, self.AlignVertical);
+
+            self.SetLayoutDirty();
+        }
+
+
+        private static void OnAutoWarpChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Label;
+            self.m_text.horizontalOverflow = self.AutoWarp ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
+
+            self.SetLayoutDirty();
         }
     }
 }
