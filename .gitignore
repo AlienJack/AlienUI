@@ -6,3 +6,4 @@ Logs/*
 *.csproj
 .vsconfig
 .vs
+/Temp
