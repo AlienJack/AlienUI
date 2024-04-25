@@ -1,8 +1,6 @@
+using AlienUI.Events;
 using AlienUI.Models;
-using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Linq;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -16,13 +14,12 @@ namespace AlienUI.UIElements
             get { return (string)GetValue(NameProperty); }
             set { SetValue(NameProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for Name.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty NameProperty =
             DependencyProperty.Register("Name", typeof(string), typeof(Node), null);
 
         private List<Node> m_childrens = new List<Node>();
         private Node m_parent = null;
+        private NodeProxy m_proxy = null;
         protected RectTransform m_rectTransform;
         protected RectTransform m_childRoot;
 
@@ -72,6 +69,12 @@ namespace AlienUI.UIElements
             parentNode.m_childrens.Add(this);
         }
 
+        public delegate void OnMouseEnterHandle(object sender, OnMouseEnterEvent e);
+        public event OnMouseEnterHandle OnMouseEnter;
+        public void RaiseMouseEnterEvent(object sender, OnMouseEnterEvent e)
+        {
+        }
+
         public GameObject Initialize()
         {
             var go = CreateEmptyUIGameObject(string.IsNullOrEmpty(Name) ? GetType().Name : Name);
@@ -95,6 +98,8 @@ namespace AlienUI.UIElements
                 childGo.transform.SetParent(childRoot.transform, false);
             }
             OnInitialized();
+            m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
+            m_proxy.TargetObject = this;
 
             return go;
         }

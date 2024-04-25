@@ -1,6 +1,7 @@
 using AlienUI.Models;
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AlienUI.UIElements
 {
@@ -12,7 +13,6 @@ namespace AlienUI.UIElements
             set { SetValue(ColorProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Color.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register("Color", typeof(Color), typeof(Image), Color.white, OnColorChanged);
 
