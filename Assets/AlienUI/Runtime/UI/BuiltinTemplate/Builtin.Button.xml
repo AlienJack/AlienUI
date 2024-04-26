@@ -2,4 +2,7 @@
 	<Label Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch"/>
 
 	<EventTrigger Event="OnMouseEnter"/>
+	<Storyboard Name="Hover">
+		<Animation/>
+	</Storyboard>
 </Image>

@@ -1,3 +1,4 @@
+using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Xml;
 using UnityEngine;
@@ -6,15 +7,16 @@ namespace AlienUI.Core.Triggers
 {
     public class EventTrigger : Trigger
     {
-        private string m_eventName;
-
-        public override void ParseByXml(XmlNode xnode)
+        public string Event
         {
-            var xatt = xnode.Attributes["Event"];
-            if (xatt == null) return;
-
-            m_eventName = xatt.Value;
+            get { return (string)GetValue(EventProperty); }
+            set { SetValue(EventProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for Event.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EventProperty =
+            DependencyProperty.Register("Event", typeof(string), typeof(EventTrigger), string.Empty);
+
 
         protected override void OnInit(UIElement host)
         {
@@ -23,7 +25,7 @@ namespace AlienUI.Core.Triggers
 
         private void Host_OnEventInvoke(object sender, Events.Event e, string eventName)
         {
-            if (eventName == m_eventName)
+            if (eventName == Event)
             {
                 Execute();
             }

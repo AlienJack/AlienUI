@@ -10,7 +10,7 @@ namespace AlienUI.UIElements
     {
         private List<Trigger> m_triggers = new List<Trigger>();
 
-        public void AddTrigger(Trigger trigger)
+        void AddTrigger(Trigger trigger)
         {
             m_triggers.Add(trigger);
             trigger.Init(this);

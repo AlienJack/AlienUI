@@ -14,11 +14,11 @@ namespace AlienUI.Core
     public class XmlAttributeParser
     {
         private Dictionary<Type, PropertyResolver> m_propertyResolvers = new Dictionary<Type, PropertyResolver>();
-        private Dictionary<string, Type> m_NodeTypes = new Dictionary<string, Type>();
+        private Dictionary<string, Type> m_uiTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_triggerTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_resourcesTypes = new Dictionary<string, Type>();
 
-        private UIElement m_node;
+        private DependencyObject m_node;
         private XmlAttribute m_xAtt;
         private XmlNode m_xNode;
         private Type m_pType;
@@ -30,7 +30,7 @@ namespace AlienUI.Core
             List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
 
             LoadPropertyResolver(allTypes);
-            LoadNodeTypes(allTypes);
+            LoadUITypes(allTypes);
             LoadTriggerTypes(allTypes);
             LoadResourcesTypes(allTypes);
         }
@@ -78,20 +78,20 @@ namespace AlienUI.Core
             }
         }
 
-        private void LoadNodeTypes(List<Type> allTypes)
+        private void LoadUITypes(List<Type> allTypes)
         {
             var uiElementType = typeof(UIElement);
             foreach (var uiType in allTypes)
             {
                 if (uiType.IsAbstract) continue;
                 if (!uiType.IsSubclassOf(uiElementType)) continue;
-                m_NodeTypes[uiType.FullName] = uiType;
+                m_uiTypes[uiType.FullName] = uiType;
             }
         }
 
-        public object CreateNode(XmlNode xnode)
+        public DependencyObject CreateNode(XmlNode xnode)
         {
-            if (m_triggerTypes.ContainsKey(xnode.LocalName))
+            if (m_triggerTypes.ContainsKey(xnode.LocalName)) //trigger和resource使用简写名称
             {
                 return createTrigger(xnode);
             }
@@ -111,19 +111,23 @@ namespace AlienUI.Core
             if (triggerType == null) return null;
 
             var trigger = Activator.CreateInstance(triggerType) as Trigger;
-            trigger.ParseByXml(xnode);
             return trigger;
         }
 
         private Resource createResource(XmlNode xnode)
         {
-            throw new NotImplementedException();
+            m_resourcesTypes.TryGetValue(xnode.LocalName, out Type resourceType);
+            if (resourceType == null) return null;
+
+            var resIns = Activator.CreateInstance(resourceType) as Resource;
+
+            return resIns;
         }
 
         private UIElement createUIElement(XmlNode xnode)
         {
             var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
-            if (!m_NodeTypes.TryGetValue(fullName, out var nodeType))
+            if (!m_uiTypes.TryGetValue(fullName, out var nodeType))
             {
                 Debug.LogError($"not found class named: <color=blue>{fullName}</color> in node <color=white>{xnode.Name}</color>");
                 return null;
@@ -134,7 +138,7 @@ namespace AlienUI.Core
         }
 
 
-        public void Begin(UIElement node, XmlNode xnode, XmlAttribute xAtt)
+        public void Begin(DependencyObject node, XmlNode xnode, XmlAttribute xAtt)
         {
             m_node = node;
             m_xAtt = xAtt;

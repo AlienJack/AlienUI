@@ -1,4 +1,5 @@
 using AlienUI.Core;
+using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using AlienUI.UIElements;
@@ -23,92 +24,56 @@ namespace AlienUI
 
         public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
         {
-            List<(UIElement, XmlNode)> attResolveTask = new List<(UIElement, XmlNode)>();
+            Document document = new Document();
+            var uiIns = Parse(xmlTxt, dataContext, document) as UIElement;
+            Debug.Assert(uiIns != null);
 
-            var node = Parse(xmlTxt, dataContext, ref attResolveTask);
-            var uiGameObj = node.Initialize();
-
-            foreach (var item in attResolveTask)
-            {
-                ResolveAttributes(item.Item1, item.Item2);
-            }
-            node.RefreshPropertyNotify();
+            var uiGameObj = uiIns.Initialize();
+            document.ResolveAttributes(AttParser);
+            uiIns.RefreshPropertyNotify();
 
             uiGameObj.transform.SetParent(parent, false);
 
-            (node as UIElement).BeginLayout();
+            uiIns.BeginLayout();
 
-            return node;
+            return uiIns;
         }
 
-        private UIElement Parse(string xmlTxt, DependencyObject dataContext, ref List<(UIElement, XmlNode)> attResolveTask)
+        private DependencyObject Parse(string xmlTxt, DependencyObject dataContext, Document doc)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
 
-            UIElement root = null;
-            CreateNodeByXml(rootNode, ref root, dataContext, ref attResolveTask);
+            DependencyObject root = CreateNodeByXml(rootNode, null, dataContext, doc);
 
             return root;
         }
 
-        private void CreateNodeByXml(XmlNode xnode, ref UIElement parentNode, DependencyObject dataContext, ref List<(UIElement, XmlNode)> attResolveTask)
+        private DependencyObject CreateNodeByXml(XmlNode xnode, DependencyObject parentNode, DependencyObject dataContext, Document doc)
         {
             var newNodeIns = AttParser.CreateNode(xnode);
-            if (newNodeIns == null) return;
+            if (newNodeIns == null) return null;
 
-            if (newNodeIns is Trigger triggerIns)
+            newNodeIns.Engine = this;
+            newNodeIns.DataContext = dataContext;
+            newNodeIns.Document = doc;
+            newNodeIns.Document.RecordDependencyObject(newNodeIns, xnode);
+
+            if (parentNode != null)
+                parentNode.AddChild(newNodeIns);
+
+            foreach (XmlNode xchild in xnode.ChildNodes)
             {
-                parentNode.AddTrigger(triggerIns);
+                CreateNodeByXml(xchild, newNodeIns, dataContext, doc);
             }
-            else if (newNodeIns is UIElement uiIns)
-            {
-                uiIns.Engine = this;
-                uiIns.DataContext = dataContext;
 
-                attResolveTask.Add(new(uiIns, xnode));
-
-                if (parentNode != null) uiIns.SetParent(parentNode);
-                else parentNode = uiIns;
-
-                foreach (XmlNode xchild in xnode.ChildNodes)
-                {
-                    CreateNodeByXml(xchild, ref uiIns, dataContext, ref attResolveTask);
-                }
-            }
+            return newNodeIns;
         }
 
         public PropertyResolver GetAttributeResolver(Type propType)
         {
             return AttParser.GetAttributeResolver(propType);
-        }
-
-        public void ResolveAttributes(UIElement node, XmlNode xNode)
-        {
-            foreach (XmlAttribute att in xNode.Attributes)
-            {
-                if (att.Name.StartsWith("xmlns")) continue; //xml±£Áô×Ö·ûÌø¹ý
-
-                if (BindUtility.IsBindingString(att.Value))
-                {
-                    BindUtility.ParseBindParam(att.Value, out string propName, out string converterName, out string modeName);
-                    node.DataContext.BeginBind()
-                        .SetSourceProperty(propName)
-                        .SetTarget(node)
-                        .SetTargetProperty(att.Name)
-                        .Apply(converterName, modeName);
-                }
-                else
-                {
-                    AttParser.Begin(node, xNode, att);
-                    if (!AttParser.ParseType()) continue;
-                    if (!AttParser.ParseValue()) continue;
-
-                    node.SetValue(att.Name, AttParser.ResultValue, false);
-                }
-
-            }
         }
 
         private HashSet<UIElement> layoutTask = new HashSet<UIElement>();

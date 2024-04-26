@@ -1,4 +1,4 @@
-<Image xmlns="AlienUI.UIElements" Width="300" Height="300">
+<Image xmlns="AlienUI.UIElements" Width="300" Height="300" Color="#6b85aaFF">
 	<Grid Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*,2*)|(100px,1*)" Padding="(20,20,100,40)">
 		<Button Text="I'm Button"/>
 		<Image Color="#FF3200FF"/>

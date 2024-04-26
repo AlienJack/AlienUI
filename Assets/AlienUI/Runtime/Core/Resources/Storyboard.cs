@@ -7,39 +7,16 @@ namespace AlienUI.Core.Resources
 {
     public class Storyboard : Resource
     {
-        public List<Animation> m_animations;
+        private List<Animation> m_animations = new List<Animation>();
 
-        public override void ParseFromXml(XmlNode xnode)
+        public override void AddChild(DependencyObject childObj)
         {
-            
-        }
-    }
-
-    public class Animation
-    {
-        public string PropertyName;
-
-        public object From;
-        public object To;
-        public float Duration;
-        public float Offset;
-
-        public bool Evalution(float time, Engine engine, DependencyObject target, out object value)
-        {
-            value = null;
-            if (time < Offset) return false;
-
-            var type = target.GetDependencyPropertyType(PropertyName);
-            if (type == null) return false;
-
-            var resolver = engine.GetAttributeResolver(type);
-            if (resolver == null) return false;
-
-            var progress = (time - Offset) / Duration;
-
-            value = resolver.Lerp(From, To, progress);
-
-            return true;
+            switch (childObj)
+            {
+                case Animation anim:
+                    m_animations.Add(anim);
+                    break;
+            }
         }
     }
 }

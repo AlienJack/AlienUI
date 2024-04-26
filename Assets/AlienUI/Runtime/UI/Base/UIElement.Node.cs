@@ -1,3 +1,5 @@
+using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 using AlienUI.Events;
 using AlienUI.Models;
 using System.Collections.Generic;
@@ -9,14 +11,6 @@ namespace AlienUI.UIElements
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
-        public string Name
-        {
-            get { return (string)GetValue(NameProperty); }
-            set { SetValue(NameProperty, value); }
-        }
-        public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(UIElement), null);
-
         private List<UIElement> m_childrens = new List<UIElement>();
         private UIElement m_parent = null;
         private NodeProxy m_proxy = null;
@@ -24,8 +18,6 @@ namespace AlienUI.UIElements
         protected RectTransform m_childRoot;
 
         public RectTransform Rect => m_rectTransform;
-        public Engine Engine { get; set; }
-        public DependencyObject DataContext { get; set; }
 
         protected UIElement Parent => m_parent;
         protected List<UIElement> Children => m_childrens;
@@ -45,13 +37,20 @@ namespace AlienUI.UIElements
             }
         }
 
-        
+        public override void AddChild(DependencyObject childObj)
+        {
+            switch (childObj)
+            {
+                case UIElement uiEle: uiEle.SetParent(this); break;
+                case Trigger trigger: AddTrigger(trigger); break;
+            }
+        }
 
-        public void SetParent(UIElement parentNode)
+        void SetParent(UIElement parentNode)
         {
             m_parent = parentNode;
             parentNode.m_childrens.Add(this);
-        }        
+        }
 
         public GameObject Initialize()
         {
@@ -78,6 +77,7 @@ namespace AlienUI.UIElements
             OnInitialized();
             m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
             m_proxy.TargetObject = this;
+
 
             return go;
         }
