@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract class Node : DependencyObject
+    public abstract partial class UIElement : DependencyObject
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
@@ -15,10 +15,10 @@ namespace AlienUI.UIElements
             set { SetValue(NameProperty, value); }
         }
         public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(Node), null);
+            DependencyProperty.Register("Name", typeof(string), typeof(UIElement), null);
 
-        private List<Node> m_childrens = new List<Node>();
-        private Node m_parent = null;
+        private List<UIElement> m_childrens = new List<UIElement>();
+        private UIElement m_parent = null;
         private NodeProxy m_proxy = null;
         protected RectTransform m_rectTransform;
         protected RectTransform m_childRoot;
@@ -27,10 +27,10 @@ namespace AlienUI.UIElements
         public Engine Engine { get; set; }
         public DependencyObject DataContext { get; set; }
 
-        protected Node Parent => m_parent;
-        protected List<Node> Children => m_childrens;
+        protected UIElement Parent => m_parent;
+        protected List<UIElement> Children => m_childrens;
 
-        public Node TopParent
+        public UIElement TopParent
         {
             get
             {
@@ -45,35 +45,13 @@ namespace AlienUI.UIElements
             }
         }
 
-        public float ActualWidth
-        {
-            get => m_rectTransform.rect.width;
-            set
-            {
-                m_rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, value);
-            }
-        }
+        
 
-        public float ActualHeight
-        {
-            get => m_rectTransform.rect.height;
-            set
-            {
-                m_rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, value);
-            }
-        }
-
-        public void SetParent(Node parentNode)
+        public void SetParent(UIElement parentNode)
         {
             m_parent = parentNode;
             parentNode.m_childrens.Add(this);
-        }
-
-        public delegate void OnMouseEnterHandle(object sender, OnMouseEnterEvent e);
-        public event OnMouseEnterHandle OnMouseEnter;
-        public void RaiseMouseEnterEvent(object sender, OnMouseEnterEvent e)
-        {
-        }
+        }        
 
         public GameObject Initialize()
         {

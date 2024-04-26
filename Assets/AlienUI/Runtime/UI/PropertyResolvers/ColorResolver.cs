@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class ColorResolver : PropertyResolver
+    public class ColorResolver : PropertyTypeResolver<Color>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(Color);
-        }
-
-        public override object Resolve(string originStr)
+        protected override Color OnResolve(string originStr)
         {
             if (!ColorUtility.TryParseHtmlString(originStr, out var color))
                 Debug.LogError($"解析Html颜色代码出错:{originStr}");
             return color;
+        }
+
+        protected override Color OnLerp(Color from, Color to, float progress)
+        {
+            return Color.Lerp(from, to, progress);
         }
     }
 }

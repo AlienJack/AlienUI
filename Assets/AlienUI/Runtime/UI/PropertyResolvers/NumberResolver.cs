@@ -4,14 +4,10 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class NumberResolver : PropertyResolver
+    public class NumberResolver : PropertyTypeResolver<Number>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(Number);
-        }
 
-        public override object Resolve(string originStr)
+        protected override Number OnResolve(string originStr)
         {
             if (originStr == "*") return Number.Identity;
             else
@@ -19,6 +15,19 @@ namespace AlienUI.PropertyResolvers
                 float.TryParse(originStr, out float value);
                 return new Number { Value = value };
             }
+        }
+
+        protected override Number OnLerp(Number from, Number to, float progress)
+        {
+            Number result = default;
+            if (Mathf.Approximately(progress, 1f))
+                result.Auto = to.Auto;
+            else
+                result.Auto = from.Auto;
+
+            result.Value = Mathf.Lerp(from.Value, to.Value, progress);
+
+            return result;
         }
     }
 }

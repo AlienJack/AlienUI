@@ -1,3 +1,5 @@
+using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
@@ -13,8 +15,10 @@ namespace AlienUI.Core
     {
         private Dictionary<Type, PropertyResolver> m_propertyResolvers = new Dictionary<Type, PropertyResolver>();
         private Dictionary<string, Type> m_NodeTypes = new Dictionary<string, Type>();
+        private Dictionary<string, Type> m_triggerTypes = new Dictionary<string, Type>();
+        private Dictionary<string, Type> m_resourcesTypes = new Dictionary<string, Type>();
 
-        private Node m_node;
+        private UIElement m_node;
         private XmlAttribute m_xAtt;
         private XmlNode m_xNode;
         private Type m_pType;
@@ -27,6 +31,38 @@ namespace AlienUI.Core
 
             LoadPropertyResolver(allTypes);
             LoadNodeTypes(allTypes);
+            LoadTriggerTypes(allTypes);
+            LoadResourcesTypes(allTypes);
+        }
+
+        private void LoadResourcesTypes(List<Type> allTypes)
+        {
+            var resourceBaseType = typeof(Resource);
+
+            foreach (var type in allTypes)
+            {
+                if (type.IsAbstract) continue;
+                if (!type.IsSubclassOf(resourceBaseType)) continue;
+                m_resourcesTypes[type.Name] = type;
+            }
+        }
+
+        public PropertyResolver GetAttributeResolver(Type propType)
+        {
+            m_propertyResolvers.TryGetValue(propType, out var propertyResolver);
+            return propertyResolver;
+        }
+
+        private void LoadTriggerTypes(List<Type> allTypes)
+        {
+            var triggerBaseType = typeof(Trigger);
+
+            foreach (var triggerType in allTypes)
+            {
+                if (triggerType.IsAbstract) continue;
+                if (!triggerType.IsSubclassOf(triggerBaseType)) continue;
+                m_triggerTypes[triggerType.Name] = triggerType;
+            }
         }
 
         private void LoadPropertyResolver(List<Type> allTypes)
@@ -53,7 +89,38 @@ namespace AlienUI.Core
             }
         }
 
-        public Node CreateNode(XmlNode xnode)
+        public object CreateNode(XmlNode xnode)
+        {
+            if (m_triggerTypes.ContainsKey(xnode.LocalName))
+            {
+                return createTrigger(xnode);
+            }
+            else if (m_resourcesTypes.ContainsKey(xnode.LocalName))
+            {
+                return createResource(xnode);
+            }
+            else
+            {
+                return createUIElement(xnode);
+            }
+        }
+
+        private Trigger createTrigger(XmlNode xnode)
+        {
+            m_triggerTypes.TryGetValue(xnode.LocalName, out Type triggerType);
+            if (triggerType == null) return null;
+
+            var trigger = Activator.CreateInstance(triggerType) as Trigger;
+            trigger.ParseByXml(xnode);
+            return trigger;
+        }
+
+        private Resource createResource(XmlNode xnode)
+        {
+            throw new NotImplementedException();
+        }
+
+        private UIElement createUIElement(XmlNode xnode)
         {
             var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
             if (!m_NodeTypes.TryGetValue(fullName, out var nodeType))
@@ -62,12 +129,12 @@ namespace AlienUI.Core
                 return null;
             }
 
-            var newNodeIns = Activator.CreateInstance(nodeType) as Node;
+            var newNodeIns = Activator.CreateInstance(nodeType) as UIElement;
             return newNodeIns;
         }
 
 
-        public void Begin(Node node, XmlNode xnode, XmlAttribute xAtt)
+        public void Begin(UIElement node, XmlNode xnode, XmlAttribute xAtt)
         {
             m_node = node;
             m_xAtt = xAtt;
@@ -85,11 +152,11 @@ namespace AlienUI.Core
 
             m_pType = pType;
             return true;
-        }        
+        }
 
         public bool ParseValue()
         {
-            m_propertyResolvers.TryGetValue(m_pType, out var propertyResolver);
+            var propertyResolver = GetAttributeResolver(m_pType);
             if (propertyResolver == null)
             {
                 Debug.LogError($"依赖属性<color=yellow>{m_xAtt.Name}</color>的类型<color=white>{m_pType}</color>没有实现Resolver");

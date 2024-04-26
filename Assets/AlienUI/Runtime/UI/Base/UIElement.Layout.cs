@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract class UIElement : Node
+    public abstract partial class UIElement : DependencyObject
     {
         public Number Width
         {
@@ -53,7 +53,23 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty PaddingProperty =
             DependencyProperty.Register("Padding", typeof(Border), typeof(UIElement), default(Border), OnLayoutParamDirty);
 
+        public float ActualWidth
+        {
+            get => m_rectTransform.rect.width;
+            set
+            {
+                m_rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, value);
+            }
+        }
 
+        public float ActualHeight
+        {
+            get => m_rectTransform.rect.height;
+            set
+            {
+                m_rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, value);
+            }
+        }
 
         public Float2 GetDesireSize()
         {

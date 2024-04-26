@@ -29,6 +29,7 @@ namespace AlienUI.Models
             }
         }
 
+
         public void SetValue(string propName, object value, bool notify = true)
         {
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);

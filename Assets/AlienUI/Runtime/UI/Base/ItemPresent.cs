@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract class ItemPresent<T> : Node
+    public abstract class ItemPresent<T> : UIElement
     {
         public IList<T> SourceData { get; set; }
     }

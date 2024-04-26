@@ -4,31 +4,37 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class TextAlignHorizontalResolver : PropertyResolver
+    public class TextAlignHorizontalResolver : PropertyTypeResolver<TextAlignHorizontal>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(TextAlignHorizontal);
-        }
-
-        public override object Resolve(string originStr)
+        protected override TextAlignHorizontal OnResolve(string originStr)
         {
             Enum.TryParse<TextAlignHorizontal>(originStr, true, out TextAlignHorizontal result);
             return result;
         }
+
+        protected override TextAlignHorizontal OnLerp(TextAlignHorizontal from, TextAlignHorizontal to, float progress)
+        {
+            if (progress >= 1)
+                return to;
+            else
+                return from;
+        }
     }
 
-    public class TextAlignVerticalResolver : PropertyResolver
+    public class TextAlignVerticalResolver : PropertyTypeResolver<TextAlignVertical>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(TextAlignVertical);
-        }
-
-        public override object Resolve(string originStr)
+        protected override TextAlignVertical OnResolve(string originStr)
         {
             Enum.TryParse<TextAlignVertical>(originStr, true, out TextAlignVertical result);
             return result;
+        }
+
+        protected override TextAlignVertical OnLerp(TextAlignVertical from, TextAlignVertical to, float progress)
+        {
+            if (progress >= 1)
+                return to;
+            else
+                return from;
         }
     }
 }

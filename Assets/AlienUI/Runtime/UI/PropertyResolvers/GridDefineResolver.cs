@@ -6,14 +6,9 @@ using static AlienUI.Models.GridDefine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class GridDefineResolver : PropertyResolver
+    public class GridDefineResolver : PropertyTypeResolver<GridDefine>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(GridDefine);
-        }
-
-        public override object Resolve(string originStr)
+        protected override GridDefine OnResolve(string originStr)
         {
             //()|(1*,1*,2*,300px)
             //(1*,1*,2*,300px)|()
@@ -21,6 +16,15 @@ namespace AlienUI.PropertyResolvers
             var result = ParseDefines(originStr);
 
             return new GridDefine(result.Item1, result.Item2);
+        }
+
+
+        protected override GridDefine OnLerp(GridDefine from, GridDefine to, float progress)
+        {
+            if (Mathf.Approximately(progress, 1f))
+                return to;
+            else
+                return from;
         }
 
         public static (Define[], Define[]) ParseDefines(string input)
@@ -48,5 +52,7 @@ namespace AlienUI.PropertyResolvers
                 }).ToArray();
             }
         }
+
+
     }
 }

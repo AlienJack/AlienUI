@@ -28,6 +28,15 @@ namespace AlienUI.PropertyResolvers
 
             return result;
         }
+
+        public override object Lerp(object from, object to, float progress)
+        {
+            var border = (Border)from;
+            if (Mathf.Approximately(progress, 1))
+                return to;
+            else
+                return from;
+        }
     }
 
 }

@@ -1,3 +1,4 @@
+using AlienUI.Events;
 using AlienUI.UIElements;
 using AlienUI.UIElements.ToolsScript;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace AlienUI
         ISubmitHandler,
         ICancelHandler
     {
-        public Node TargetObject { get; set; }
+        public UIElement TargetObject { get; set; }
 
         private Graphic m_graphElement;
         private void Awake()
@@ -35,7 +36,7 @@ namespace AlienUI
             {
                 m_graphElement = gameObject.AddComponent<RaycastLit>();
             }
-            SetRaycast(false);
+            SetRaycast(true);
         }
 
         private void SetRaycast(bool value)
@@ -45,87 +46,87 @@ namespace AlienUI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+            TargetObject?.RaiseMouseEnterEvent(TargetObject, new OnMouseEnterEvent(eventData));
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+            TargetObject?.RaiseMouseExitEvent(TargetObject, new OnMouseExitEvent(eventData));
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnInitializePotentialDrag(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnDrop(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnScroll(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnUpdateSelected(BaseEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnSelect(BaseEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnMove(AxisEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnSubmit(BaseEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public void OnCancel(BaseEventData eventData)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

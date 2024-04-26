@@ -4,16 +4,19 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class StringResolver : PropertyResolver
+    public class StringResolver : PropertyTypeResolver<string>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(string);
-        }
-
-        public override object Resolve(string originStr)
+        protected override string OnResolve(string originStr)
         {
             return originStr;
+        }
+
+        protected override string OnLerp(string from, string to, float progress)
+        {
+            if (Mathf.Approximately(progress, 1f))
+                return to;
+            else
+                return from;
         }
     }
 }

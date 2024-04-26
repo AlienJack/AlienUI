@@ -1,4 +1,5 @@
 using AlienUI.Core;
+using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
@@ -20,9 +21,9 @@ namespace AlienUI
             setting.OptimizeData();
         }
 
-        public Node CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
+        public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
         {
-            List<(Node, XmlNode)> attResolveTask = new List<(Node, XmlNode)>();
+            List<(UIElement, XmlNode)> attResolveTask = new List<(UIElement, XmlNode)>();
 
             var node = Parse(xmlTxt, dataContext, ref attResolveTask);
             var uiGameObj = node.Initialize();
@@ -40,40 +41,50 @@ namespace AlienUI
             return node;
         }
 
-        private Node Parse(string xmlTxt, DependencyObject dataContext, ref List<(Node, XmlNode)> attResolveTask)
+        private UIElement Parse(string xmlTxt, DependencyObject dataContext, ref List<(UIElement, XmlNode)> attResolveTask)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
 
-            Node root = null;
+            UIElement root = null;
             CreateNodeByXml(rootNode, ref root, dataContext, ref attResolveTask);
 
             return root;
         }
 
-
-
-        private void CreateNodeByXml(XmlNode xnode, ref Node parentNode, DependencyObject dataContext, ref List<(Node, XmlNode)> attResolveTask)
+        private void CreateNodeByXml(XmlNode xnode, ref UIElement parentNode, DependencyObject dataContext, ref List<(UIElement, XmlNode)> attResolveTask)
         {
             var newNodeIns = AttParser.CreateNode(xnode);
             if (newNodeIns == null) return;
 
-            newNodeIns.Engine = this;
-            newNodeIns.DataContext = dataContext;
-
-            attResolveTask.Add(new(newNodeIns, xnode));
-
-            if (parentNode != null) newNodeIns.SetParent(parentNode);
-            else parentNode = newNodeIns;
-
-            foreach (XmlNode xchild in xnode.ChildNodes)
+            if (newNodeIns is Trigger triggerIns)
             {
-                CreateNodeByXml(xchild, ref newNodeIns, dataContext, ref attResolveTask);
+                parentNode.AddTrigger(triggerIns);
+            }
+            else if (newNodeIns is UIElement uiIns)
+            {
+                uiIns.Engine = this;
+                uiIns.DataContext = dataContext;
+
+                attResolveTask.Add(new(uiIns, xnode));
+
+                if (parentNode != null) uiIns.SetParent(parentNode);
+                else parentNode = uiIns;
+
+                foreach (XmlNode xchild in xnode.ChildNodes)
+                {
+                    CreateNodeByXml(xchild, ref uiIns, dataContext, ref attResolveTask);
+                }
             }
         }
 
-        public void ResolveAttributes(Node node, XmlNode xNode)
+        public PropertyResolver GetAttributeResolver(Type propType)
+        {
+            return AttParser.GetAttributeResolver(propType);
+        }
+
+        public void ResolveAttributes(UIElement node, XmlNode xNode)
         {
             foreach (XmlAttribute att in xNode.Attributes)
             {
