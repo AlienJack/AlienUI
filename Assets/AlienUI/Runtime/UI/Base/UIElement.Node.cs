@@ -2,8 +2,10 @@ using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
 using AlienUI.Events;
 using AlienUI.Models;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AlienUI.UIElements
 {
@@ -37,7 +39,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        public NodeProxy NodeProxy => m_proxy;
+        internal NodeProxy NodeProxy => m_proxy;
 
         protected override void OnAddChild(DependencyObject childObj)
         {
@@ -100,5 +102,7 @@ namespace AlienUI.UIElements
 
             return go;
         }
+
+
     }
 }
