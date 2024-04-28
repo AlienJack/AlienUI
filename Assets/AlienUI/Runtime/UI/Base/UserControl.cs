@@ -29,7 +29,8 @@ namespace AlienUI.UIElements
         {
             var targetTemplate = Template ?? DefaultTemplate;
 
-            m_templateInstance = (UIElement)Engine.CreateUI(targetTemplate.text, m_childRoot, this);
+            m_templateInstance = Engine.CreateUI(targetTemplate.text, m_childRoot, this);
+            AddChild(m_templateInstance);
         }
 
     }
