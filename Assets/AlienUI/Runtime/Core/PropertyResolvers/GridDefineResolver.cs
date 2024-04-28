@@ -6,7 +6,7 @@ using static AlienUI.Models.GridDefine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class GridDefineResolver : PropertyTypeResolver<GridDefine>
+    public class GridDefineResolver : PropertyResolver<GridDefine>
     {
         protected override GridDefine OnResolve(string originStr)
         {

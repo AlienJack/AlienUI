@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class NumberResolver : PropertyTypeResolver<Number>
+    public class NumberResolver : PropertyResolver<Number>
     {
 
         protected override Number OnResolve(string originStr)

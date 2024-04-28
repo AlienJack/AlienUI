@@ -12,7 +12,7 @@ namespace AlienUI.Models
         public PropertyResolver() { }
     }
 
-    public abstract class PropertyTypeResolver<T> : PropertyResolver
+    public abstract class PropertyResolver<T> : PropertyResolver
     {
         public sealed override Type GetResolveType()
         {

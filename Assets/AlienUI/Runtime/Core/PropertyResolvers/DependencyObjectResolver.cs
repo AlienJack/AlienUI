@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class DependencyObjectResolver : PropertyTypeResolver<DependencyObjectRef>
+    public class DependencyObjectResolver : PropertyResolver<DependencyObjectRef>
     {
         protected override DependencyObjectRef OnResolve(string originStr)
         {

@@ -47,7 +47,6 @@ namespace AlienUI.Models
 
         public static DependencyProperty GetDependencyPropertyByName(Type owenClassType, string propName)
         {
-            if (owenClassType.IsGenericType) owenClassType = owenClassType.GetGenericTypeDefinition();
             m_dependencyProperties.TryGetValue(owenClassType, out var dps);
             DependencyProperty targetDp = null;
             if (dps != null) dps.TryGetValue(propName, out targetDp);

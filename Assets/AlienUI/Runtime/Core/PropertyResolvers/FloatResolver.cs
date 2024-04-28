@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class FloatResolver : PropertyTypeResolver<float>
+    public class FloatResolver : PropertyResolver<float>
     {
         protected override float OnResolve(string originStr)
         {

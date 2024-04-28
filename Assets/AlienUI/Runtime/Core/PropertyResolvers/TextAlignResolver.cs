@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class TextAlignHorizontalResolver : PropertyTypeResolver<TextAlignHorizontal>
+    public class TextAlignHorizontalResolver : PropertyResolver<TextAlignHorizontal>
     {
         protected override TextAlignHorizontal OnResolve(string originStr)
         {
@@ -21,7 +21,7 @@ namespace AlienUI.PropertyResolvers
         }
     }
 
-    public class TextAlignVerticalResolver : PropertyTypeResolver<TextAlignVertical>
+    public class TextAlignVerticalResolver : PropertyResolver<TextAlignVertical>
     {
         protected override TextAlignVertical OnResolve(string originStr)
         {

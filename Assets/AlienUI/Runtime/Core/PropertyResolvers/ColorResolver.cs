@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class ColorResolver : PropertyTypeResolver<Color>
+    public class ColorResolver : PropertyResolver<Color>
     {
         protected override Color OnResolve(string originStr)
         {

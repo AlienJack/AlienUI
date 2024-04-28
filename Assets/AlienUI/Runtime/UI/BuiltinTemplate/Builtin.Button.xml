@@ -8,16 +8,15 @@
 		<PlayStoryBoard Storyboard="Normal"/>
 	</EventTrigger>
 
-
 	<StoryboardGroup>
 		<Storyboard Name="Hover">
 			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.5" Value="#BBBBBBFF"/>
+				<AnimationKey Time="0.2" Value="#BBBBBBFF"/>
 			</Animation>
 		</Storyboard>
 		<Storyboard Name="Normal">
 			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.5" Value="#FFFFFFFF"/>
+				<AnimationKey Time="0.2" Value="#FFFFFFFF"/>
 			</Animation>
 		</Storyboard>
 	</StoryboardGroup>

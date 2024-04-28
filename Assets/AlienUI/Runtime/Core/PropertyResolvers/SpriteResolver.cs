@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class SpriteResolver : PropertyTypeResolver<Sprite>
+    public class SpriteResolver : PropertyResolver<Sprite>
     {
 
         protected override Sprite OnResolve(string originStr)
