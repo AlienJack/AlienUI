@@ -12,14 +12,17 @@ using UnityEngine;
 
 namespace AlienUI
 {
-    public class Engine
+    public class Engine : MonoBehaviour
     {
         private XmlAttributeParser AttParser = new XmlAttributeParser();
-        public Settings Settings { get; private set; }
-        public Engine(Settings setting)
+        [SerializeField]
+        private Settings m_setting;
+        public Settings Settings => m_setting;
+
+        private void Awake()
         {
-            Settings = setting;
-            setting.OptimizeData();
+            Settings.OptimizeData();
+            DontDestroyOnLoad(gameObject);
         }
 
         public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
@@ -27,12 +30,14 @@ namespace AlienUI
             Document document = new Document();
             var uiIns = Parse(xmlTxt, dataContext, document) as UIElement;
             Debug.Assert(uiIns != null);
+            document.SetDocumentHost(uiIns);
+
+            document.PrepareStruct(AttParser);
 
             var uiGameObj = uiIns.Initialize();
-            document.ResolveAttributes(AttParser);
-            uiIns.RefreshPropertyNotify();
-
             uiGameObj.transform.SetParent(parent, false);
+
+            document.PrepareNotify(uiIns);
 
             uiIns.BeginLayout();
 
@@ -59,9 +64,9 @@ namespace AlienUI
             newNodeIns.DataContext = dataContext;
             newNodeIns.Document = doc;
             newNodeIns.Document.RecordDependencyObject(newNodeIns, xnode);
-
             if (parentNode != null)
-                parentNode.AddChild(newNodeIns);
+                newNodeIns.Document.RecordAddChild(parentNode, newNodeIns);
+
 
             foreach (XmlNode xchild in xnode.ChildNodes)
             {
@@ -83,7 +88,8 @@ namespace AlienUI
             UIElement handleTarget = element.TopParent == null ? element : element.TopParent as UIElement;
             layoutTask.Add(handleTarget);
         }
-        public void Lateupdate()
+
+        private void LateUpdate()
         {
             layoutTask.Clear();
 

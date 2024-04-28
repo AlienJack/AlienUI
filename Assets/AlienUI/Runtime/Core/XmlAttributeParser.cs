@@ -13,130 +13,25 @@ namespace AlienUI.Core
 {
     public class XmlAttributeParser
     {
-        private Dictionary<Type, PropertyResolver> m_propertyResolvers = new Dictionary<Type, PropertyResolver>();
-        private Dictionary<string, Type> m_uiTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> m_triggerTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> m_resourcesTypes = new Dictionary<string, Type>();
-
         private DependencyObject m_node;
         private XmlAttribute m_xAtt;
         private XmlNode m_xNode;
         private Type m_pType;
-
+        private XmlTypeCollector m_collector;
         public object ResultValue { get; private set; }
+
+        Dictionary<Type, Action> m_typeRegister = new Dictionary<Type, Action>();
 
         public XmlAttributeParser()
         {
-            List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
-
-            LoadPropertyResolver(allTypes);
-            LoadUITypes(allTypes);
-            LoadTriggerTypes(allTypes);
-            LoadResourcesTypes(allTypes);
-        }
-
-        private void LoadResourcesTypes(List<Type> allTypes)
-        {
-            var resourceBaseType = typeof(Resource);
-
-            foreach (var type in allTypes)
-            {
-                if (type.IsAbstract) continue;
-                if (!type.IsSubclassOf(resourceBaseType)) continue;
-                m_resourcesTypes[type.Name] = type;
-            }
-        }
-
-        public PropertyResolver GetAttributeResolver(Type propType)
-        {
-            m_propertyResolvers.TryGetValue(propType, out var propertyResolver);
-            return propertyResolver;
-        }
-
-        private void LoadTriggerTypes(List<Type> allTypes)
-        {
-            var triggerBaseType = typeof(Trigger);
-
-            foreach (var triggerType in allTypes)
-            {
-                if (triggerType.IsAbstract) continue;
-                if (!triggerType.IsSubclassOf(triggerBaseType)) continue;
-                m_triggerTypes[triggerType.Name] = triggerType;
-            }
-        }
-
-        private void LoadPropertyResolver(List<Type> allTypes)
-        {
-            var resolverBaseType = typeof(PropertyResolver);
-
-            foreach (var resolverType in allTypes)
-            {
-                if (resolverType.IsAbstract) continue;
-                if (!resolverType.IsSubclassOf(resolverBaseType)) continue;
-                var resolverInstance = Activator.CreateInstance(resolverType) as PropertyResolver;
-                m_propertyResolvers[resolverInstance.GetResolveType()] = resolverInstance;
-            }
-        }
-
-        private void LoadUITypes(List<Type> allTypes)
-        {
-            var uiElementType = typeof(UIElement);
-            foreach (var uiType in allTypes)
-            {
-                if (uiType.IsAbstract) continue;
-                if (!uiType.IsSubclassOf(uiElementType)) continue;
-                m_uiTypes[uiType.FullName] = uiType;
-            }
+            m_collector = new XmlTypeCollector();
+            m_collector.Collect();
         }
 
         public DependencyObject CreateNode(XmlNode xnode)
         {
-            if (m_triggerTypes.ContainsKey(xnode.LocalName)) //trigger和resource使用简写名称
-            {
-                return createTrigger(xnode);
-            }
-            else if (m_resourcesTypes.ContainsKey(xnode.LocalName))
-            {
-                return createResource(xnode);
-            }
-            else
-            {
-                return createUIElement(xnode);
-            }
+            return m_collector.CreateInstance(xnode);
         }
-
-        private Trigger createTrigger(XmlNode xnode)
-        {
-            m_triggerTypes.TryGetValue(xnode.LocalName, out Type triggerType);
-            if (triggerType == null) return null;
-
-            var trigger = Activator.CreateInstance(triggerType) as Trigger;
-            return trigger;
-        }
-
-        private Resource createResource(XmlNode xnode)
-        {
-            m_resourcesTypes.TryGetValue(xnode.LocalName, out Type resourceType);
-            if (resourceType == null) return null;
-
-            var resIns = Activator.CreateInstance(resourceType) as Resource;
-
-            return resIns;
-        }
-
-        private UIElement createUIElement(XmlNode xnode)
-        {
-            var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
-            if (!m_uiTypes.TryGetValue(fullName, out var nodeType))
-            {
-                Debug.LogError($"not found class named: <color=blue>{fullName}</color> in node <color=white>{xnode.Name}</color>");
-                return null;
-            }
-
-            var newNodeIns = Activator.CreateInstance(nodeType) as UIElement;
-            return newNodeIns;
-        }
-
 
         public void Begin(DependencyObject node, XmlNode xnode, XmlAttribute xAtt)
         {
@@ -156,6 +51,11 @@ namespace AlienUI.Core
 
             m_pType = pType;
             return true;
+        }
+
+        public PropertyResolver GetAttributeResolver(Type propType)
+        {
+            return m_collector.GetAttributeResolver(propType);
         }
 
         public bool ParseValue()

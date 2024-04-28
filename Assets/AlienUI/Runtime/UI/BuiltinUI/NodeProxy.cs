@@ -46,22 +46,22 @@ namespace AlienUI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            TargetObject?.RaiseMouseEnterEvent(TargetObject, new OnMouseEnterEvent(eventData));
+            TargetObject?.RaiseMouseEnterEvent(TargetObject, eventData);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            TargetObject?.RaiseMouseExitEvent(TargetObject, new OnMouseExitEvent(eventData));
+            TargetObject?.RaiseMouseExitEvent(TargetObject, eventData);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseMouseDownEvent(TargetObject, eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-
+            
         }
 
         public void OnPointerClick(PointerEventData eventData)

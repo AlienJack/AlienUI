@@ -6,14 +6,16 @@ using UnityEngine;
 
 namespace AlienUI.Models
 {
-    public abstract class DependencyObject
+    public abstract class DependencyObject : IDependencyObjectResolver
     {
         private Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
         private Type m_selfType;
+        private List<DependencyObject> m_childrens = new List<DependencyObject>();
 
         public Engine Engine { get; set; }
         public DependencyObject DataContext { get; set; }
         public Document Document { get; set; }
+        protected List<DependencyObject> Children => m_childrens;
 
         public string Name
         {
@@ -33,9 +35,16 @@ namespace AlienUI.Models
             allDp.ForEach(dp => SetValue(dp, dp.DefaultValue, false));
         }
 
-        public abstract void AddChild(DependencyObject childObj);
+        public void AddChild(DependencyObject childObj)
+        {
+            m_childrens.Add(childObj);
 
-        public virtual void RefreshPropertyNotify()
+            OnAddChild(childObj);
+        }
+
+        protected virtual void OnAddChild(DependencyObject childObj) { }
+
+        public void RefreshPropertyNotify()
         {
             foreach (var item in m_dpPropValues)
             {
@@ -43,6 +52,8 @@ namespace AlienUI.Models
                 var value = item.Value;
                 dp.RaiseChangeEvent(this, dp.DefaultValue, value);
             }
+            foreach (var child in m_childrens)
+                child.RefreshPropertyNotify();
         }
 
 
@@ -99,5 +110,17 @@ namespace AlienUI.Models
 
             return dp.PropType;
         }
+
+        public DependencyObject Resolve(string resolveKey)
+        {
+            return this.Document.Resolve(resolveKey);
+        }
+
+        internal void Prepare()
+        {
+            OnPrepared();
+        }
+
+        protected virtual void OnPrepared() { }
     }
 }

@@ -95,7 +95,7 @@ namespace AlienUI.UIElements
         {
             CalcChildrenLayout();
 
-            foreach (UIElement child in Children)
+            foreach (var child in UIChildren)
             {
                 child.BeginChildrenLayout();
             }
@@ -105,7 +105,7 @@ namespace AlienUI.UIElements
         {
             m_childRoot.SetStretchModeOffsets(Padding);
 
-            foreach (UIElement child in Children)
+            foreach (var child in UIChildren)
             {
                 child.HandleChildRoot();
             }
@@ -142,7 +142,7 @@ namespace AlienUI.UIElements
         /// </summary>
         public virtual void CalcChildrenLayout()
         {
-            foreach (UIElement child in Children)
+            foreach (var child in UIChildren)
             {
                 PerformUIElement(child);
             }

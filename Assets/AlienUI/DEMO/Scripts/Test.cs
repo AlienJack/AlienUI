@@ -4,17 +4,12 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     public TextAsset ta;
-    public Settings settings;
-    private Engine e;
+    public Engine e;
+    public RectTransform uiRoot;
 
-    private void Awake()
+    private void Start()
     {
-        e = new Engine(settings);
-        e.CreateUI(ta.text, transform, null);
+        e.CreateUI(ta.text, uiRoot, null);
     }
 
-    private void LateUpdate()
-    {
-        e.Lateupdate();
-    }
 }

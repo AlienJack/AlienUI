@@ -11,16 +11,16 @@ namespace AlienUI.UIElements
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
-        private List<UIElement> m_childrens = new List<UIElement>();
         private UIElement m_parent = null;
         private NodeProxy m_proxy = null;
         protected RectTransform m_rectTransform;
         protected RectTransform m_childRoot;
 
+        public List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
+
         public RectTransform Rect => m_rectTransform;
 
         protected UIElement Parent => m_parent;
-        protected List<UIElement> Children => m_childrens;
 
         public UIElement TopParent
         {
@@ -37,11 +37,16 @@ namespace AlienUI.UIElements
             }
         }
 
-        public override void AddChild(DependencyObject childObj)
+        public NodeProxy NodeProxy => m_proxy;
+
+        protected override void OnAddChild(DependencyObject childObj)
         {
             switch (childObj)
             {
-                case UIElement uiEle: uiEle.SetParent(this); break;
+                case UIElement uiEle:
+                    uiEle.SetParent(this);
+                    UIChildren.Add(uiEle);
+                    break;
                 case Trigger trigger: AddTrigger(trigger); break;
             }
         }
@@ -49,7 +54,6 @@ namespace AlienUI.UIElements
         void SetParent(UIElement parentNode)
         {
             m_parent = parentNode;
-            parentNode.m_childrens.Add(this);
         }
 
         public GameObject Initialize()
@@ -69,7 +73,7 @@ namespace AlienUI.UIElements
 
             tracker.Add(childRoot, m_childRoot, DrivenTransformProperties.All);
 
-            foreach (var child in m_childrens)
+            foreach (var child in UIChildren)
             {
                 var childGo = child.Initialize();
                 childGo.transform.SetParent(childRoot.transform, false);
@@ -78,15 +82,7 @@ namespace AlienUI.UIElements
             m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
             m_proxy.TargetObject = this;
 
-
             return go;
-        }
-
-
-        public override void RefreshPropertyNotify()
-        {
-            base.RefreshPropertyNotify();
-            foreach (var child in Children) child.RefreshPropertyNotify();
         }
 
         protected abstract void OnInitialized();

@@ -19,7 +19,7 @@ namespace AlienUI.UIElements
         {
             Float2 result = new Float2(Padding.left + Padding.right, Padding.top + Padding.bottom);
 
-            foreach (UIElement child in Children)
+            foreach (var child in UIChildren)
             {
                 var childSize = child.GetDesireSize();
                 result.x += childSize.x;
@@ -32,20 +32,21 @@ namespace AlienUI.UIElements
         public override void CalcChildrenLayout()
         {
             GridDefine.CalcCellSizes(ActualWidth - Padding.left - Padding.right, ActualHeight - Padding.top - Padding.bottom);
-            for (int i = 0; i < Children.Count; i++)
+            for (int i = 0; i < UIChildren.Count; i++)
             {
-                UIElement child = (UIElement)Children[i];
+                UIElement uiChild = UIChildren[i];
+
                 int x = i % GridDefine.Column;
                 int y = i / GridDefine.Column;
                 var size = GridDefine.GetCellSize(x, y);
-                child.ActualWidth = size.x;
-                child.ActualHeight = size.y;
-                child.Rect.pivot = new Vector2(0, 1);
-                child.Rect.anchorMin = new Vector2(0, 1);
-                child.Rect.anchorMax = new Vector2(0, 1);
-                child.Rect.anchoredPosition = GridDefine.GetCellOffset(x, y);
+                uiChild.ActualWidth = size.x;
+                uiChild.ActualHeight = size.y;
+                uiChild.Rect.pivot = new Vector2(0, 1);
+                uiChild.Rect.anchorMin = new Vector2(0, 1);
+                uiChild.Rect.anchorMax = new Vector2(0, 1);
+                uiChild.Rect.anchoredPosition = GridDefine.GetCellOffset(x, y);
 
-                child.CalcChildrenLayout();
+                uiChild.CalcChildrenLayout();
             }
         }
 

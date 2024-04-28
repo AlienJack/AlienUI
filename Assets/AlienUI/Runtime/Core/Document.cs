@@ -1,5 +1,6 @@
 ﻿using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -12,13 +13,42 @@ namespace AlienUI.Core
         private HashSet<DependencyObject> m_dpObjects = new HashSet<DependencyObject>();
         private Dictionary<DependencyObject, XmlNode> m_dpObjectsXmlMap = new Dictionary<DependencyObject, XmlNode>();
         private Dictionary<string, DependencyObject> m_dpObjectsNameMap = new Dictionary<string, DependencyObject>();
-        public void RecordDependencyObject(DependencyObject dependencyObject, XmlNode xnode)
+        private Dictionary<DependencyObject, HashSet<DependencyObject>> m_parentChildrenRecords = new Dictionary<DependencyObject, HashSet<DependencyObject>>();
+        private UIElement m_rootElement;
+
+        public void SetDocumentHost(UIElement root)
+        {
+            m_rootElement = root;
+        }
+
+        public Coroutine StartCoroutine(IEnumerator itor)
+        {
+            return m_rootElement.NodeProxy.StartCoroutine(itor);
+        }
+
+        public void StopCoroutine(Coroutine cor)
+        {
+            m_rootElement.NodeProxy.StopCoroutine(cor);
+        }
+
+        internal void RecordDependencyObject(DependencyObject dependencyObject, XmlNode xnode)
         {
             m_dpObjects.Add(dependencyObject);
             m_dpObjectsXmlMap[dependencyObject] = xnode;
 
-            if (!string.IsNullOrWhiteSpace(dependencyObject.Name))
-                m_dpObjectsNameMap[dependencyObject.Name] = dependencyObject;
+            var nameProperty = xnode.Attributes["Name"];
+            if (nameProperty == null) return;
+            var nameValue = nameProperty.Value;
+            if (!string.IsNullOrWhiteSpace(nameValue))
+                m_dpObjectsNameMap[nameValue] = dependencyObject;
+        }
+
+        internal void RecordAddChild(DependencyObject parentNode, DependencyObject newNodeIns)
+        {
+            if (!m_parentChildrenRecords.ContainsKey(parentNode))
+                m_parentChildrenRecords[parentNode] = new HashSet<DependencyObject>();
+
+            m_parentChildrenRecords[parentNode].Add(newNodeIns);
         }
 
         public DependencyObject Resolve(string resolveKey)
@@ -27,12 +57,32 @@ namespace AlienUI.Core
             return dpObject;
         }
 
-        public void ResolveAttributes(XmlAttributeParser xmlParser)
+        internal void PrepareStruct(XmlAttributeParser xmlParser)
         {
             foreach (var item in m_dpObjectsXmlMap)
             {
                 ResolveAttributes(item.Key, item.Value, xmlParser);
             }
+            foreach (var item in m_parentChildrenRecords)
+            {
+                var parent = item.Key;
+                foreach (var child in item.Value)
+                {
+                    parent.AddChild(child);
+                }
+            }
+
+
+        }
+
+        internal void PrepareNotify(UIElement uiRoot)
+        {
+            foreach (var dpObj in m_dpObjects)
+            {
+                dpObj.Prepare();
+            }
+
+            uiRoot.RefreshPropertyNotify();
         }
 
         void ResolveAttributes(DependencyObject node, XmlNode xNode, XmlAttributeParser xmlParser)
@@ -61,5 +111,7 @@ namespace AlienUI.Core
 
             }
         }
+
+
     }
 }

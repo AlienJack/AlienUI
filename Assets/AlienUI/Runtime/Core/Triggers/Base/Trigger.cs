@@ -9,7 +9,7 @@ namespace AlienUI.Core.Triggers
     public abstract class Trigger : DependencyObject
     {
         private UIElement m_host;
-        private List<TriggerAction> m_actions;
+        private List<TriggerAction> m_actions = new List<TriggerAction>();
 
         public void Init(UIElement host)
         {
@@ -17,7 +17,7 @@ namespace AlienUI.Core.Triggers
             OnInit(m_host);
         }
 
-        public override void AddChild(DependencyObject childObj)
+        protected override void OnAddChild(DependencyObject childObj)
         {
             switch (childObj)
             {

@@ -1,8 +1,24 @@
-<Image xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
+<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
 	<Label Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch"/>
 
-	<EventTrigger Event="OnMouseEnter"/>
-	<Storyboard Name="Hover">
-		<Animation/>
-	</Storyboard>
+	<EventTrigger Event="OnMouseEnter">
+		<PlayStoryBoard Storyboard="Hover"/>
+	</EventTrigger>
+	<EventTrigger Event="OnMouseExit">
+		<PlayStoryBoard Storyboard="Normal"/>
+	</EventTrigger>
+
+
+	<StoryboardGroup>
+		<Storyboard Name="Hover">
+			<Animation Target="Root" PropertyName="Color">
+				<AnimationKey Time="0.5" Value="#BBBBBBFF"/>
+			</Animation>
+		</Storyboard>
+		<Storyboard Name="Normal">
+			<Animation Target="Root" PropertyName="Color">
+				<AnimationKey Time="0.5" Value="#FFFFFFFF"/>
+			</Animation>
+		</Storyboard>
+	</StoryboardGroup>
 </Image>
