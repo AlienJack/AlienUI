@@ -1,10 +1,10 @@
 <Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
 	<Label Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch"/>
 
-	<EventTrigger Event="OnMouseEnter">
+	<EventTrigger Event="OnPointerEnter">
 		<PlayStoryBoard Storyboard="Hover"/>
 	</EventTrigger>
-	<EventTrigger Event="OnMouseExit">
+	<EventTrigger Event="OnPointerExit">
 		<PlayStoryBoard Storyboard="Normal"/>
 	</EventTrigger>
 

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AlienUI
 {
-    public class NodeProxy : MonoBehaviour,
+    internal class NodeProxy : MonoBehaviour,
         IPointerEnterHandler,
         IPointerExitHandler,
         IPointerDownHandler,
@@ -46,87 +46,87 @@ namespace AlienUI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            TargetObject?.RaiseMouseEnterEvent(TargetObject, eventData);
+            TargetObject?.RaisePointerEnterEvent(TargetObject, eventData);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            TargetObject?.RaiseMouseExitEvent(TargetObject, eventData);
+            TargetObject?.RaisePointerExitEvent(TargetObject, eventData);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            TargetObject?.RaiseMouseDownEvent(TargetObject, eventData);
+            TargetObject?.RaisePointerDownEvent(TargetObject, eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            
+            TargetObject?.RaisePointerUpEvent(TargetObject, eventData);
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-
+            TargetObject?.RaisePointerClickEvent(TargetObject, eventData);
         }
 
         public void OnInitializePotentialDrag(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseInitializePotentialDragEvent(TargetObject, eventData);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseBeginDrag(TargetObject, eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseDrag(TargetObject, eventData);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseEndDrag(TargetObject, eventData);
         }
 
         public void OnDrop(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseDrop(TargetObject, eventData);
         }
 
         public void OnScroll(PointerEventData eventData)
         {
-
+            TargetObject?.RaiseScroll(TargetObject, eventData);
         }
 
         public void OnUpdateSelected(BaseEventData eventData)
         {
-
+            TargetObject?.RaiseUpdateSelected(TargetObject, eventData);
         }
 
         public void OnSelect(BaseEventData eventData)
         {
-
+            TargetObject?.RaiseSelected(TargetObject, eventData);
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-
+            TargetObject?.RaiseDeselect(TargetObject, eventData);
         }
 
         public void OnMove(AxisEventData eventData)
         {
-
+            TargetObject?.RaiseMove(TargetObject, eventData);
         }
 
         public void OnSubmit(BaseEventData eventData)
         {
-
+            TargetObject?.RaiseSubmit(TargetObject, eventData);
         }
 
         public void OnCancel(BaseEventData eventData)
         {
-
+            TargetObject?.RaiseCancel(TargetObject, eventData);
         }
     }
 }

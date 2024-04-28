@@ -23,9 +23,9 @@ namespace AlienUI.Core.Triggers
             host.OnEventInvoke += Host_OnEventInvoke;
         }
 
-        private void Host_OnEventInvoke(object sender, Events.Event e, string eventName)
+        private void Host_OnEventInvoke(object sender, Events.Event e)
         {
-            if (eventName == Event)
+            if (e.EventName == Event)
             {
                 Execute();
             }
