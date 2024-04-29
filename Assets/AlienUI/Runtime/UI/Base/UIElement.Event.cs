@@ -13,7 +13,7 @@ namespace AlienUI.UIElements
 
         public delegate void OnEventHandle<EV>(object sender, EV e) where EV : Event;
 
-
+        #region
         /*  由于Unity的事件机制问题,PointerEnter和PointerExit总会向上传递
         *   所以AlienUI的事件传递机制,总是不传递PointerEnter和PointerExit事件,而是交由Unity自己传递
         *   在Unity2021之后的版本,这个传递机制可以在EventSystem的InputModule上被关闭,为了保持逻辑统一
@@ -38,7 +38,7 @@ namespace AlienUI.UIElements
         internal void RaisePointerDownEvent(object sender, OnPointerDownEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
-            
+
             if (OnPointerDown != null)
             {
                 OnPointerDown.Invoke(sender, e);
@@ -227,6 +227,18 @@ namespace AlienUI.UIElements
                 if (e.Canceled && Parent != null) Parent.RaiseCancel(sender, e);
             }
             else Parent?.RaiseCancel(sender, e);
+        }
+        #endregion
+
+        protected event OnEventHandle<OnShowEvent> OnShow;
+        internal void RaiseShow()
+        {
+            var evt = new OnShowEvent(this);
+            OnEventInvoke?.Invoke(null, evt);
+            OnShow?.Invoke(this, evt);
+
+            foreach (var child in UIChildren)
+                child.RaiseShow();
         }
     }
 }

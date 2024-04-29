@@ -8,5 +8,13 @@ namespace AlienUI.Models
         public float bottom;
         public float left;
         public float right;
+
+        public Border(float value)
+        {
+            top = value;
+            bottom = value;
+            left = value;
+            right = value;
+        }
     }
 }

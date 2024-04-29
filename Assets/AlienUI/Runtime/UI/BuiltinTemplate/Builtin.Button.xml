@@ -4,10 +4,10 @@
 	</Image>
 
 	<EventTrigger Event="OnPointerEnter">
-		<PlayStoryBoard Storyboard="Hover"/>
+		<PlayStoryboard Target="Hover"/>
 	</EventTrigger>
 	<EventTrigger Event="OnPointerExit">
-		<PlayStoryBoard Storyboard="Normal"/>
+		<PlayStoryboard Target="Normal"/>
 	</EventTrigger>
 
 	<StoryboardGroup>

@@ -150,4 +150,12 @@ namespace AlienUI.Events
         public override string EventName => "OnCancel";
         public static implicit operator OnCancelEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
     }
+
+    public class OnShowEvent : Event<UIElement>
+    {
+        public OnShowEvent(UIElement eventData) : base(eventData) { }
+
+        public override string EventName => "OnShow";
+    }
+
 }

@@ -15,3 +15,4 @@ MonoBehaviour:
   m_defaultLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_templates:
   - Xml: {fileID: 4900000, guid: 8cea79868d497ba418c453de4bf594b2, type: 3}
+  - Xml: {fileID: 4900000, guid: 0033afc2dd86fbc44a818238cc756435, type: 3}

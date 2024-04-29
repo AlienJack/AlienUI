@@ -1,3 +1,4 @@
+using AlienUI.Core.Converters;
 using AlienUI.Models;
 using System;
 using System.Text.RegularExpressions;
@@ -12,6 +13,8 @@ namespace AlienUI.Core
         public DependencyObject Target { get; private set; }
         public string TargetProperty { get; private set; }
 
+        private ConverterBase m_converter;
+
         private enum EnumBindMode
         {
             OneWay,
@@ -19,12 +22,31 @@ namespace AlienUI.Core
             TwoWay,
         }
 
-        public void Apply(string convert, string mode)
+        public void Apply(string convertName, string mode)
         {
             Enum.TryParse<EnumBindMode>(mode, true, out EnumBindMode bindMode);
 
+            m_converter = Target.Engine.GetConverter(convertName);
+            if (m_converter == null)
+            {
+                var dstPropType = Target.GetDependencyPropertyType(TargetProperty);
+                var srcPropType = Source.GetDependencyPropertyType(SourceProperty);
+                if (dstPropType != srcPropType)
+                {
+                    m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
+                    if (m_converter == null)
+                    {
+                        Debug.LogError($"<color=blue>{Source.GetType()}</color>.<color=white>{srcPropType}</color>与<color=blue>{Target.GetType()}</color>.<color=white>{dstPropType}</color>类型不一致,并且没有找到可用的Converter");
+                        return;
+                    }
+                }
+            }
+
+            var srcValue = Source.GetValue(SourceProperty);
+            if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
+
             //首先同步一次数值
-            Target.SetValue(TargetProperty, Source.GetValue(SourceProperty), false);
+            Target.SetValue(TargetProperty, srcValue, false);
 
             switch (bindMode)
             {
@@ -51,6 +73,7 @@ namespace AlienUI.Core
 
             m_dataSync = true;
 
+            newValue = m_converter?.DstToSrc(newValue);
             try { Source.SetValue(SourceProperty, newValue, true); }
             finally { m_dataSync = false; }
         }
@@ -60,6 +83,8 @@ namespace AlienUI.Core
             if (m_dataSync) return;
 
             m_dataSync = true;
+
+            newValue = m_converter?.SrcToDst(newValue);
 
             try { Target.SetValue(TargetProperty, newValue, true); }
             finally { m_dataSync = false; }

@@ -17,6 +17,7 @@ namespace AlienUI.UIElements
         private NodeProxy m_proxy = null;
         protected RectTransform m_rectTransform;
         protected RectTransform m_childRoot;
+        protected RectTransform m_templateRoot;
 
         public List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
 
@@ -64,6 +65,14 @@ namespace AlienUI.UIElements
             m_rectTransform = go.transform as RectTransform;
             tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
 
+            var templateRoot = CreateEmptyUIGameObject("[TEMPLATE]");
+            m_templateRoot = templateRoot.transform as RectTransform;
+            m_templateRoot.SetParent(go.transform, false);
+            m_templateRoot.anchorMin = new Vector2(0, 0);
+            m_templateRoot.anchorMax = new Vector2(1, 1);
+            m_templateRoot.pivot = new Vector2(0.5f, 0.5f);
+            m_templateRoot.sizeDelta = Vector2.zero;
+            m_templateRoot.anchoredPosition = Vector2.zero;
             var childRoot = CreateEmptyUIGameObject("[CHILD]");
             m_childRoot = childRoot.transform as RectTransform;
             m_childRoot.SetParent(go.transform, false);

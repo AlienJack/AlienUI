@@ -7,6 +7,8 @@ using AlienUI.UIElements;
 using AlienUI.Core.Triggers;
 using AlienUI.Core.Resources;
 using System.Xml;
+using ConverterDict = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<System.Type, AlienUI.Core.Converters.ConverterBase>>;
+using AlienUI.Core.Converters;
 
 namespace AlienUI.Core
 {
@@ -17,6 +19,8 @@ namespace AlienUI.Core
         private Dictionary<string, Type> m_triggerTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_resourcesTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_triggerActionTypes = new Dictionary<string, Type>();
+        private ConverterDict m_converterMaps = new ConverterDict();
+        private Dictionary<string, ConverterBase> m_converterNameMap = new Dictionary<string, ConverterBase>();
 
         public void Collect()
         {
@@ -25,6 +29,7 @@ namespace AlienUI.Core
             Type triggerBaseType = typeof(Trigger);
             Type resourceBaseType = typeof(Resource);
             Type triggerActionBaseType = typeof(TriggerAction);
+            Type converterBaseType = typeof(ConverterBase);
 
             List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
 
@@ -53,7 +58,37 @@ namespace AlienUI.Core
                 {
                     m_triggerActionTypes[type.Name] = type;
                 }
+                else if (type.IsSubclassOf(converterBaseType))
+                {
+                    var converterIns = Activator.CreateInstance(type) as ConverterBase;
+                    var srcType = type.BaseType.GenericTypeArguments[0];
+                    var dstType = type.BaseType.GenericTypeArguments[1];
+
+                    if (!m_converterMaps.ContainsKey(srcType))
+                        m_converterMaps[srcType] = new Dictionary<Type, ConverterBase>();
+
+                    m_converterMaps[srcType][dstType] = converterIns;
+
+                    m_converterNameMap[type.Name] = converterIns;
+                }
             }
+        }
+
+        internal ConverterBase GetConverter(Type srcType, Type dstType)
+        {
+            if (m_converterMaps.TryGetValue(srcType, out var temp))
+                if (temp.TryGetValue(dstType, out var converter))
+                    return converter;
+
+            return null;
+        }
+
+        internal ConverterBase GetConverter(string converterName)
+        {
+            if (m_converterNameMap.TryGetValue(converterName, out var converter))
+                return converter;
+
+            return null;
         }
 
         internal DependencyObject CreateInstance(XmlNode xnode)

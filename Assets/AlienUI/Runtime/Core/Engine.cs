@@ -1,4 +1,5 @@
 using AlienUI.Core;
+using AlienUI.Core.Converters;
 using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
 using AlienUI.Models;
@@ -39,6 +40,8 @@ namespace AlienUI
 
             document.PrepareNotify(uiIns);
 
+            uiIns.RaiseShow();
+
             SetDirty(uiIns);
 
             return uiIns;
@@ -57,6 +60,8 @@ namespace AlienUI
 
         private DependencyObject CreateNodeByXml(XmlNode xnode, DependencyObject parentNode, DependencyObject dataContext, Document doc)
         {
+            if (xnode.NodeType == XmlNodeType.Comment) return null;
+
             var newNodeIns = AttParser.CreateNode(xnode);
             if (newNodeIns == null) return null;
 
@@ -79,6 +84,16 @@ namespace AlienUI
         public PropertyResolver GetAttributeResolver(Type propType)
         {
             return AttParser.GetAttributeResolver(propType);
+        }
+
+        public ConverterBase GetConverter(Type srcType, Type dstType)
+        {
+            return AttParser.Collector.GetConverter(srcType, dstType);
+        }
+
+        public ConverterBase GetConverter(string converterName)
+        {
+            return AttParser.Collector.GetConverter(converterName);
         }
 
         private HashSet<UIElement> layoutTask = new HashSet<UIElement>();

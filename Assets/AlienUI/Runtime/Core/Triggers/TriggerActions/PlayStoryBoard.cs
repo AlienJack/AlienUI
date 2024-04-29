@@ -1,24 +1,22 @@
+using AlienUI.Core.Resources;
 using AlienUI.Models;
-using UnityEngine;
 
 namespace AlienUI.Core.Triggers
 {
-    public class PlayStoryBoard : TriggerAction
+    public class PlayStoryboard : TriggerAction
     {
-        public DependencyObjectRef Storyboard
+        public DependencyObjectRef Target
         {
-            get { return (DependencyObjectRef)GetValue(StoryboardProperty); }
-            set { SetValue(StoryboardProperty, value); }
+            get { return (DependencyObjectRef)GetValue(TargetProperty); }
+            set { SetValue(TargetProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for Storyboard.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty StoryboardProperty =
-            DependencyProperty.Register("Storyboard", typeof(DependencyObjectRef), typeof(PlayStoryBoard), default(DependencyObjectRef));
+        public static readonly DependencyProperty TargetProperty =
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(PlayStoryboard), default(DependencyObjectRef));
 
 
         public override void Excute()
         {
-            var sbIns = Storyboard.Get(this) as AlienUI.Core.Resources.Storyboard;
+            var sbIns = Target.Get(this) as Storyboard;
             if (sbIns == null) return;
 
             sbIns.Play();

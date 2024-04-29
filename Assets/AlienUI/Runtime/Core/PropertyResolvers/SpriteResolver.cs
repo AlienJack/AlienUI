@@ -6,7 +6,6 @@ namespace AlienUI.PropertyResolvers
 {
     public class SpriteResolver : PropertyResolver<Sprite>
     {
-
         protected override Sprite OnResolve(string originStr)
         {
             return Resources.Load<Sprite>(originStr);

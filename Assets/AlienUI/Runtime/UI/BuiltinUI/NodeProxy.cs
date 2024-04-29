@@ -26,20 +26,25 @@ namespace AlienUI
         ISubmitHandler,
         ICancelHandler
     {
-        public UIElement TargetObject { get; set; }
+        internal UIElement TargetObject { get; set; }
+        internal float Alpha
+        {
+            get => m_canvasRenderer.alpha;
+            set => m_canvasRenderer.alpha = value;
+        }
 
         private Graphic m_graphElement;
+        private CanvasGroup m_canvasRenderer;
         private void Awake()
         {
             m_graphElement = GetComponent<Graphic>();
-            if (m_graphElement == null)
-            {
-                m_graphElement = gameObject.AddComponent<RaycastLit>();
-            }
+            if (m_graphElement == null) m_graphElement = gameObject.AddComponent<RaycastLit>();
+            m_canvasRenderer = gameObject.AddComponent<CanvasGroup>();
+
             SetRaycast(true);
         }
 
-        private void SetRaycast(bool value)
+        internal void SetRaycast(bool value)
         {
             m_graphElement.raycastTarget = value;
         }

@@ -22,6 +22,8 @@ namespace AlienUI.Core
 
         Dictionary<Type, Action> m_typeRegister = new Dictionary<Type, Action>();
 
+        internal XmlTypeCollector Collector => m_collector;
+
         public XmlAttributeParser()
         {
             m_collector = new XmlTypeCollector();

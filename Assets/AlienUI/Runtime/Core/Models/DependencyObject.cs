@@ -2,6 +2,7 @@ using AlienUI.Core;
 using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AlienUI.Models
@@ -46,10 +47,9 @@ namespace AlienUI.Models
 
         public void RefreshPropertyNotify()
         {
-            foreach (var item in m_dpPropValues)
+            foreach (var dp in m_dpPropValues.Keys.ToArray())
             {
-                var dp = item.Key;
-                var value = item.Value;
+                var value = m_dpPropValues[dp];
                 dp.RaiseChangeEvent(this, dp.DefaultValue, value);
             }
             foreach (var child in m_childrens)
