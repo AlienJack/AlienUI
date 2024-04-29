@@ -3,15 +3,11 @@ using AlienUI.UIElements;
 using System;
 using UnityEngine;
 
-namespace AlienUI
+namespace AlienUI.UIElements.ToolsScript
 {
-    public class TestAttribute : Attribute
+    internal static class Utility
     {
-        public Action<DependencyObject, object, object> OnChange;
-    }
-    public static class Utility
-    {
-        public static void PerformRectTransform(this UIElement uiElement)
+        internal static void PerformRectTransform(this UIElement uiElement)
         {
             var anchorMin = new Vector2();
             var anchorMax = new Vector2();
@@ -43,7 +39,7 @@ namespace AlienUI
             uiElement.Rect.anchorMin = anchorMin;
             uiElement.Rect.pivot = pivot;
         }
-        public static void SetPivotStayPosition(this RectTransform rectTransform, Vector2 pivot)
+        internal static void SetPivotStayPosition(this RectTransform rectTransform, Vector2 pivot)
         {
             Vector3 deltaPosition = rectTransform.pivot - pivot;    // get change in pivot
             deltaPosition.Scale(rectTransform.rect.size);           // apply sizing
@@ -53,18 +49,18 @@ namespace AlienUI
             rectTransform.pivot = pivot;                            // change the pivot
             rectTransform.localPosition -= deltaPosition;           // reverse the position change
         }
-        public static void SetStretchModeOffsets(this RectTransform rectTransform, float top, float bottom, float left, float right)
+        internal static void SetStretchModeOffsets(this RectTransform rectTransform, float top, float bottom, float left, float right)
         {
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.offsetMin = new Vector2(left, bottom);
             rectTransform.offsetMax = new Vector2(-right, -top);
         }
-        public static void SetStretchModeOffsets(this RectTransform rectTransform, Border borderInfo)
+        internal static void SetStretchModeOffsets(this RectTransform rectTransform, Border borderInfo)
         {
             rectTransform.SetStretchModeOffsets(borderInfo.top, borderInfo.bottom, borderInfo.left, borderInfo.right);
         }
-        public static TextAnchor ConvertToTextAnchor(TextAlignHorizontal hori, TextAlignVertical verti)
+        internal static TextAnchor ConvertToTextAnchor(TextAlignHorizontal hori, TextAlignVertical verti)
         {
             if (verti == TextAlignVertical.Top)
             {
