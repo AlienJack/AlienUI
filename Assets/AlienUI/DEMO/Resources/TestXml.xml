@@ -1,11 +1,9 @@
 <Image xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#6b85aaFF" Padding="(10,10,10,10)">
 	<Image Content="BG" Horizontal="Stretch" Vertical="Stretch" ImageType="Sliced"/>
 	<Grid Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*,2*)|(100px,1*)" Padding="(20,20,100,40)">
-		<Button Text="I'm Button"/>
-		<Image Color="#FF3200FF" Content="git"/>
-		<Image Color="#1f2300FF" />
-		<Image Color="#df11dd88" Padding="(10,10,20,20)">
-			<Label Content="Hello World!" Horizontal="Stretch" Vertical="Stretch"/>
-		</Image>
+		<Button Text="I'm Button1"/>
+		<Button Text="I'm Button2"/>
+		<Button Text="I'm Button3"/>
+		<Button Text="I'm Button4"/>
 	</Grid>
 </Image>

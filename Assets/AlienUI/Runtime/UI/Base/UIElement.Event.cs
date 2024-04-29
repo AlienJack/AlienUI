@@ -9,7 +9,7 @@ namespace AlienUI.UIElements
     public abstract partial class UIElement : DependencyObject
     {
         public delegate void OnEventInvokeHandle(object sender, Event e);
-        internal event  OnEventInvokeHandle OnEventInvoke;
+        internal event OnEventInvokeHandle OnEventInvoke;
 
         public delegate void OnEventHandle<EV>(object sender, EV e) where EV : Event;
 
@@ -20,25 +20,25 @@ namespace AlienUI.UIElements
         *   应该总是打开向上传递功能(Send Pointer Hover To Parent)
         */
 
-        protected event  OnEventHandle<OnPointerEnterEvent> OnPointerEnter;
+        protected event OnEventHandle<OnPointerEnterEvent> OnPointerEnter;
         internal void RaisePointerEnterEvent(object sender, OnPointerEnterEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
             OnPointerEnter?.Invoke(sender, e);
         }
 
-        protected event  OnEventHandle<OnPointerExitEvent> OnPointerExit;
+        protected event OnEventHandle<OnPointerExitEvent> OnPointerExit;
         internal void RaisePointerExitEvent(object sender, OnPointerExitEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
             OnPointerExit?.Invoke(sender, e);
         }
 
-        protected event  OnEventHandle<OnPointerDownEvent> OnPointerDown;
+        protected event OnEventHandle<OnPointerDownEvent> OnPointerDown;
         internal void RaisePointerDownEvent(object sender, OnPointerDownEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
-
+            
             if (OnPointerDown != null)
             {
                 OnPointerDown.Invoke(sender, e);
@@ -47,7 +47,7 @@ namespace AlienUI.UIElements
             else Parent?.RaisePointerDownEvent(sender, e);
         }
 
-        protected event  OnEventHandle<OnPointerUpEvent> OnPointerUp;
+        protected event OnEventHandle<OnPointerUpEvent> OnPointerUp;
         internal void RaisePointerUpEvent(object sender, OnPointerUpEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -73,7 +73,7 @@ namespace AlienUI.UIElements
             else Parent?.RaisePointerClickEvent(sender, e);
         }
 
-        protected event  OnEventHandle<OnInitializePotentialDragEvent> OnInitializePotentialDrag;
+        protected event OnEventHandle<OnInitializePotentialDragEvent> OnInitializePotentialDrag;
         internal void RaiseInitializePotentialDragEvent(object sender, OnInitializePotentialDragEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -86,7 +86,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseInitializePotentialDragEvent(sender, e);
         }
 
-        protected event  OnEventHandle<OnBeginDragEvent> OnBeginDrag;
+        protected event OnEventHandle<OnBeginDragEvent> OnBeginDrag;
         internal void RaiseBeginDrag(object sender, OnBeginDragEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -99,7 +99,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseBeginDrag(sender, e);
         }
 
-        protected event  OnEventHandle<OnDragEvent> OnDrag;
+        protected event OnEventHandle<OnDragEvent> OnDrag;
         internal void RaiseDrag(object sender, OnDragEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -112,7 +112,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseDrag(sender, e);
         }
 
-        protected event  OnEventHandle<OnEndDragEvent> OnEndDrag;
+        protected event OnEventHandle<OnEndDragEvent> OnEndDrag;
         internal void RaiseEndDrag(object sender, OnEndDragEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -125,7 +125,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseEndDrag(sender, e);
         }
 
-        protected event  OnEventHandle<OnDropEvent> OnDrop;
+        protected event OnEventHandle<OnDropEvent> OnDrop;
         internal void RaiseDrop(object sender, OnDropEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -138,7 +138,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseDrop(sender, e);
         }
 
-        protected event  OnEventHandle<OnScrollEvent> OnScroll;
+        protected event OnEventHandle<OnScrollEvent> OnScroll;
         internal void RaiseScroll(object sender, OnScrollEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -151,7 +151,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseScroll(sender, e);
         }
 
-        protected event  OnEventHandle<OnUpdateSelectedEvent> OnUpdateSelected;
+        protected event OnEventHandle<OnUpdateSelectedEvent> OnUpdateSelected;
         internal void RaiseUpdateSelected(object sender, OnUpdateSelectedEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -164,7 +164,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseUpdateSelected(sender, e);
         }
 
-        protected event  OnEventHandle<OnSelectEvent> OnSelect;
+        protected event OnEventHandle<OnSelectEvent> OnSelect;
         internal void RaiseSelected(object sender, OnSelectEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -177,7 +177,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseSelected(sender, e);
         }
 
-        protected event  OnEventHandle<OnDeselectEvent> OnDeselect;
+        protected event OnEventHandle<OnDeselectEvent> OnDeselect;
         internal void RaiseDeselect(object sender, OnDeselectEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -190,7 +190,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseDeselect(sender, e);
         }
 
-        protected event  OnEventHandle<OnMoveEvent> OnMove;
+        protected event OnEventHandle<OnMoveEvent> OnMove;
         internal void RaiseMove(object sender, OnMoveEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -203,7 +203,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseMove(sender, e);
         }
 
-        protected event  OnEventHandle<OnSubmitEvent> OnSubmit;
+        protected event OnEventHandle<OnSubmitEvent> OnSubmit;
         internal void RaiseSubmit(object sender, OnSubmitEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);
@@ -216,7 +216,7 @@ namespace AlienUI.UIElements
             else Parent?.RaiseSubmit(sender, e);
         }
 
-        protected event  OnEventHandle<OnCancelEvent> OnCancel;
+        protected event OnEventHandle<OnCancelEvent> OnCancel;
         internal void RaiseCancel(object sender, OnCancelEvent e)
         {
             OnEventInvoke?.Invoke(sender, e);

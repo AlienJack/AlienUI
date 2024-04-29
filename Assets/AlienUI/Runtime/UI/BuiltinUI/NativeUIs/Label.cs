@@ -19,6 +19,8 @@ namespace AlienUI.UIElements
             get { return (Color)GetValue(ColorProperty); }
             set { SetValue(ColorProperty, value); }
         }
+        public static readonly DependencyProperty ColorProperty =
+            DependencyProperty.Register("Color", typeof(Color), typeof(Label), Color.black, OnColorChange);
 
         public TextAlignHorizontal AlignHorizontal
         {
@@ -33,13 +35,21 @@ namespace AlienUI.UIElements
             get { return (TextAlignVertical)GetValue(AlignVerticalProperty); }
             set { SetValue(AlignVerticalProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for AlignVertical.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AlignVerticalProperty =
             DependencyProperty.Register("AlignVertical", typeof(TextAlignVertical), typeof(Label), TextAlignVertical.Middle, OnAlignChanged);
 
-        public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(Label), Color.black, OnColorChange);
+        public int FontSize
+        {
+            get { return (int)GetValue(FontSizeProperty); }
+            set { SetValue(FontSizeProperty, value); }
+        }
+        public static readonly DependencyProperty FontSizeProperty =
+            DependencyProperty.Register("FontSize", typeof(int), typeof(Label), 32, OnFontSizeChanged);
+
+        private static void OnFontSizeChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            (sender as Label).m_text.fontSize = (int)newValue;
+        }
 
         private static void OnColorChange(DependencyObject sender, object oldValue, object newValue)
         {

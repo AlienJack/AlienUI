@@ -2,7 +2,7 @@ using AlienUI.Models;
 using System;
 using UGUIImg = UnityEngine.UI.Image;
 
-namespace AlienUI
+namespace AlienUI.PropertyResolvers
 {
     public class ImageTypeResolver : PropertyResolver<UGUIImg.Type>
     {

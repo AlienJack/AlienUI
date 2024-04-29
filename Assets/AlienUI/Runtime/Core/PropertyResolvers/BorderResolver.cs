@@ -4,14 +4,9 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class BorderResolver : PropertyResolver
+    public class BorderResolver : PropertyResolver<Border>
     {
-        public override Type GetResolveType()
-        {
-            return typeof(Border);
-        }
-
-        public override object Resolve(string originStr)
+        protected override Border OnResolve(string originStr)
         {
             var result = new Border();
 
@@ -29,13 +24,16 @@ namespace AlienUI.PropertyResolvers
             return result;
         }
 
-        public override object Lerp(object from, object to, float progress)
+        protected override Border OnLerp(Border from, Border to, float progress)
         {
-            var border = (Border)from;
-            if (Mathf.Approximately(progress, 1))
-                return to;
-            else
-                return from;
+            var border = from;
+
+            border.top = Mathf.Lerp(from.top, to.top, progress);
+            border.bottom = Mathf.Lerp(from.bottom, to.bottom, progress);
+            border.left = Mathf.Lerp(from.left, to.left, progress);
+            border.right = Mathf.Lerp(from.right, to.right, progress);
+
+            return border;
         }
     }
 

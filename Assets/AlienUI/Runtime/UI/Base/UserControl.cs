@@ -13,8 +13,6 @@ namespace AlienUI.UIElements
             get { return (TextAsset)GetValue(TemplateProperty); }
             set { SetValue(TemplateProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for Template.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TemplateProperty =
             DependencyProperty.Register("Template", typeof(TextAsset), typeof(UserControl), null);
 

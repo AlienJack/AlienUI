@@ -1,5 +1,7 @@
-<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
-	<Label Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch"/>
+<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#000000FF"  Padding="5,5,5,5">
+	<Image Name="Bg"  Horizontal="Stretch" Vertical="Stretch" Color="#FFFFFFFF">
+		<Label Name="ButtonTxt" Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
+	</Image>
 
 	<EventTrigger Event="OnPointerEnter">
 		<PlayStoryBoard Storyboard="Hover"/>
@@ -10,13 +12,25 @@
 
 	<StoryboardGroup>
 		<Storyboard Name="Hover">
-			<Animation Target="Root" PropertyName="Color">
+			<Animation Target="Bg" PropertyName="Color">
 				<AnimationKey Time="0.2" Value="#BBBBBBFF"/>
+			</Animation>
+			<Animation Target="Root" PropertyName="Padding">
+				<AnimationKey Time="0.2" Value="0"/>
+			</Animation>
+			<Animation Target="ButtonTxt" PropertyName="FontSize">
+				<AnimationKey Time="0.2" Value="32"/>
 			</Animation>
 		</Storyboard>
 		<Storyboard Name="Normal">
-			<Animation Target="Root" PropertyName="Color">
+			<Animation Target="Bg" PropertyName="Color">
 				<AnimationKey Time="0.2" Value="#FFFFFFFF"/>
+			</Animation>
+			<Animation Target="Root" PropertyName="Padding">
+				<AnimationKey Time="0.2" Value="5,5,5,5"/>
+			</Animation>
+			<Animation Target="ButtonTxt" PropertyName="FontSize">
+				<AnimationKey Time="0.2" Value="24"/>
 			</Animation>
 		</Storyboard>
 	</StoryboardGroup>

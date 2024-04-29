@@ -29,7 +29,7 @@ namespace AlienUI.UIElements
             get
             {
                 var parent = Parent;
-                if (parent == null) return this;
+                if (parent == null) return null;
 
                 while (true)
                 {

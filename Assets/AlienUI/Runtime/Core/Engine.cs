@@ -39,7 +39,7 @@ namespace AlienUI
 
             document.PrepareNotify(uiIns);
 
-            uiIns.BeginLayout();
+            SetDirty(uiIns);
 
             return uiIns;
         }
@@ -91,12 +91,11 @@ namespace AlienUI
 
         private void LateUpdate()
         {
-            layoutTask.Clear();
-
             foreach (UIElement element in layoutTask)
             {
-                element.BeginLayout();
+                if (element.TopParent == null) element.BeginLayout();
             }
+            layoutTask.Clear();
         }
     }
 }
