@@ -26,7 +26,16 @@ namespace AlienUI.UIElements
         {
             var targetTemplate = Template ?? DefaultTemplate;
 
-            m_templateInstance = Engine.CreateUI(targetTemplate.text, m_templateRoot, this);
+            var templateRoot = CreateEmptyUIGameObject("[TEMPLATE]").transform as RectTransform;
+            templateRoot.SetParent(m_childRoot, false);
+            templateRoot.anchorMin = new Vector2(0, 0);
+            templateRoot.anchorMax = new Vector2(1, 1);
+            templateRoot.pivot = new Vector2(0.5f, 0.5f);
+            templateRoot.sizeDelta = Vector2.zero;
+            templateRoot.anchoredPosition = Vector2.zero;
+            templateRoot.SetAsFirstSibling();
+
+            m_templateInstance = Engine.CreateUI(targetTemplate.text, templateRoot, this);
             AddChild(m_templateInstance);
         }
 

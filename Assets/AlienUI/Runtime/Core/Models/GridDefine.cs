@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace AlienUI.Models
 {
-    public class GridDefine
+    public struct GridDefine
     {
         public static GridDefine Default => new GridDefine(new Define[] { new Define { DefineType = EnumDefineType.Weight, Value = 1 } }, new Define[] { });
 
-        public int Column => m_columnDef.Length;
-        public int Row => m_rowDef.Length;
+        public readonly int Column => m_columnDef.Length;
+        public readonly int Row => m_rowDef.Length;
 
         private Define[] m_columnDef;
         private Define[] m_rowDef;
@@ -21,6 +21,10 @@ namespace AlienUI.Models
         {
             m_columnDef = columnDefine;
             m_rowDef = rowDefine;
+            m_cellWidth = new float[m_columnDef.Length];
+            m_cellHeight = new float[m_rowDef.Length];
+            m_cellOffsetX = new float[m_columnDef.Length];
+            m_cellOffsetY = new float[m_rowDef.Length];
         }
 
         public Float2 GetCellSize(int column, int row)
@@ -44,7 +48,6 @@ namespace AlienUI.Models
 
         public void CalcCellSizes(float totalWidth, float totalHeight)
         {
-            m_cellWidth = new float[Column];
             //计算宽度
             {
                 float totalWeight = 0;
@@ -78,7 +81,6 @@ namespace AlienUI.Models
                 }
             }
 
-            m_cellHeight = new float[Row];
             //计算高度
             {
                 float totalWeight = 0;
@@ -112,14 +114,12 @@ namespace AlienUI.Models
                 }
             }
 
-            m_cellOffsetX = new float[Column];
             float offset = 0;
             for (int i = 0; i < Column; i++)
             {
                 m_cellOffsetX[i] = offset;
                 offset += m_cellWidth[i];
             }
-            m_cellOffsetY = new float[Row];
             offset = 0;
             for (int i = 0; i < Row; i++)
             {

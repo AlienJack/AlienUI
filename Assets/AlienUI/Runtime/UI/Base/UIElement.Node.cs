@@ -13,7 +13,6 @@ namespace AlienUI.UIElements
         private NodeProxy m_proxy = null;
         protected RectTransform m_rectTransform;
         protected RectTransform m_childRoot;
-        protected RectTransform m_templateRoot;
 
         public List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
 
@@ -55,20 +54,15 @@ namespace AlienUI.UIElements
             m_parent = parentNode;
         }
 
+        private bool m_inited;
         public GameObject Initialize()
         {
+            if (m_inited) return null;
+
             var go = CreateEmptyUIGameObject(string.IsNullOrEmpty(Name) ? GetType().Name : Name);
             m_rectTransform = go.transform as RectTransform;
             tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
 
-            var templateRoot = CreateEmptyUIGameObject("[TEMPLATE]");
-            m_templateRoot = templateRoot.transform as RectTransform;
-            m_templateRoot.SetParent(go.transform, false);
-            m_templateRoot.anchorMin = new Vector2(0, 0);
-            m_templateRoot.anchorMax = new Vector2(1, 1);
-            m_templateRoot.pivot = new Vector2(0.5f, 0.5f);
-            m_templateRoot.sizeDelta = Vector2.zero;
-            m_templateRoot.anchoredPosition = Vector2.zero;
             var childRoot = CreateEmptyUIGameObject("[CHILD]");
             m_childRoot = childRoot.transform as RectTransform;
             m_childRoot.SetParent(go.transform, false);
@@ -85,7 +79,9 @@ namespace AlienUI.UIElements
                 var childGo = child.Initialize();
                 childGo.transform.SetParent(childRoot.transform, false);
             }
+
             OnInitialized();
+
             m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
             m_proxy.TargetObject = this;
 
@@ -94,7 +90,7 @@ namespace AlienUI.UIElements
 
         protected abstract void OnInitialized();
 
-        private static GameObject CreateEmptyUIGameObject(string name)
+        protected static GameObject CreateEmptyUIGameObject(string name)
         {
             var go = new GameObject(name);
             var rect = go.AddComponent<RectTransform>();
