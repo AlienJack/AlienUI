@@ -1,7 +1,6 @@
 using AlienUI.Core.Resources;
 using AlienUI.Models;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AlienUI
 {
@@ -19,7 +18,7 @@ namespace AlienUI
         }
 
 
-        
+
         private void Sb_OnPlay(Storyboard sender)
         {
             if (m_currentPlay != null)

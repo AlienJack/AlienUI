@@ -1,6 +1,4 @@
-using AlienUI.Models;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AlienUI.UIElements
 {

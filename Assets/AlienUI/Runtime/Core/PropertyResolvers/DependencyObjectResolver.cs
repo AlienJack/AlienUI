@@ -1,6 +1,4 @@
 ﻿using AlienUI.Models;
-using System.Collections;
-using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {

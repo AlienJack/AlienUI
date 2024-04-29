@@ -1,5 +1,3 @@
-using AlienUI.Models;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements.Containers

@@ -1,14 +1,10 @@
 using AlienUI.Core;
 using AlienUI.Core.Converters;
-using AlienUI.Core.Resources;
-using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
-using System.Xml.Linq;
 using UnityEngine;
 
 namespace AlienUI
@@ -100,7 +96,7 @@ namespace AlienUI
 
         public void SetDirty(UIElement element)
         {
-            UIElement handleTarget = element.TopParent == null ? element : element.TopParent as UIElement;
+            UIElement handleTarget = element.TopParent == null ? element : element.TopParent;
             layoutTask.Add(handleTarget);
         }
 

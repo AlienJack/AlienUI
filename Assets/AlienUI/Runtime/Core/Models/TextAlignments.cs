@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AlienUI.Models
 {
     public enum TextAlignHorizontal

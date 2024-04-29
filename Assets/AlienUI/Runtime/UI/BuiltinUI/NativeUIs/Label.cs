@@ -1,7 +1,5 @@
 using AlienUI.Models;
 using AlienUI.UIElements.ToolsScript;
-using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 

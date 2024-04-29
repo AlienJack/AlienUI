@@ -14,7 +14,7 @@ namespace AlienUI
 
         private Dictionary<string, Template> m_templatesDict = new Dictionary<string, Template>();
 
-        public void OptimizeData() 
+        public void OptimizeData()
         {
             m_templates.ForEach(t => m_templatesDict[t.Name] = t);
         }
@@ -31,7 +31,7 @@ namespace AlienUI
         [Serializable]
         public class Template
         {
-            public string Name=>Xml.name;
+            public string Name => Xml.name;
             public TextAsset Xml;
         }
     }

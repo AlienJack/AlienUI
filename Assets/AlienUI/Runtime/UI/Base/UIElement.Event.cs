@@ -1,8 +1,5 @@
 using AlienUI.Events;
 using AlienUI.Models;
-using System;
-using UnityEngine.EventSystems;
-using static AlienUI.UIElements.UIElement;
 
 namespace AlienUI.UIElements
 {

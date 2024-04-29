@@ -1,7 +1,5 @@
 using AlienUI.Models;
 using AlienUI.UIElements;
-using System.Xml;
-using UnityEngine;
 
 namespace AlienUI.Core.Triggers
 {

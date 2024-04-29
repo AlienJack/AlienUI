@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System;
-using UnityEngine;
-using System.Linq;
+using AlienUI.Core.Converters;
+using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using AlienUI.UIElements;
-using AlienUI.Core.Triggers;
-using AlienUI.Core.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using UnityEngine;
 using ConverterDict = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<System.Type, AlienUI.Core.Converters.ConverterBase>>;
-using AlienUI.Core.Converters;
 
 namespace AlienUI.Core
 {

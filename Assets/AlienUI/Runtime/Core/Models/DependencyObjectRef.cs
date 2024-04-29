@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace AlienUI.Models
+﻿namespace AlienUI.Models
 {
     public struct DependencyObjectRef
     {

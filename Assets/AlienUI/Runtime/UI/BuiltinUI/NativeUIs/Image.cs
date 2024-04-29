@@ -1,9 +1,7 @@
 using AlienUI.Models;
-using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UGUIImg = UnityEngine.UI.Image;
 using ImgType = UnityEngine.UI.Image.Type;
+using UGUIImg = UnityEngine.UI.Image;
 
 namespace AlienUI.UIElements
 {

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AlienUI
 {
     public enum eHorizontalAlign

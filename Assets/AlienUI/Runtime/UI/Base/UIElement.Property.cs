@@ -1,6 +1,4 @@
 ﻿using AlienUI.Models;
-using System;
-using UnityEngine;
 
 namespace AlienUI.UIElements
 {
