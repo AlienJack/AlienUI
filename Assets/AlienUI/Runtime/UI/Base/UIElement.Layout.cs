@@ -42,8 +42,6 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty VerticalProperty =
             DependencyProperty.Register("Vertical", typeof(eVerticalAlign), typeof(UIElement), eVerticalAlign.Middle, OnLayoutParamDirty);
 
-
-
         public Border Padding
         {
             get { return (Border)GetValue(PaddingProperty); }
@@ -52,6 +50,19 @@ namespace AlienUI.UIElements
 
         public static readonly DependencyProperty PaddingProperty =
             DependencyProperty.Register("Padding", typeof(Border), typeof(UIElement), default(Border), OnLayoutParamDirty);
+
+
+
+        public Vector2 Offset
+        {
+            get { return (Vector2)GetValue(OffsetProperty); }
+            set { SetValue(OffsetProperty, value); }
+        }
+
+        public static readonly DependencyProperty OffsetProperty =
+            DependencyProperty.Register("Offset", typeof(Vector2), typeof(UIElement), Vector2.zero, OnLayoutParamDirty);
+
+
 
         public float ActualWidth
         {
@@ -133,6 +144,8 @@ namespace AlienUI.UIElements
             }
             else
                 ui.ActualHeight = desireSize.y;
+
+            Canvas.ForceUpdateCanvases();
 
             ui.m_rectTransform.SetPivotStayPosition(new Vector2(0.5f, 0.5f));
         }

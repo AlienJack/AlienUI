@@ -39,7 +39,6 @@ namespace AlienUI
             m_graphElement = GetComponent<Graphic>();
             if (m_graphElement == null) m_graphElement = gameObject.AddComponent<RaycastLit>();
             m_canvasRenderer = gameObject.AddComponent<CanvasGroup>();
-
             SetRaycast(true);
         }
 

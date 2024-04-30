@@ -36,6 +36,7 @@ namespace AlienUI.UIElements.ToolsScript
             uiElement.Rect.anchorMax = anchorMax;
             uiElement.Rect.anchorMin = anchorMin;
             uiElement.Rect.pivot = pivot;
+            uiElement.Rect.anchoredPosition = uiElement.Offset;
         }
         internal static void SetPivotStayPosition(this RectTransform rectTransform, Vector2 pivot)
         {

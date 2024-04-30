@@ -43,5 +43,15 @@ namespace AlienUI.UIElements
                 m_childRoot = m_templateInstance.Document.m_templateChildRoot.m_childRoot;
             }
         }
+
+        protected sealed override void OnPrepared()
+        {
+            foreach (var uichild in UIChildren)
+            {
+                m_templateInstance.AddChild(uichild);
+            }
+            UIChildren.Clear();
+            AddChild(m_templateInstance);
+        }
     }
 }
