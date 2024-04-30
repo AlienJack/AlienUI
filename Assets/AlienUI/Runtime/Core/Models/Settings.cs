@@ -21,7 +21,7 @@ namespace AlienUI
 
         public Font DefaultLabelFont => m_defaultLabelFont;
 
-        public TextAsset GetTemplate(string templateName)
+        public TextAsset GetTemplateAsset(string templateName)
         {
             m_templatesDict.TryGetValue(templateName, out Template template);
             return template.Xml;

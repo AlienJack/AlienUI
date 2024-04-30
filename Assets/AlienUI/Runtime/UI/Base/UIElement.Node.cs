@@ -1,5 +1,6 @@
 using AlienUI.Core.Triggers;
 using AlienUI.Models;
+using AlienUI.UIElements.ToolsScript;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,8 @@ namespace AlienUI.UIElements
 
         private UIElement m_parent = null;
         private NodeProxy m_proxy = null;
-        protected RectTransform m_rectTransform;
-        protected RectTransform m_childRoot;
+        internal RectTransform m_rectTransform;
+        internal RectTransform m_childRoot;
 
         public List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
 
@@ -35,10 +36,20 @@ namespace AlienUI.UIElements
             }
         }
 
+        public bool TemplateRoot
+        {
+            get { return (bool)GetValue(TemplateRootProperty); }
+            set { SetValue(TemplateRootProperty, value); }
+        }
+        public static readonly DependencyProperty TemplateRootProperty =
+            DependencyProperty.Register("TemplateRoot", typeof(bool), typeof(UIElement), false);
+
         internal NodeProxy NodeProxy => m_proxy;
 
-        protected override void OnAddChild(DependencyObject childObj)
+        public sealed override void AddChild(DependencyObject childObj)
         {
+            base.AddChild(childObj);
+
             switch (childObj)
             {
                 case UIElement uiEle:
@@ -47,6 +58,9 @@ namespace AlienUI.UIElements
                     break;
                 case Trigger trigger: AddTrigger(trigger); break;
             }
+
+            OnAddChild(childObj);
+
         }
 
         void SetParent(UIElement parentNode)
@@ -54,56 +68,48 @@ namespace AlienUI.UIElements
             m_parent = parentNode;
         }
 
-        private bool m_inited;
         public GameObject Initialize()
         {
-            if (m_inited) return null;
+            if (m_rectTransform == null)
+            {
+                var go = AlienUtility.CreateEmptyUIGameObject(string.IsNullOrEmpty(Name) ? GetType().Name : Name);
+                m_rectTransform = go.transform as RectTransform;
+                tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
 
-            var go = CreateEmptyUIGameObject(string.IsNullOrEmpty(Name) ? GetType().Name : Name);
-            m_rectTransform = go.transform as RectTransform;
-            tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
 
-            var childRoot = CreateEmptyUIGameObject("[CHILD]");
-            m_childRoot = childRoot.transform as RectTransform;
-            m_childRoot.SetParent(go.transform, false);
+                OnInitialized();
+
+                m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
+                m_proxy.TargetObject = this;
+
+                CreateChildRoot();
+            }
+
+            foreach (var child in UIChildren)
+            {
+                var childGo = child.Initialize();
+                if (childGo != null)
+                    childGo.transform.SetParent(m_childRoot, false);
+            }
+
+            return m_rectTransform.gameObject;
+        }
+
+        private void CreateChildRoot()
+        {
+            if (m_childRoot != null) return;
+
+            var go = AlienUtility.CreateEmptyUIGameObject("[CHILD]");
+            m_childRoot = go.transform as RectTransform;
+            m_childRoot.SetParent(m_rectTransform, false);
             m_childRoot.anchorMin = new Vector2(0, 0);
             m_childRoot.anchorMax = new Vector2(1, 1);
             m_childRoot.pivot = new Vector2(0.5f, 0.5f);
             m_childRoot.sizeDelta = Vector2.zero;
             m_childRoot.anchoredPosition = Vector2.zero;
-
-            tracker.Add(childRoot, m_childRoot, DrivenTransformProperties.All);
-
-            foreach (var child in UIChildren)
-            {
-                var childGo = child.Initialize();
-                childGo.transform.SetParent(childRoot.transform, false);
-            }
-
-            OnInitialized();
-
-            m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
-            m_proxy.TargetObject = this;
-
-            return go;
+            tracker.Add(m_childRoot.gameObject, m_childRoot, DrivenTransformProperties.All);
         }
 
         protected abstract void OnInitialized();
-
-        protected static GameObject CreateEmptyUIGameObject(string name)
-        {
-            var go = new GameObject(name);
-            var rect = go.AddComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.localScale = Vector3.one;
-            rect.localRotation = Quaternion.identity;
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
-
-            return go;
-        }
-
-
     }
 }

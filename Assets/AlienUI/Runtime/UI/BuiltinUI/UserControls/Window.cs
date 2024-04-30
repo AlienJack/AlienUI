@@ -5,6 +5,6 @@ namespace AlienUI.UIElements
 {
     public class Window : UserControl
     {
-        protected override TextAsset DefaultTemplate => Engine.Settings.GetTemplate("Builtin.Window");
+        protected override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Window");
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements.ToolsScript
 {
-    internal static class Utility
+    internal static class AlienUtility
     {
         internal static void PerformRectTransform(this UIElement uiElement)
         {
@@ -107,6 +107,19 @@ namespace AlienUI.UIElements.ToolsScript
             }
 
             return default;
+        }
+        internal static GameObject CreateEmptyUIGameObject(string name)
+        {
+            var go = new GameObject(name);
+            var rect = go.AddComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.localScale = Vector3.one;
+            rect.localRotation = Quaternion.identity;
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+
+            return go;
         }
     }
 }

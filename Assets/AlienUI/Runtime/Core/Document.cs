@@ -14,6 +14,7 @@ namespace AlienUI.Core
         private Dictionary<string, DependencyObject> m_dpObjectsNameMap = new Dictionary<string, DependencyObject>();
         private Dictionary<DependencyObject, HashSet<DependencyObject>> m_parentChildrenRecords = new Dictionary<DependencyObject, HashSet<DependencyObject>>();
         private UIElement m_rootElement;
+        internal UIElement m_templateChildRoot;
 
         public void SetDocumentHost(UIElement root)
         {
@@ -70,8 +71,6 @@ namespace AlienUI.Core
                     parent.AddChild(child);
                 }
             }
-
-
         }
 
         internal void PrepareNotify(UIElement uiRoot)
@@ -107,8 +106,10 @@ namespace AlienUI.Core
 
                     node.SetValue(att.Name, xmlParser.ResultValue, false);
                 }
-
             }
+
+            if (node is UIElement uiEle && uiEle.TemplateRoot)
+                m_templateChildRoot = uiEle;
         }
 
 

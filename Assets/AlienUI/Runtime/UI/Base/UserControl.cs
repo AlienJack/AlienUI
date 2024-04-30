@@ -1,21 +1,22 @@
 using AlienUI.Models;
+using AlienUI.UIElements.ToolsScript;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
     public abstract class UserControl : UIElement
     {
-        protected abstract TextAsset DefaultTemplate { get; }
+        protected abstract ControlTemplate DefaultTemplate { get; }
 
-        public TextAsset Template
+        public ControlTemplate Template
         {
-            get { return (TextAsset)GetValue(TemplateProperty); }
+            get { return (ControlTemplate)GetValue(TemplateProperty); }
             set { SetValue(TemplateProperty, value); }
         }
         public static readonly DependencyProperty TemplateProperty =
-            DependencyProperty.Register("Template", typeof(TextAsset), typeof(UserControl), null);
+            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), default(ControlTemplate));
 
-        private UIElement m_templateInstance;
+        internal UIElement m_templateInstance;
 
         protected override Float2 CalcDesireSize()
         {
@@ -24,10 +25,10 @@ namespace AlienUI.UIElements
 
         protected override void OnInitialized()
         {
-            var targetTemplate = Template ?? DefaultTemplate;
+            var targetTemplate = Template.Valid ? Template : DefaultTemplate;
 
-            var templateRoot = CreateEmptyUIGameObject("[TEMPLATE]").transform as RectTransform;
-            templateRoot.SetParent(m_childRoot, false);
+            var templateRoot = AlienUtility.CreateEmptyUIGameObject("[TEMPLATE]").transform as RectTransform;
+            templateRoot.SetParent(m_rectTransform, false);
             templateRoot.anchorMin = new Vector2(0, 0);
             templateRoot.anchorMax = new Vector2(1, 1);
             templateRoot.pivot = new Vector2(0.5f, 0.5f);
@@ -35,9 +36,12 @@ namespace AlienUI.UIElements
             templateRoot.anchoredPosition = Vector2.zero;
             templateRoot.SetAsFirstSibling();
 
-            m_templateInstance = Engine.CreateUI(targetTemplate.text, templateRoot, this);
-            AddChild(m_templateInstance);
-        }
+            m_templateInstance = targetTemplate.Instantiate(Engine, templateRoot, this);
 
+            if (m_templateInstance.Document.m_templateChildRoot != null)
+            {
+                m_childRoot = m_templateInstance.Document.m_templateChildRoot.m_childRoot;
+            }
+        }
     }
 }

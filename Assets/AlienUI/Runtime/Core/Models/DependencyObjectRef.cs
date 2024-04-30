@@ -11,6 +11,7 @@
 
         public DependencyObject Get(IDependencyObjectResolver resolver)
         {
+            if (string.IsNullOrWhiteSpace(m_uniqueTag)) return null;
             return resolver.Resolve(m_uniqueTag);
         }
     }

@@ -5,7 +5,7 @@ namespace AlienUI.UIElements
 {
     public class Button : UserControl
     {
-        protected override TextAsset DefaultTemplate => Engine.Settings.GetTemplate("Builtin.Button");
+        protected override ControlTemplate DefaultTemplate => new("Builtin.Button");
 
         public string Text
         {

@@ -1,3 +1,6 @@
-<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#000000FF">
-	<Image Name="Content" Horizontal="Stretch" Vertical="Stretch"/>
+<Image xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch">
+	<Image Name="Border" Horizontal="Stretch" Vertical="Stretch" Color="#000000FF" Padding="30,2,2,2">
+		<Image Horizontal="Stretch" Vertical="Stretch" TemplateRoot="true"/>
+	</Image>
+	<Button Width="30" Height="30" Horizontal="Right" Vertical="Top" Text="X" />
 </Image>

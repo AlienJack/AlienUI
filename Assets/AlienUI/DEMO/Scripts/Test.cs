@@ -13,4 +13,10 @@ public class Test : MonoBehaviour
     {
         m_window = e.CreateUI(ta.text, uiRoot, null) as Window;
     }
+
+    private void Update()
+    {
+        //m_window.Width += 10 * Time.deltaTime;
+        //m_window.Height += 10 * Time.deltaTime;
+    }
 }

@@ -35,7 +35,7 @@ namespace AlienUI.Models
             allDp.ForEach(dp => SetValue(dp, dp.DefaultValue, false));
         }
 
-        public void AddChild(DependencyObject childObj)
+        public virtual void AddChild(DependencyObject childObj)
         {
             m_childrens.Add(childObj);
 

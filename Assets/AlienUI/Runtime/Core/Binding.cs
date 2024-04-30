@@ -73,7 +73,7 @@ namespace AlienUI.Core
 
             m_dataSync = true;
 
-            newValue = m_converter?.DstToSrc(newValue);
+            newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
             try { Source.SetValue(SourceProperty, newValue, true); }
             finally { m_dataSync = false; }
         }
@@ -84,7 +84,7 @@ namespace AlienUI.Core
 
             m_dataSync = true;
 
-            newValue = m_converter?.SrcToDst(newValue);
+            newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
 
             try { Target.SetValue(TargetProperty, newValue, true); }
             finally { m_dataSync = false; }

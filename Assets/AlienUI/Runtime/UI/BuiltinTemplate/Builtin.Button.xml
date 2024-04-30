@@ -1,4 +1,4 @@
-<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#000000FF"  Padding="5,5,5,5">
+<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#383838FF"  Padding="1,1,1,1">
 	<Image Name="Bg"  Horizontal="Stretch" Vertical="Stretch" Color="#FFFFFFFF">
 		<Label Name="ButtonTxt" Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
 	</Image>
@@ -16,10 +16,7 @@
 				<AnimationKey Time="0.2" Value="#BBBBBBFF"/>
 			</Animation>
 			<Animation Target="Root" PropertyName="Padding">
-				<AnimationKey Time="0.2" Value="0"/>
-			</Animation>
-			<Animation Target="ButtonTxt" PropertyName="FontSize">
-				<AnimationKey Time="0.2" Value="32"/>
+				<AnimationKey Time="0.05" Value="0"/>
 			</Animation>
 		</Storyboard>
 		<Storyboard Name="Normal">
@@ -27,10 +24,7 @@
 				<AnimationKey Time="0.2" Value="#FFFFFFFF"/>
 			</Animation>
 			<Animation Target="Root" PropertyName="Padding">
-				<AnimationKey Time="0.2" Value="5,5,5,5"/>
-			</Animation>
-			<Animation Target="ButtonTxt" PropertyName="FontSize">
-				<AnimationKey Time="0.2" Value="24"/>
+				<AnimationKey Time="0.05" Value="1,1,1,1"/>
 			</Animation>
 		</Storyboard>
 	</StoryboardGroup>

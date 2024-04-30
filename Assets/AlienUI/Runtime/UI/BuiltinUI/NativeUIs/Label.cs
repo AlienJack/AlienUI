@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,9 +63,21 @@ namespace AlienUI.UIElements
             get { return (bool)GetValue(AutoWarpProperty); }
             set { SetValue(AutoWarpProperty, value); }
         }
-
         public static readonly DependencyProperty AutoWarpProperty =
-            DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), true, OnAutoWarpChanged);
+            DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), false, OnAutoWarpChanged);
+
+
+
+
+        public bool Truncate
+        {
+            get { return (bool)GetValue(TruncateProperty); }
+            set { SetValue(TruncateProperty, value); }
+        }
+
+        public static readonly DependencyProperty TruncateProperty =
+            DependencyProperty.Register("Truncate", typeof(bool), typeof(Label), false, OnTruncateChanged);
+
 
 
         private Text m_text;
@@ -96,7 +109,7 @@ namespace AlienUI.UIElements
         {
             var self = sender as Label;
 
-            self.m_text.alignment = Utility.ConvertToTextAnchor(self.AlignHorizontal, self.AlignVertical);
+            self.m_text.alignment = AlienUtility.ConvertToTextAnchor(self.AlignHorizontal, self.AlignVertical);
 
             self.SetLayoutDirty();
         }
@@ -106,6 +119,14 @@ namespace AlienUI.UIElements
         {
             var self = sender as Label;
             self.m_text.horizontalOverflow = self.AutoWarp ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
+
+            self.SetLayoutDirty();
+        }
+
+        private static void OnTruncateChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Label;
+            self.m_text.verticalOverflow = self.Truncate ? VerticalWrapMode.Truncate : VerticalWrapMode.Overflow;
 
             self.SetLayoutDirty();
         }

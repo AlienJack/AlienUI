@@ -6,7 +6,7 @@ namespace AlienUI.UIElements.Containers
     {
         protected override void OnInitialized()
         {
-            m_childRoot.gameObject.AddComponent<RectMask2D>();
+            //m_childRoot.gameObject.AddComponent<RectMask2D>();
         }
     }
 }
