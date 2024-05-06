@@ -4,6 +4,5 @@ namespace AlienUI
 {
     public abstract class ViewModel : DependencyObject
     {
-
     }
 }

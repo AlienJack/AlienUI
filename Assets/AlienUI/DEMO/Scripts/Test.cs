@@ -12,7 +12,7 @@ public class Test : MonoBehaviour
 
     private void Start()
     {
-        m_window = e.CreateUI(ta.text, uiRoot, null) as Window;
+        m_window = e.CreateUI(ta.text, uiRoot, new LoginVM()) as Window;
     }
 
     private void Update()

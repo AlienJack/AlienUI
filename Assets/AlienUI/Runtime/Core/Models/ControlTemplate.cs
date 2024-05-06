@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace AlienUI
 {
-    public struct ControlTemplate
+    public readonly struct ControlTemplate
     {
-        private string m_name;
-        public bool Valid => m_name != null;
+        private readonly string m_name;
+        public readonly bool Valid => m_name != null;
 
         public ControlTemplate(string name)
         {
@@ -15,7 +15,7 @@ namespace AlienUI
         }
 
 
-        public UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext, XmlNodeElement templateHost)
+        public readonly UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext, XmlNodeElement templateHost)
         {
             var templateAsset = engine.Settings.GetTemplateAsset(m_name);
             if (templateAsset == null) return null;

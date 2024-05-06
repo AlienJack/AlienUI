@@ -49,10 +49,5 @@ namespace AlienUI.UIElements
                 uiChild.CalcChildrenLayout();
             }
         }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
     }
 }
