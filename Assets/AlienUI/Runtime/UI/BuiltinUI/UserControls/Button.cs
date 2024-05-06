@@ -1,3 +1,4 @@
+using AlienUI.Core.Commnands;
 using AlienUI.Models;
 using UnityEngine;
 
@@ -25,6 +26,17 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty PressedProperty =
             DependencyProperty.Register("Pressed", typeof(bool), typeof(Button), false);
 
+        public CommandBase Command
+        {
+            get { return (CommandBase)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register("Command", typeof(CommandBase), typeof(Button), null);
+
+
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -46,7 +58,8 @@ namespace AlienUI.UIElements
 
         private void Button_OnPointerClick(object sender, Events.OnPointerClickEvent e)
         {
-            Debug.Log("Clicked!", Rect.gameObject);
+            if (Command != null)
+                Command.Execute();
         }
     }
 }

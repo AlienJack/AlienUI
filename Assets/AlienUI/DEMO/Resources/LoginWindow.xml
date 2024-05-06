@@ -3,17 +3,4 @@
 		<Image Name="Left" Color="#204363ff"/>
 		<Image Name="Right" Color="#c2c2c2ff"/>
 	</Grid>
-
-	<EventTrigger Event="OnShow">
-		<PlayStoryboard Target="Show"/>
-	</EventTrigger>
-
-	<StoryboardGroup>
-		<Storyboard Name="Show">
-			<Animation Target="LoginWindow" PropertyName="Alpha">
-				<AnimationKey Time="0" Value="0"/>
-				<AnimationKey Time="0.5" Value="1"/>
-			</Animation>
-		</Storyboard>
-	</StoryboardGroup>
 </Window>

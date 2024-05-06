@@ -17,14 +17,14 @@ namespace AlienUI
             }
         }
 
-
-
         private void Sb_OnPlay(Storyboard sender)
         {
-            if (m_currentPlay != null)
+            if (m_currentPlay != null && sender != m_currentPlay)
+            {
                 m_currentPlay.Stop();
 
-            m_currentPlay = sender;
+                m_currentPlay = sender;
+            }
         }
     }
 }

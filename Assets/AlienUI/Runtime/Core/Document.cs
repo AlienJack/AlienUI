@@ -31,6 +31,24 @@ namespace AlienUI.Core
             m_rootElement.NodeProxy.StopCoroutine(cor);
         }
 
+        public void StopAllCoroutine()
+        {
+            m_rootElement.NodeProxy.StopAllCoroutines();
+        }
+
+        public void Dispose(UIElement element)
+        {
+            if (element == m_rootElement)
+            {
+                StopAllCoroutine();
+                GameObject.Destroy(m_rootElement.m_rectTransform.gameObject);
+            }
+            else
+            {
+                GameObject.Destroy(element.m_rectTransform.gameObject);
+            }
+        }
+
         internal void RecordDependencyObject(DependencyObject dependencyObject, XmlNode xnode)
         {
             m_dpObjects.Add(dependencyObject);

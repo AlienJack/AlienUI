@@ -31,7 +31,7 @@ namespace AlienUI.Core
             {
                 var dstPropType = Target.GetDependencyPropertyType(TargetProperty);
                 var srcPropType = Source.GetDependencyPropertyType(SourceProperty);
-                if (dstPropType != srcPropType)
+                if (dstPropType != srcPropType && !srcPropType.IsSubclassOf(dstPropType))
                 {
                     m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
                     if (m_converter == null)

@@ -237,5 +237,15 @@ namespace AlienUI.UIElements
             foreach (var child in UIChildren)
                 child.RaiseShow();
         }
+
+        protected event OnEventHandle<OnCloseEvent> OnClose;
+        internal void RaiseClose()
+        {
+            var evt = new OnCloseEvent(this);
+            OnEventInvoke?.Invoke(null, evt);
+            OnClose?.Invoke(this, evt);
+
+            foreach (var child in UIChildren) child.RaiseClose();
+        }
     }
 }

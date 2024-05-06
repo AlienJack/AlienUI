@@ -111,5 +111,11 @@ namespace AlienUI.UIElements
         }
 
         protected abstract void OnInitialized();
+
+        public void Close()
+        {
+            RaiseClose();
+            Document.Dispose(this);
+        }
     }
 }

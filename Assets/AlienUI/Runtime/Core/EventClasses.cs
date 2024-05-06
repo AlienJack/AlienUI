@@ -157,4 +157,11 @@ namespace AlienUI.Events
         public override string EventName => "OnShow";
     }
 
+    public class OnCloseEvent : Event<UIElement>
+    {
+        public OnCloseEvent(UIElement eventData) : base(eventData) { }
+
+        public override string EventName => "OnClose";
+    }
+
 }
