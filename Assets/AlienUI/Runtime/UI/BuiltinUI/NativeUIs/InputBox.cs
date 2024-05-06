@@ -1,6 +1,5 @@
 
 using AlienUI.Models;
-using System;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements

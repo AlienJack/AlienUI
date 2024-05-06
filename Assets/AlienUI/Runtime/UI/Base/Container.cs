@@ -1,5 +1,3 @@
-using UnityEngine.UI;
-
 namespace AlienUI.UIElements.Containers
 {
     public abstract class Container : UIElement

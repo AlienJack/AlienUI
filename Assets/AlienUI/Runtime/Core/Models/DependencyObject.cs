@@ -1,12 +1,10 @@
-using AlienUI.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AlienUI.Models
 {
-    public abstract class DependencyObject 
+    public abstract class DependencyObject
     {
         protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
         private Type m_selfType;
