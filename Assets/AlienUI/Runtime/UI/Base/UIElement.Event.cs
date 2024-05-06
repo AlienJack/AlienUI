@@ -3,7 +3,7 @@ using AlienUI.Models;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : DependencyObject
+    public abstract partial class UIElement : XmlNodeElement
     {
         public delegate void OnEventInvokeHandle(object sender, Event e);
         internal event OnEventInvokeHandle OnEventInvoke;

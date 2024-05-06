@@ -36,7 +36,7 @@ namespace AlienUI.UIElements
             templateRoot.anchoredPosition = Vector2.zero;
             templateRoot.SetAsFirstSibling();
 
-            m_templateInstance = targetTemplate.Instantiate(Engine, templateRoot, this);
+            m_templateInstance = targetTemplate.Instantiate(Engine, templateRoot, DataContext, this);
 
             if (m_templateInstance.Document.m_templateChildRoot != null)
             {

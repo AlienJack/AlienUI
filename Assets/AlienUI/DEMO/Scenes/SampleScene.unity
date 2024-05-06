@@ -493,6 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setting: {fileID: 11400000, guid: 2ec2f41d973e9f248b778741b8154b30, type: 2}
+  UIRoot: {fileID: 994643238}
 --- !u!4 &1594676384
 Transform:
   m_ObjectHideFlags: 0

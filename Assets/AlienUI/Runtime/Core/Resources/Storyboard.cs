@@ -1,4 +1,5 @@
 using AlienUI.Models;
+using AlienUI.UIElements;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace AlienUI.Core.Resources
         internal delegate void OnPlayHanlde(Storyboard sender);
         internal event OnPlayHanlde OnPlay;
 
-        protected override void OnAddChild(DependencyObject childObj)
+        protected override void OnAddChild(XmlNodeElement childObj)
         {
             switch (childObj)
             {

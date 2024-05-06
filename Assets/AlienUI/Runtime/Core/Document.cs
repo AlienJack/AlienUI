@@ -2,6 +2,7 @@
 using AlienUI.UIElements;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml;
 using UnityEngine;
 
@@ -9,16 +10,20 @@ namespace AlienUI.Core
 {
     public class Document : IDependencyObjectResolver
     {
-        private HashSet<DependencyObject> m_dpObjects = new HashSet<DependencyObject>();
-        private Dictionary<DependencyObject, XmlNode> m_dpObjectsXmlMap = new Dictionary<DependencyObject, XmlNode>();
-        private Dictionary<string, DependencyObject> m_dpObjectsNameMap = new Dictionary<string, DependencyObject>();
-        private Dictionary<DependencyObject, HashSet<DependencyObject>> m_parentChildrenRecords = new Dictionary<DependencyObject, HashSet<DependencyObject>>();
+        private HashSet<XmlNodeElement> m_dpObjects = new HashSet<XmlNodeElement>();
+        private Dictionary<XmlNodeElement, XmlNode> m_dpObjectsXmlMap = new Dictionary<XmlNodeElement, XmlNode>();
+        private Dictionary<string, List<XmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<XmlNodeElement>>();
+        private Dictionary<XmlNodeElement, HashSet<XmlNodeElement>> m_parentChildrenRecords = new Dictionary<XmlNodeElement, HashSet<XmlNodeElement>>();
         private UIElement m_rootElement;
         internal UIElement m_templateChildRoot;
+        internal DependencyObject m_dataContext;
+        internal XmlNodeElement m_templateHost;
 
-        public void SetDocumentHost(UIElement root)
+        public void SetDocumentHost(UIElement root, DependencyObject dataContext, XmlNodeElement templateHost)
         {
             m_rootElement = root;
+            m_dataContext = dataContext;
+            m_templateHost = templateHost;
         }
 
         public Coroutine StartCoroutine(IEnumerator itor)
@@ -49,7 +54,7 @@ namespace AlienUI.Core
             }
         }
 
-        internal void RecordDependencyObject(DependencyObject dependencyObject, XmlNode xnode)
+        internal void RecordDependencyObject(XmlNodeElement dependencyObject, XmlNode xnode)
         {
             m_dpObjects.Add(dependencyObject);
             m_dpObjectsXmlMap[dependencyObject] = xnode;
@@ -58,21 +63,45 @@ namespace AlienUI.Core
             if (nameProperty == null) return;
             var nameValue = nameProperty.Value;
             if (!string.IsNullOrWhiteSpace(nameValue))
-                m_dpObjectsNameMap[nameValue] = dependencyObject;
+            {
+                if (!m_dpObjectsNameMap.ContainsKey(nameValue)) m_dpObjectsNameMap[nameValue] = new List<XmlNodeElement>();
+                m_dpObjectsNameMap[nameValue].Add(dependencyObject);
+            }
         }
 
-        internal void RecordAddChild(DependencyObject parentNode, DependencyObject newNodeIns)
+        internal void RecordAddChild(XmlNodeElement parentNode, XmlNodeElement newNodeIns)
         {
             if (!m_parentChildrenRecords.ContainsKey(parentNode))
-                m_parentChildrenRecords[parentNode] = new HashSet<DependencyObject>();
+                m_parentChildrenRecords[parentNode] = new HashSet<XmlNodeElement>();
 
             m_parentChildrenRecords[parentNode].Add(newNodeIns);
         }
 
+        public T Query<T>(string name) where T : DependencyObject
+        {
+            m_dpObjectsNameMap.TryGetValue(name, out var dpObjects);
+            if (dpObjects == null || dpObjects.Count == 0) return null;
+            return dpObjects[0] as T;
+        }
+
+        public List<T> QueryAll<T>(string name) where T : DependencyObject
+        {
+            List<T> list = new List<T>();
+
+            m_dpObjectsNameMap.TryGetValue(name, out var dpObjects);
+            if (dpObjects == null || dpObjects.Count == 0) return list;
+            foreach (var dpObject in dpObjects)
+            {
+                var targetTypeObj = dpObject as T;
+                if (targetTypeObj != null) list.Add(targetTypeObj);
+            }
+
+            return list;
+        }
+
         public DependencyObject Resolve(string resolveKey)
         {
-            m_dpObjectsNameMap.TryGetValue(resolveKey, out DependencyObject dpObject);
-            return dpObject;
+            return Query<DependencyObject>(resolveKey);
         }
 
         internal void PrepareStruct(XmlAttributeParser xmlParser)
@@ -101,20 +130,32 @@ namespace AlienUI.Core
             uiRoot.RefreshPropertyNotify();
         }
 
-        void ResolveAttributes(DependencyObject node, XmlNode xNode, XmlAttributeParser xmlParser)
+        void ResolveAttributes(XmlNodeElement node, XmlNode xNode, XmlAttributeParser xmlParser)
         {
             foreach (XmlAttribute att in xNode.Attributes)
             {
                 if (att.Name.StartsWith("xmlns")) continue; //xml保留字符跳过
 
-                if (BindUtility.IsBindingString(att.Value))
+                if (BindUtility.IsBindingString(att.Value, out Match match))
                 {
-                    BindUtility.ParseBindParam(att.Value, out string propName, out string converterName, out string modeName);
-                    node.DataContext.BeginBind()
+                    var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
+                    DependencyObject source = null;
+                    switch (bindType)
+                    {
+                        case EnumBindingType.Binding: source = m_dataContext; break;
+                        case EnumBindingType.TemplateBinding: source = m_templateHost; break;
+                        default:
+                            Debug.LogError("BindType Invalid");
+                            break;
+                    }
+                    if (source != null)
+                    {
+                        source.BeginBind()
                         .SetSourceProperty(propName)
                         .SetTarget(node)
                         .SetTargetProperty(att.Name)
                         .Apply(converterName, modeName);
+                    }
                 }
                 else
                 {

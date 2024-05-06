@@ -1,6 +1,8 @@
 using AlienUI.Core.Converters;
 using AlienUI.Models;
+using AlienUI.UIElements;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -10,7 +12,7 @@ namespace AlienUI.Core
     {
         public DependencyObject Source { get; private set; }
         public string SourceProperty { get; private set; }
-        public DependencyObject Target { get; private set; }
+        public XmlNodeElement Target { get; private set; }
         public string TargetProperty { get; private set; }
 
         private ConverterBase m_converter;
@@ -117,7 +119,7 @@ namespace AlienUI.Core
                 this.bind = bind;
             }
 
-            public BindTargetProperty SetTarget(DependencyObject target)
+            public BindTargetProperty SetTarget(XmlNodeElement target)
             {
                 bind.Target = target;
                 return new BindTargetProperty(bind);
@@ -146,7 +148,12 @@ namespace AlienUI.Core
             return new BindSourceProperty(bind, source);
         }
     }
-
+    public enum EnumBindingType
+    {
+        InValid,
+        Binding,
+        TemplateBinding
+    }
     public static class BindUtility
     {
         public static Binding.BindSourceProperty BeginBind(this DependencyObject source)
@@ -154,38 +161,40 @@ namespace AlienUI.Core
             return Binding.Create(source);
         }
 
-        public static bool IsBindingString(string input)
+        public static bool IsBindingString(string input, out Match match)
         {
-            return Regex.Match(input, @"{Binding (.+)}", RegexOptions.IgnoreCase).Success;
+            match = Regex.Match(input, @"{(.*?) (.*?)}", RegexOptions.IgnoreCase);
+            return match.Success;
         }
 
-        public static void ParseBindParam(string input, out string propName, out string converterName, out string modeName)
+        public static EnumBindingType ParseBindParam(Match match, out string propName, out string converterName, out string modeName)
         {
             propName = string.Empty;
             converterName = string.Empty;
             modeName = string.Empty;
 
-            var matches = Regex.Matches(input, @"{Binding (.*?)}", RegexOptions.IgnoreCase);
-            if (matches.Count > 0)
+            if (!Enum.TryParse(match.Groups[1].Value, out EnumBindingType bindType))
+                return EnumBindingType.InValid;
+
+            var parameters = match.Groups[2].Value.Split(',');
+            propName = parameters[0]; // 第一个参数是属性名
+            for (int i = 1; i < parameters.Length; i++)
             {
-                var parameters = matches[0].Groups[1].Value.Split(',');
-                propName = parameters[0]; // 第一个参数是属性名
-                for (int i = 1; i < parameters.Length; i++)
+                var pair = parameters[i].Split('=');
+                if (pair.Length == 2)
                 {
-                    var pair = parameters[i].Split('=');
-                    if (pair.Length == 2)
+                    if (pair[0].Equals("Converter", System.StringComparison.OrdinalIgnoreCase))
                     {
-                        if (pair[0].Equals("Converter", System.StringComparison.OrdinalIgnoreCase))
-                        {
-                            converterName = pair[1];
-                        }
-                        else if (pair[0].Equals("Mode", System.StringComparison.OrdinalIgnoreCase))
-                        {
-                            modeName = pair[1];
-                        }
+                        converterName = pair[1];
+                    }
+                    else if (pair[0].Equals("Mode", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        modeName = pair[1];
                     }
                 }
             }
+
+            return bindType;
         }
     }
 }

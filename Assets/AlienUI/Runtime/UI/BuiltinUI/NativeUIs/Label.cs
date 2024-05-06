@@ -66,9 +66,6 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty AutoWarpProperty =
             DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), false, OnAutoWarpChanged);
 
-
-
-
         public bool Truncate
         {
             get { return (bool)GetValue(TruncateProperty); }
@@ -78,9 +75,9 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty TruncateProperty =
             DependencyProperty.Register("Truncate", typeof(bool), typeof(Label), false, OnTruncateChanged);
 
-
-
         private Text m_text;
+
+        public Text UGUIText => m_text;
 
         protected override void OnInitialized()
         {

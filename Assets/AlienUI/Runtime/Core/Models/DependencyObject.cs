@@ -6,24 +6,10 @@ using UnityEngine;
 
 namespace AlienUI.Models
 {
-    public abstract class DependencyObject : IDependencyObjectResolver
+    public abstract class DependencyObject 
     {
-        private Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
+        protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
         private Type m_selfType;
-        private List<DependencyObject> m_childrens = new List<DependencyObject>();
-
-        public Engine Engine { get; set; }
-        public DependencyObject DataContext { get; set; }
-        public Document Document { get; set; }
-        protected List<DependencyObject> Children => m_childrens;
-
-        public string Name
-        {
-            get { return (string)GetValue(NameProperty); }
-            set { SetValue(NameProperty, value); }
-        }
-        public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(DependencyObject), null);
 
         public DependencyObject()
         {
@@ -33,26 +19,6 @@ namespace AlienUI.Models
             //Ìî³äÒÀÀµÊôÐÔÄ¬ÈÏÖµ
             DependencyProperty.GetAllDP(m_selfType, ref allDp);
             allDp.ForEach(dp => SetValue(dp, dp.DefaultValue, false));
-        }
-
-        public virtual void AddChild(DependencyObject childObj)
-        {
-            m_childrens.Add(childObj);
-
-            OnAddChild(childObj);
-        }
-
-        protected virtual void OnAddChild(DependencyObject childObj) { }
-
-        public void RefreshPropertyNotify()
-        {
-            foreach (var dp in m_dpPropValues.Keys.ToArray())
-            {
-                var value = m_dpPropValues[dp];
-                dp.RaiseChangeEvent(this, dp.DefaultValue, value);
-            }
-            foreach (var child in m_childrens)
-                child.RefreshPropertyNotify();
         }
 
 
@@ -110,16 +76,5 @@ namespace AlienUI.Models
             return dp.PropType;
         }
 
-        public DependencyObject Resolve(string resolveKey)
-        {
-            return this.Document.Resolve(resolveKey);
-        }
-
-        internal void Prepare()
-        {
-            OnPrepared();
-        }
-
-        protected virtual void OnPrepared() { }
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   m_templates:
   - Xml: {fileID: 4900000, guid: 8cea79868d497ba418c453de4bf594b2, type: 3}
   - Xml: {fileID: 4900000, guid: 0033afc2dd86fbc44a818238cc756435, type: 3}
+  - Xml: {fileID: 4900000, guid: 6204bf4589c9aac42961f62726ace7b8, type: 3}

@@ -16,13 +16,13 @@ namespace AlienUI
         }
 
 
-        public UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext)
+        public UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext, XmlNodeElement templateHost)
         {
             var templateAsset = engine.Settings.GetTemplateAsset(m_name);
             if (templateAsset == null) return null;
 
-            var uiInstance = engine.CreateUI(templateAsset.text, parent, dataContext);
-            
+            var uiInstance = engine.CreateUI(templateAsset.text, parent, dataContext, templateHost);
+
             return uiInstance;
         }
     }

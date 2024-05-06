@@ -1,8 +1,9 @@
 using AlienUI.Models;
+using AlienUI.UIElements;
 
 namespace AlienUI.Core.Triggers
 {
-    public abstract class TriggerAction : DependencyObject
+    public abstract class TriggerAction : XmlNodeElement
     {
         public abstract void Excute();
     }

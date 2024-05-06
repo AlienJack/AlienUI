@@ -1,4 +1,5 @@
 using AlienUI.Models;
+using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -25,7 +26,7 @@ namespace AlienUI.Core
             m_collector.Collect();
         }
 
-        public DependencyObject CreateNode(XmlNode xnode)
+        public XmlNodeElement CreateNode(XmlNode xnode)
         {
             return m_collector.CreateInstance(xnode);
         }

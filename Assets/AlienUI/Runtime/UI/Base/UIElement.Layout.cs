@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : DependencyObject
+    public abstract partial class UIElement : XmlNodeElement
     {
         public Number Width
         {
@@ -144,8 +144,6 @@ namespace AlienUI.UIElements
             }
             else
                 ui.ActualHeight = desireSize.y;
-
-            Canvas.ForceUpdateCanvases();
 
             ui.m_rectTransform.SetPivotStayPosition(new Vector2(0.5f, 0.5f));
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : DependencyObject
+    public abstract partial class UIElement : XmlNodeElement
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
@@ -46,7 +46,7 @@ namespace AlienUI.UIElements
 
         internal NodeProxy NodeProxy => m_proxy;
 
-        public sealed override void AddChild(DependencyObject childObj)
+        public sealed override void AddChild(XmlNodeElement childObj)
         {
             base.AddChild(childObj);
 
@@ -81,6 +81,7 @@ namespace AlienUI.UIElements
 
                 m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
                 m_proxy.TargetObject = this;
+                m_proxy.hideFlags = HideFlags.HideInInspector;
 
                 CreateChildRoot();
             }

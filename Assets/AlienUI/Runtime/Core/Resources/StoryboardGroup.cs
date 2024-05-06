@@ -1,5 +1,6 @@
 using AlienUI.Core.Resources;
 using AlienUI.Models;
+using AlienUI.UIElements;
 using System.Collections.Generic;
 
 namespace AlienUI
@@ -9,7 +10,7 @@ namespace AlienUI
         private List<Storyboard> stories = new List<Storyboard>();
         private Storyboard m_currentPlay;
 
-        protected override void OnAddChild(DependencyObject childObj)
+        protected override void OnAddChild(XmlNodeElement childObj)
         {
             switch (childObj)
             {

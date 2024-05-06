@@ -91,12 +91,12 @@ namespace AlienUI.Core
             return null;
         }
 
-        internal DependencyObject CreateInstance(XmlNode xnode)
+        internal XmlNodeElement CreateInstance(XmlNode xnode)
         {
             var type = GetDependencyObjectType(xnode);
             if (type == null) return null;
 
-            return Activator.CreateInstance(type) as DependencyObject;
+            return Activator.CreateInstance(type) as XmlNodeElement;
         }
 
         private Type GetDependencyObjectType(XmlNode xnode)

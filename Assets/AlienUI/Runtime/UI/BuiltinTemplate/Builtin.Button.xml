@@ -1,6 +1,6 @@
 <Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#383838FF"  Padding="1,1,1,1">
 	<Image Name="Bg"  Horizontal="Stretch" Vertical="Stretch" Color="#FFFFFFFF">
-		<Label Name="ButtonTxt" Content="{Binding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
+		<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
 	</Image>
 
 	<EventTrigger Event="OnPointerEnter">

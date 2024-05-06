@@ -15,6 +15,8 @@ namespace AlienUI
         [SerializeField]
         private Settings m_setting;
         public Settings Settings => m_setting;
+        [SerializeField]
+        private RectTransform UIRoot;
 
         private void Awake()
         {
@@ -22,12 +24,12 @@ namespace AlienUI
             DontDestroyOnLoad(gameObject);
         }
 
-        public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
+        internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost)
         {
             Document document = new Document();
-            var uiIns = Parse(xmlTxt, dataContext, document) as UIElement;
+            var uiIns = Parse(xmlTxt, document) as UIElement;
             Debug.Assert(uiIns != null);
-            document.SetDocumentHost(uiIns);
+            document.SetDocumentHost(uiIns, dataContext, templateHost);
 
             document.PrepareStruct(AttParser);
 
@@ -43,18 +45,23 @@ namespace AlienUI
             return uiIns;
         }
 
-        private DependencyObject Parse(string xmlTxt, DependencyObject dataContext, Document doc)
+        public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
+        {
+            return CreateUI(xmlTxt, parent, dataContext, null);
+        }
+
+        private DependencyObject Parse(string xmlTxt, Document doc)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
 
-            DependencyObject root = CreateNodeByXml(rootNode, null, dataContext, doc);
+            DependencyObject root = CreateNodeByXml(rootNode, null, doc);
 
             return root;
         }
 
-        private DependencyObject CreateNodeByXml(XmlNode xnode, DependencyObject parentNode, DependencyObject dataContext, Document doc)
+        private XmlNodeElement CreateNodeByXml(XmlNode xnode, XmlNodeElement parentNode, Document doc)
         {
             if (xnode.NodeType == XmlNodeType.Comment) return null;
 
@@ -62,7 +69,8 @@ namespace AlienUI
             if (newNodeIns == null) return null;
 
             newNodeIns.Engine = this;
-            newNodeIns.DataContext = dataContext;
+            newNodeIns.DataContext = doc.m_dataContext;
+            newNodeIns.TemplateHost = doc.m_templateHost;
             newNodeIns.Document = doc;
             newNodeIns.Document.RecordDependencyObject(newNodeIns, xnode);
             if (parentNode != null)
@@ -71,7 +79,7 @@ namespace AlienUI
 
             foreach (XmlNode xchild in xnode.ChildNodes)
             {
-                CreateNodeByXml(xchild, newNodeIns, dataContext, doc);
+                CreateNodeByXml(xchild, newNodeIns, doc);
             }
 
             return newNodeIns;

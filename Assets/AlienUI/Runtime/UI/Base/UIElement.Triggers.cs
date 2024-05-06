@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : DependencyObject
+    public abstract partial class UIElement : XmlNodeElement
     {
         private List<Trigger> m_triggers = new List<Trigger>();
 
