@@ -27,7 +27,7 @@ namespace AlienUI.Models
             m_cellOffsetY = new float[m_rowDef.Length];
         }
 
-        public Vector2 GetCellSize(int column, int row)
+        public readonly Vector2 GetCellSize(int column, int row)
         {
             Vector2 size = default;
             size.x = m_cellWidth.Length <= column ? 0 : m_cellWidth[column];
@@ -36,7 +36,7 @@ namespace AlienUI.Models
             return size;
         }
 
-        public Vector2 GetCellOffset(int column, int row)
+        public readonly Vector2 GetCellOffset(int column, int row)
         {
             Vector2 offset = default;
             column = Mathf.Min(m_cellOffsetX.Length - 1, column);
@@ -46,7 +46,7 @@ namespace AlienUI.Models
             return offset;
         }
 
-        public void CalcCellSizes(float totalWidth, float totalHeight)
+        public readonly void CalcCellSizes(float totalWidth, float totalHeight)
         {
             //¼ÆËã¿í¶È
             {

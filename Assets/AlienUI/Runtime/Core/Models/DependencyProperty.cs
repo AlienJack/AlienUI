@@ -9,7 +9,7 @@ namespace AlienUI.Models
         public Type PropType { get; private set; }
         public object DefaultValue { get; private set; }
         public delegate void OnValueChangedHandle(DependencyObject sender, object oldValue, object newValue);
-        public OnValueChangedHandle OnValueChanged;
+        public event OnValueChangedHandle OnValueChanged;
 
         private int m_hash;
 
@@ -19,7 +19,7 @@ namespace AlienUI.Models
             PropType = propType;
             DefaultValue = defaultValue;
             m_hash = PropName.GetHashCode();
-            OnValueChanged = onValueChanged;
+            OnValueChanged += onValueChanged;
         }
 
         public void RaiseChangeEvent(DependencyObject sender, object oldValue, object newValue)

@@ -34,8 +34,6 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command", typeof(CommandBase), typeof(Button), null);
 
-
-
         protected override void OnInitialized()
         {
             base.OnInitialized();

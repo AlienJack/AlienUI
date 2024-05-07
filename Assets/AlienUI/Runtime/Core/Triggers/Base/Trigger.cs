@@ -1,3 +1,4 @@
+using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections.Generic;
 
@@ -5,11 +6,13 @@ namespace AlienUI.Core.Triggers
 {
     public abstract class Trigger : XmlNodeElement
     {
-        private UIElement m_host;
+        protected UIElement m_host;
         private List<TriggerAction> m_actions = new List<TriggerAction>();
 
         public void Init(UIElement host)
         {
+            if (host.TemplateHost is UIElement tHost) host = tHost;
+
             m_host = host;
             OnInit(m_host);
         }

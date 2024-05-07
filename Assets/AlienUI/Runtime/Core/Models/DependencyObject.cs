@@ -19,6 +19,11 @@ namespace AlienUI.Models
             allDp.ForEach(dp => SetValue(dp, dp.DefaultValue, false));
         }
 
+        public DependencyProperty GetDependencyProperty(string propName)
+        {
+            var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);
+            return dp;
+        }
 
         public void SetValue(string propName, object value, bool notify = true)
         {
@@ -37,6 +42,8 @@ namespace AlienUI.Models
             if (dp == null) return;
 
             m_dpPropValues.TryGetValue(dp, out object oldValue);
+
+            if (notify && oldValue == value) return;
 
             var newValue = value;
             m_dpPropValues[dp] = value;

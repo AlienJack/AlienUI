@@ -19,11 +19,15 @@ namespace AlienUI.Core
         internal DependencyObject m_dataContext;
         internal XmlNodeElement m_templateHost;
 
-        public void SetDocumentHost(UIElement root, DependencyObject dataContext, XmlNodeElement templateHost)
+        public Document(DependencyObject dataContext, XmlNodeElement templateHost)
         {
-            m_rootElement = root;
             m_dataContext = dataContext;
             m_templateHost = templateHost;
+        }
+
+        public void SetDocumentHost(UIElement root)
+        {
+            m_rootElement = root;
         }
 
         public Coroutine StartCoroutine(IEnumerator itor)

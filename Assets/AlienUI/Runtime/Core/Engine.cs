@@ -26,10 +26,10 @@ namespace AlienUI
 
         internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost)
         {
-            Document document = new Document();
+            Document document = new Document(dataContext, templateHost);
             var uiIns = Parse(xmlTxt, document) as UIElement;
             Debug.Assert(uiIns != null);
-            document.SetDocumentHost(uiIns, dataContext, templateHost);
+            document.SetDocumentHost(uiIns);
 
             document.PrepareStruct(AttParser);
 

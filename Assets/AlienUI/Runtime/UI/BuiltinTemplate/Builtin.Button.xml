@@ -1,31 +1,45 @@
-<Image Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Color="#383838FF"  Padding="1,1,1,1">
-	<Image Name="Bg"  Horizontal="Stretch" Vertical="Stretch" Color="#FFFFFFFF">
-		<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
-	</Image>
+<Border Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" 
+		FrontColor="#4c4c4c" BorderColor="#00000000" BorderWidth="2">
+	<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
 
+	<DataTrigger PropertyName="Pressed" Condition="==true">
+		<PlayStoryboard Target="Press"/>
+	</DataTrigger>
+	
 	<EventTrigger Event="OnPointerEnter">
 		<PlayStoryboard Target="Hover"/>
 	</EventTrigger>
 	<EventTrigger Event="OnPointerExit">
 		<PlayStoryboard Target="Normal"/>
 	</EventTrigger>
+	<EventTrigger Event="OnPointerUp">
+		<PlayStoryboard Target="Hover"/>
+	</EventTrigger>
 
 	<StoryboardGroup>
 		<Storyboard Name="Hover">
-			<Animation Target="Bg" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#BBBBBBFF"/>
+			<Animation Target="Root" PropertyName="FrontColor">
+				<AnimationKey Time="0.2" Value="#353535"/>
 			</Animation>
-			<Animation Target="Root" PropertyName="Padding">
-				<AnimationKey Time="0.05" Value="0"/>
+			<Animation Target="Root" PropertyName="BorderColor">
+				<AnimationKey Time="0.2" Value="#46607cff"/>
 			</Animation>
 		</Storyboard>
 		<Storyboard Name="Normal">
-			<Animation Target="Bg" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#FFFFFFFF"/>
+			<Animation Target="Root" PropertyName="FrontColor">
+				<AnimationKey Time="0.2" Value="#2d2d2d"/>
 			</Animation>
-			<Animation Target="Root" PropertyName="Padding">
-				<AnimationKey Time="0.05" Value="1,1,1,1"/>
+			<Animation Target="Root" PropertyName="BorderColor">
+				<AnimationKey Time="0.2" Value="#00000000"/>
+			</Animation>
+		</Storyboard>
+		<Storyboard Name="Press">
+			<Animation Target="Root" PropertyName="FrontColor">
+				<AnimationKey Time="0.2" Value="#6a6a6a"/>
+			</Animation>
+			<Animation Target="Root" PropertyName="BorderColor">
+				<AnimationKey Time="0.2" Value="#46607cff"/>
 			</Animation>
 		</Storyboard>
 	</StoryboardGroup>
-</Image>
+</Border>
