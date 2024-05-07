@@ -83,9 +83,9 @@ namespace AlienUI.UIElements
             m_text = m_rectTransform.gameObject.AddComponent<Text>();
         }
 
-        protected override Float2 CalcDesireSize()
+        protected override Vector2 CalcDesireSize()
         {
-            return new Float2(m_text.preferredWidth, m_text.preferredHeight);
+            return new Vector2(m_text.preferredWidth, m_text.preferredHeight);
         }
 
         private static void OnFontChanged(DependencyObject sender, object oldValue, object newValue)

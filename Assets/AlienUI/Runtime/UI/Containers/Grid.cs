@@ -15,9 +15,9 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty GridDefineProperty =
             DependencyProperty.Register("GridDefine", typeof(GridDefine), typeof(Grid), GridDefine.Default, OnLayoutParamDirty);
 
-        protected override Float2 CalcDesireSize()
+        protected override Vector2 CalcDesireSize()
         {
-            Float2 result = new Float2(Padding.left + Padding.right, Padding.top + Padding.bottom);
+            Vector2 result = new Vector2(Padding.left + Padding.right, Padding.top + Padding.bottom);
 
             foreach (var child in UIChildren)
             {

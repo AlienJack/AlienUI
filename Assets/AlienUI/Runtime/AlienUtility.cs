@@ -55,7 +55,7 @@ namespace AlienUI.UIElements.ToolsScript
             rectTransform.offsetMin = new Vector2(left, bottom);
             rectTransform.offsetMax = new Vector2(-right, -top);
         }
-        internal static void SetStretchModeOffsets(this RectTransform rectTransform, Border borderInfo)
+        internal static void SetStretchModeOffsets(this RectTransform rectTransform, BorderData borderInfo)
         {
             rectTransform.SetStretchModeOffsets(borderInfo.top, borderInfo.bottom, borderInfo.left, borderInfo.right);
         }

@@ -18,7 +18,7 @@ namespace AlienUI.UIElements
 
         internal UIElement m_templateInstance;
 
-        protected override Float2 CalcDesireSize()
+        protected override Vector2 CalcDesireSize()
         {
             return m_templateInstance.GetDesireSize();
         }

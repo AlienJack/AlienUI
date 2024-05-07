@@ -1,13 +1,13 @@
 namespace AlienUI.Models
 {
-    public struct Border
+    public struct BorderData
     {
         public float top;
         public float bottom;
         public float left;
         public float right;
 
-        public Border(float value)
+        public BorderData(float value)
         {
             top = value;
             bottom = value;

@@ -42,14 +42,14 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty VerticalProperty =
             DependencyProperty.Register("Vertical", typeof(eVerticalAlign), typeof(UIElement), eVerticalAlign.Middle, OnLayoutParamDirty);
 
-        public Border Padding
+        public BorderData Padding
         {
-            get { return (Border)GetValue(PaddingProperty); }
+            get { return (BorderData)GetValue(PaddingProperty); }
             set { SetValue(PaddingProperty, value); }
         }
 
         public static readonly DependencyProperty PaddingProperty =
-            DependencyProperty.Register("Padding", typeof(Border), typeof(UIElement), default(Border), OnLayoutParamDirty);
+            DependencyProperty.Register("Padding", typeof(BorderData), typeof(UIElement), default(BorderData), OnLayoutParamDirty);
 
 
 
@@ -82,7 +82,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        public Float2 GetDesireSize()
+        public Vector2 GetDesireSize()
         {
             var desireSize = CalcDesireSize();
 
@@ -172,6 +172,6 @@ namespace AlienUI.UIElements
             Engine?.SetDirty(this);
         }
 
-        protected abstract Float2 CalcDesireSize();
+        protected abstract Vector2 CalcDesireSize();
     }
 }

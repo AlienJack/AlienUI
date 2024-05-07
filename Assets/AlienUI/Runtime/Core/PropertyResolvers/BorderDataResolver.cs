@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace AlienUI.PropertyResolvers
 {
-    public class BorderResolver : PropertyResolver<Border>
+    public class BorderResolver : PropertyResolver<BorderData>
     {
-        protected override Border OnResolve(string originStr)
+        protected override BorderData OnResolve(string originStr)
         {
-            var result = new Border();
+            var result = new BorderData();
 
             originStr = originStr.Trim('(').Trim(')');
             var paramList = originStr.Split(',');
@@ -23,7 +23,7 @@ namespace AlienUI.PropertyResolvers
             return result;
         }
 
-        protected override Border OnLerp(Border from, Border to, float progress)
+        protected override BorderData OnLerp(BorderData from, BorderData to, float progress)
         {
             var border = from;
 

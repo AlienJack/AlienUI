@@ -51,9 +51,9 @@ namespace AlienUI.UIElements
             (sender as Image).img.color = (Color)newValue;
         }
 
-        protected override Float2 CalcDesireSize()
+        protected override Vector2 CalcDesireSize()
         {
-            return new Float2 { x = img.preferredWidth, y = img.preferredHeight };
+            return new Vector2 { x = img.preferredWidth, y = img.preferredHeight };
         }
     }
 }

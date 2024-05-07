@@ -74,8 +74,7 @@ namespace AlienUI.UIElements
             {
                 var go = AlienUtility.CreateEmptyUIGameObject(string.IsNullOrEmpty(Name) ? GetType().Name : Name);
                 m_rectTransform = go.transform as RectTransform;
-                //tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
-
+                tracker.Add(go, m_rectTransform, DrivenTransformProperties.All);
 
                 OnInitialized();
 
@@ -108,7 +107,7 @@ namespace AlienUI.UIElements
             m_childRoot.pivot = new Vector2(0.5f, 0.5f);
             m_childRoot.sizeDelta = Vector2.zero;
             m_childRoot.anchoredPosition = Vector2.zero;
-            //tracker.Add(m_childRoot.gameObject, m_childRoot, DrivenTransformProperties.All);
+            tracker.Add(m_childRoot.gameObject, m_childRoot, DrivenTransformProperties.All);
         }
 
         protected abstract void OnInitialized();
