@@ -84,30 +84,14 @@ namespace AlienUI.UIElements
         #region HandleUGUIEvents
         private void HandleUGUIInputFieldEvent()
         {
-            OnUpdateSelected += InputBox_OnUpdateSelected;
             OnBeginDrag += InputBox_OnBeginDrag;
             OnDrag += InputBox_OnDrag;
             OnEndDrag += InputBox_OnEndDrag;
             OnPointerClick += InputBox_OnPointerClick;
-            OnSubmit += InputBox_OnSubmit;
-            OnMove += InputBox_OnMove;
             OnPointerDown += InputBox_OnPointerDown;
             OnPointerUp += InputBox_OnPointerUp;
             OnPointerEnter += InputBox_OnPointerEnter;
             OnPointerExit += InputBox_OnPointerExit;
-            OnSelect += InputBox_OnSelect;
-            OnDeselect += InputBox_OnDeselect;
-        }
-
-
-        private void InputBox_OnDeselect(object sender, Events.OnDeselectEvent e)
-        {
-            m_inputField.OnDeselect(e.EvtData);
-        }
-
-        private void InputBox_OnSelect(object sender, Events.OnSelectEvent e)
-        {
-            m_inputField.OnSelect(e.EvtData);
         }
 
         private void InputBox_OnPointerExit(object sender, Events.OnPointerExitEvent e)
@@ -129,18 +113,6 @@ namespace AlienUI.UIElements
         {
             m_inputField.OnPointerDown(e.EvtData);
         }
-
-        private void InputBox_OnMove(object sender, Events.OnMoveEvent e)
-        {
-            m_inputField.OnMove(e.EvtData);
-        }
-
-
-        private void InputBox_OnSubmit(object sender, Events.OnSubmitEvent e)
-        {
-            m_inputField.OnSubmit(e.EvtData);
-        }
-
         private void InputBox_OnPointerClick(object sender, Events.OnPointerClickEvent e)
         {
             m_inputField.OnPointerClick(e.EvtData);
@@ -159,11 +131,6 @@ namespace AlienUI.UIElements
         private void InputBox_OnBeginDrag(object sender, Events.OnBeginDragEvent e)
         {
             m_inputField.OnBeginDrag(e.EvtData);
-        }
-
-        private void InputBox_OnUpdateSelected(object sender, Events.OnUpdateSelectedEvent e)
-        {
-            m_inputField.OnUpdateSelected(e.EvtData);
         }
         #endregion
     }

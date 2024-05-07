@@ -9,7 +9,28 @@ namespace AlienUI.UIElements
 
         public delegate void OnEventHandle<EV>(object sender, EV e) where EV : Event;
 
-        #region
+        protected event OnEventHandle<OnShowEvent> OnShow;
+        internal void RaiseShow()
+        {
+            var evt = new OnShowEvent(this);
+            OnEventInvoke?.Invoke(null, evt);
+            OnShow?.Invoke(this, evt);
+
+            foreach (var child in UIChildren)
+                child.RaiseShow();
+        }
+
+        protected event OnEventHandle<OnCloseEvent> OnClose;
+        internal void RaiseClose()
+        {
+            var evt = new OnCloseEvent(this);
+            OnEventInvoke?.Invoke(null, evt);
+            OnClose?.Invoke(this, evt);
+
+            foreach (var child in UIChildren) child.RaiseClose();
+        }
+
+        #region UGUI Events
         /*  由于Unity的事件机制问题,PointerEnter和PointerExit总会向上传递
         *   所以AlienUI的事件传递机制,总是不传递PointerEnter和PointerExit事件,而是交由Unity自己传递
         *   在Unity2021之后的版本,这个传递机制可以在EventSystem的InputModule上被关闭,为了保持逻辑统一
@@ -147,104 +168,6 @@ namespace AlienUI.UIElements
             else Parent?.RaiseScroll(sender, e);
         }
 
-        protected event OnEventHandle<OnUpdateSelectedEvent> OnUpdateSelected;
-        internal void RaiseUpdateSelected(object sender, OnUpdateSelectedEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnUpdateSelected != null)
-            {
-                OnUpdateSelected.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseUpdateSelected(sender, e);
-            }
-            else Parent?.RaiseUpdateSelected(sender, e);
-        }
-
-        protected event OnEventHandle<OnSelectEvent> OnSelect;
-        internal void RaiseSelected(object sender, OnSelectEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnSelect != null)
-            {
-                OnSelect.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseSelected(sender, e);
-            }
-            else Parent?.RaiseSelected(sender, e);
-        }
-
-        protected event OnEventHandle<OnDeselectEvent> OnDeselect;
-        internal void RaiseDeselect(object sender, OnDeselectEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnDeselect != null)
-            {
-                OnDeselect.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseDeselect(sender, e);
-            }
-            else Parent?.RaiseDeselect(sender, e);
-        }
-
-        protected event OnEventHandle<OnMoveEvent> OnMove;
-        internal void RaiseMove(object sender, OnMoveEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnMove != null)
-            {
-                OnMove.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseMove(sender, e);
-            }
-            else Parent?.RaiseMove(sender, e);
-        }
-
-        protected event OnEventHandle<OnSubmitEvent> OnSubmit;
-        internal void RaiseSubmit(object sender, OnSubmitEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnSubmit != null)
-            {
-                OnSubmit.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseSubmit(sender, e);
-            }
-            else Parent?.RaiseSubmit(sender, e);
-        }
-
-        protected event OnEventHandle<OnCancelEvent> OnCancel;
-        internal void RaiseCancel(object sender, OnCancelEvent e)
-        {
-            OnEventInvoke?.Invoke(sender, e);
-
-            if (OnCancel != null)
-            {
-                OnCancel.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseCancel(sender, e);
-            }
-            else Parent?.RaiseCancel(sender, e);
-        }
         #endregion
-
-        protected event OnEventHandle<OnShowEvent> OnShow;
-        internal void RaiseShow()
-        {
-            var evt = new OnShowEvent(this);
-            OnEventInvoke?.Invoke(null, evt);
-            OnShow?.Invoke(this, evt);
-
-            foreach (var child in UIChildren)
-                child.RaiseShow();
-        }
-
-        protected event OnEventHandle<OnCloseEvent> OnClose;
-        internal void RaiseClose()
-        {
-            var evt = new OnCloseEvent(this);
-            OnEventInvoke?.Invoke(null, evt);
-            OnClose?.Invoke(this, evt);
-
-            foreach (var child in UIChildren) child.RaiseClose();
-        }
     }
 }

@@ -107,48 +107,6 @@ namespace AlienUI.Events
         public override string EventName => "OnScroll";
         public static implicit operator OnScrollEvent(PointerEventData uguiEvtData) => new(uguiEvtData);
     }
-    public class OnUpdateSelectedEvent : Event<BaseEventData>
-    {
-        public OnUpdateSelectedEvent(BaseEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnUpdateSelected";
-        public static implicit operator OnUpdateSelectedEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
-    }
-    public class OnSelectEvent : Event<BaseEventData>
-    {
-        public OnSelectEvent(BaseEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnSelect";
-        public static implicit operator OnSelectEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
-    }
-    public class OnDeselectEvent : Event<BaseEventData>
-    {
-        public OnDeselectEvent(BaseEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnDeselect";
-        public static implicit operator OnDeselectEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
-    }
-    public class OnMoveEvent : Event<AxisEventData>
-    {
-        public OnMoveEvent(AxisEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnMove";
-        public static implicit operator OnMoveEvent(AxisEventData uguiEvtData) => new(uguiEvtData);
-    }
-    public class OnSubmitEvent : Event<BaseEventData>
-    {
-        public OnSubmitEvent(BaseEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnSubmit";
-        public static implicit operator OnSubmitEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
-    }
-    public class OnCancelEvent : Event<BaseEventData>
-    {
-        public OnCancelEvent(BaseEventData eventData) : base(eventData) { }
-
-        public override string EventName => "OnCancel";
-        public static implicit operator OnCancelEvent(BaseEventData uguiEvtData) => new(uguiEvtData);
-    }
 
     public class OnShowEvent : Event<UIElement>
     {
