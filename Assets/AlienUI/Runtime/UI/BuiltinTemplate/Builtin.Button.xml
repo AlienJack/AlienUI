@@ -12,9 +12,6 @@
 	<EventTrigger Event="OnPointerExit">
 		<PlayStoryboard Target="Normal"/>
 	</EventTrigger>
-	<EventTrigger Event="OnPointerUp">
-		<PlayStoryboard Target="Hover"/>
-	</EventTrigger>
 
 	<StoryboardGroup>
 		<Storyboard Name="Hover">
