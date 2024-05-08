@@ -1,18 +1,19 @@
 using AlienUI;
+using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections;
 using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public TextAsset ta;
+    public AmlAsset ta;
     public Engine e;
     public RectTransform uiRoot;
     private Window m_window;
 
     private void Start()
     {
-        m_window = e.CreateUI(ta.text, uiRoot, new LoginVM()) as Window;
+        m_window = e.CreateUI(ta.Text, uiRoot, new LoginVM()) as Window;
     }
 
     private void Update()

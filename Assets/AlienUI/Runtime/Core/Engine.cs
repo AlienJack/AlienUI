@@ -64,9 +64,9 @@ namespace AlienUI
             return CreateUI(xmlTxt, parent, dataContext, null, null);
         }
 
-        public UIElement CreateUI(TextAsset xmlAsset, Transform parent, DependencyObject dataContext)
+        public UIElement CreateUI(AmlAsset amlAsset, Transform parent, DependencyObject dataContext)
         {
-            return CreateUI(xmlAsset.text, parent, dataContext, null, xmlAsset);
+            return CreateUI(amlAsset.Text, parent, dataContext, null, amlAsset);
         }
 
         private DependencyObject Parse(string xmlTxt, Document doc)

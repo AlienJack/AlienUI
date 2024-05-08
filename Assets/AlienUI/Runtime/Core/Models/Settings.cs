@@ -1,3 +1,4 @@
+using AlienUI.Models;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace AlienUI
 
         public Font DefaultLabelFont => m_defaultLabelFont;
 
-        public TextAsset GetTemplateAsset(string templateName)
+        public AmlAsset GetTemplateAsset(string templateName)
         {
             m_templatesDict.TryGetValue(templateName, out Template template);
             return template.Xml;
@@ -32,7 +33,7 @@ namespace AlienUI
         public class Template
         {
             public string Name => Xml.name;
-            public TextAsset Xml;
+            public AmlAsset Xml;
         }
     }
 }
