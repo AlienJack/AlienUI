@@ -24,30 +24,49 @@ namespace AlienUI
             DontDestroyOnLoad(gameObject);
         }
 
-        internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost)
+        internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost, UnityEngine.Object xmlAsset)
         {
-            Document document = new Document(dataContext, templateHost);
-            var uiIns = Parse(xmlTxt, document) as UIElement;
-            Debug.Assert(uiIns != null);
-            document.SetDocumentHost(uiIns);
+            try
+            {
+                Document document = new Document(dataContext, templateHost, xmlAsset);
+                currentHandlingDoc.Push(document);
+                var uiIns = Parse(xmlTxt, document) as UIElement;
+                Debug.Assert(uiIns != null);
+                document.SetDocumentHost(uiIns);
 
-            document.PrepareStruct(AttParser);
+                document.PrepareStruct(AttParser);
 
-            var uiGameObj = uiIns.Initialize();
-            uiGameObj.transform.SetParent(parent, false);
+                var uiGameObj = uiIns.Initialize();
+                uiGameObj.transform.SetParent(parent, false);
 
-            document.PrepareNotify(uiIns);
+                document.PrepareNotify(uiIns);
 
-            uiIns.RaiseShow();
+                uiIns.RaiseShow();
 
-            SetDirty(uiIns);
+                SetDirty(uiIns);
 
-            return uiIns;
+                return uiIns;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                throw ex;
+            }
+            finally
+            {
+                currentHandlingDoc.Pop();
+            }
+
         }
 
         public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
         {
-            return CreateUI(xmlTxt, parent, dataContext, null);
+            return CreateUI(xmlTxt, parent, dataContext, null, null);
+        }
+
+        public UIElement CreateUI(TextAsset xmlAsset, Transform parent, DependencyObject dataContext)
+        {
+            return CreateUI(xmlAsset.text, parent, dataContext, null, xmlAsset);
         }
 
         private DependencyObject Parse(string xmlTxt, Document doc)
@@ -115,6 +134,21 @@ namespace AlienUI
                 if (element.TopParent == null) element.BeginLayout();
             }
             layoutTask.Clear();
+        }
+
+        private static Stack<Document> currentHandlingDoc = new Stack<Document>();
+        public static void Log(object message)
+        {
+            if (currentHandlingDoc.Peek() is Document doc && doc.m_xmlAsset != null)
+                Debug.Log(message, doc.m_xmlAsset);
+            else Debug.Log(message);
+        }
+
+        public static void LogError(object message)
+        {
+            if (currentHandlingDoc.Peek() is Document doc && doc.m_xmlAsset != null)
+                Debug.LogError(message, doc.m_xmlAsset);
+            else Debug.LogError(message);
         }
     }
 }

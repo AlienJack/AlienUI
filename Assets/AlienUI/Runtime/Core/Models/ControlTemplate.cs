@@ -20,7 +20,7 @@ namespace AlienUI
             var templateAsset = engine.Settings.GetTemplateAsset(m_name);
             if (templateAsset == null) return null;
 
-            var uiInstance = engine.CreateUI(templateAsset.text, parent, dataContext, templateHost);
+            var uiInstance = engine.CreateUI(templateAsset.text, parent, dataContext, templateHost, templateAsset);
 
             return uiInstance;
         }

@@ -6,15 +6,25 @@ namespace AlienUI.Core.Triggers
 {
     public abstract class Trigger : XmlNodeElement
     {
-        protected UIElement m_host;
+        private UIElement m_host;
         private List<TriggerAction> m_actions = new List<TriggerAction>();
+
+        public DependencyObjectRef Target
+        {
+            get { return (DependencyObjectRef)GetValue(TargetProperty); }
+            set { SetValue(TargetProperty, value); }
+        }
+
+        public static readonly DependencyProperty TargetProperty =
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Trigger), default(DependencyObjectRef));
+
+        protected DependencyObject m_targetObj { get; private set; }
 
         public void Init(UIElement host)
         {
-            if (host.TemplateHost is UIElement tHost) host = tHost;
-
             m_host = host;
-            OnInit(m_host);
+            m_targetObj = Target.Get(Document) ?? m_host;
+            OnInit();
         }
 
         protected override void OnAddChild(XmlNodeElement childObj)
@@ -35,7 +45,7 @@ namespace AlienUI.Core.Triggers
             }
         }
 
-        protected abstract void OnInit(UIElement host);
+        protected abstract void OnInit();
 
     }
 }

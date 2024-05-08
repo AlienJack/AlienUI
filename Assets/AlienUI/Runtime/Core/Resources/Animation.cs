@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,6 +39,7 @@ namespace AlienUI.Core.Resources
             DependencyProperty.Register("Offset", typeof(float), typeof(Animation), 0f);
 
         private PropertyResolver m_resolver;
+        private Type m_resolverType;
         private DependencyObject m_target;
         private float m_duration;
         private List<AnimationKey> m_keys = new List<AnimationKey>();
@@ -59,7 +61,7 @@ namespace AlienUI.Core.Resources
 
             foreach (var key in m_keys)
             {
-                key.ActualValue = m_resolver.Resolve(key.Value);
+                key.ActualValue = m_resolver.Resolve(key.Value, m_resolverType);
             }
         }
 
@@ -68,10 +70,10 @@ namespace AlienUI.Core.Resources
             m_target = Target.Get(this);
             if (m_target == null) return;
 
-            var propType = m_target.GetDependencyPropertyType(PropertyName);
-            if (propType == null) return;
+            m_resolverType = m_target.GetDependencyPropertyType(PropertyName);
+            if (m_resolverType == null) return;
 
-            m_resolver = Engine.GetAttributeResolver(propType);
+            m_resolver = Engine.GetAttributeResolver(m_resolverType);
         }
 
         public void StageDefaultValue()

@@ -1,50 +1,53 @@
-using AlienUI.Core.Triggers;
+using AlienUI.Core.Resources;
 using AlienUI.Models;
 using AlienUI.UIElements;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace AlienUI.Core.Triggers
 {
     public class DataTrigger : Trigger
     {
-        public string PropertyName
+        private List<Condition> m_conditions = new List<Condition>();
+
+        protected override void OnInit()
         {
-            get { return (string)GetValue(PropertyNameProperty); }
-            set { SetValue(PropertyNameProperty, value); }
-        }
-        public static readonly DependencyProperty PropertyNameProperty =
-            DependencyProperty.Register("PropertyName", typeof(string), typeof(DataTrigger), string.Empty);
-
-        public ConditionSets Condition
-        {
-            get { return (ConditionSets)GetValue(ConditionProperty); }
-            set { SetValue(ConditionProperty, value); }
-        }
-        public static readonly DependencyProperty ConditionProperty =
-            DependencyProperty.Register("Condition", typeof(ConditionSets), typeof(DataTrigger), default(ConditionSets));
-
-        private DependencyProperty dp;
-
-        protected override void OnInit(UIElement host)
-        {
-            dp = host.GetDependencyProperty(PropertyName);
-            dp.OnValueChanged += Dp_OnValueChanged;
-
-            for (int i = 0; i < Condition.Conditions.Count; i++)
-            {
-                var resolveCondition = Condition.Conditions[i].ResolveCompareValue(Engine, dp.PropType);
-                Condition.Conditions[i] = resolveCondition;
-            }
+            m_targetObj.OnDependencyPropertyChanged += M_targetObj_OnDependencyPropertyChanged;
         }
 
-        private void Dp_OnValueChanged(DependencyObject sender, object oldValue, object newValue)
+        private void M_targetObj_OnDependencyPropertyChanged(string propName, object oldValue, object newValue)
         {
-            if (sender != m_host) return;
-
-            if (Condition.Test(newValue))
-            {
+            if (Test(propName))
                 Execute();
-            }
         }
+
+        HashSet<string> m_focusProperties = new HashSet<string>();
+        protected override void OnAddChild(XmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case Condition cond:
+                    m_conditions.Add(cond);
+                    m_focusProperties.Add(cond.PropertyName);
+                    cond.ResolveCompareValue(m_targetObj);
+                    break;
+            }
+            base.OnAddChild(childObj);
+        }
+
+        private bool Test(string propName)
+        {
+            if (!m_focusProperties.Contains(propName)) return false;
+
+            if (m_conditions.Count == 0) return false;
+
+            foreach (var con in m_conditions)
+            {
+                if (!con.Test())
+                    return false;
+            }
+
+            return true;
+        }
+
     }
 }

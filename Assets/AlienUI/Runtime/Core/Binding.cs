@@ -37,7 +37,7 @@ namespace AlienUI.Core
                     m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
                     if (m_converter == null)
                     {
-                        Debug.LogError($"<color=blue>{Source.GetType()}</color>.<color=white>{srcPropType}</color>与<color=blue>{Target.GetType()}</color>.<color=white>{dstPropType}</color>类型不一致,并且没有找到可用的Converter");
+                        Engine.LogError($"<color=blue>{Source.GetType()}</color>.<color=white>{srcPropType}</color>与<color=blue>{Target.GetType()}</color>.<color=white>{dstPropType}</color>类型不一致,并且没有找到可用的Converter");
                         return;
                     }
                 }

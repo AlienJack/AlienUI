@@ -1,7 +1,5 @@
 
 using AlienUI.Models;
-using System;
-using TMPro;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements
@@ -40,7 +38,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty InputTypeProperty =
-            DependencyProperty.Register("InputType", typeof(InputField.InputType), typeof(InputBox), InputField.InputType.Standard,OnInputTypeChanged);
+            DependencyProperty.Register("InputType", typeof(InputField.InputType), typeof(InputBox), InputField.InputType.Standard, OnInputTypeChanged);
 
         private static void OnInputTypeChanged(DependencyObject sender, object oldValue, object newValue)
         {

@@ -9,6 +9,9 @@ namespace AlienUI.Models
         protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
         private Type m_selfType;
 
+        public delegate void OnDependencyPropertyChangedHandle(string propName, object oldValue, object newValue);
+        public event OnDependencyPropertyChangedHandle OnDependencyPropertyChanged;
+
         public DependencyObject()
         {
             m_selfType = GetType();
@@ -30,7 +33,7 @@ namespace AlienUI.Models
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);
             if (dp == null)
             {
-                Debug.LogError($"类型<color=blue>{m_selfType}</color>中没有找到依赖属性<color=yellow>{propName}</color>");
+                Engine.LogError($"类型<color=blue>{m_selfType}</color>中没有找到依赖属性<color=yellow>{propName}</color>");
                 return;
             }
 
@@ -49,7 +52,10 @@ namespace AlienUI.Models
             m_dpPropValues[dp] = value;
 
             if (notify)
+            {
                 dp.RaiseChangeEvent(this, oldValue, newValue);
+                OnDependencyPropertyChanged?.Invoke(dp.PropName, oldValue, newValue);
+            }
         }
 
         public object GetValue(string properyName)

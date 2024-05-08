@@ -113,7 +113,7 @@ namespace AlienUI.Core
 
                 if (instanceType == null)
                 {
-                    Debug.LogError($"not found class named: <color=blue>{fullName}</color> in node <color=white>{xnode.Name}</color>");
+                    Engine.LogError($"not found class named: <color=blue>{fullName}</color> in node <color=white>{xnode.Name}</color>");
                 }
 
                 return instanceType;

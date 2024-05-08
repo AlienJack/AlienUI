@@ -1,7 +1,5 @@
-using AlienUI.Events;
 using AlienUI.UIElements;
 using AlienUI.UIElements.ToolsScript;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

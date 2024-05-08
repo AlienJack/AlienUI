@@ -8,7 +8,7 @@ namespace AlienUI.PropertyResolvers
         protected override Color OnResolve(string originStr)
         {
             if (!ColorUtility.TryParseHtmlString(originStr, out var color))
-                Debug.LogError($"解析Html颜色代码出错:{originStr}");
+                Engine.LogError($"解析Html颜色代码出错:{originStr}");
             return color;
         }
 

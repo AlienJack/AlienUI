@@ -2,11 +2,12 @@
 		FrontColor="#4c4c4c" BorderColor="#00000000" BorderWidth="2">
 	<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
 
-	<DataTrigger PropertyName="Pressed" Condition="==true">
+	<DataTrigger Target="#TemplateHost">
+		<Condition PropertyName="Pressed" CompareType="Equal" Value="true"/>
 		<PlayStoryboard Target="Press"/>
 	</DataTrigger>
 	
-	<EventTrigger Event="OnPointerEnter">
+	<EventTrigger Target="#TemplateHost" Event="OnPointerEnter">
 		<PlayStoryboard Target="Hover"/>
 	</EventTrigger>
 	<EventTrigger Event="OnPointerExit">

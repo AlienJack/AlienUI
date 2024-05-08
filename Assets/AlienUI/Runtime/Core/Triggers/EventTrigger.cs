@@ -15,9 +15,10 @@ namespace AlienUI.Core.Triggers
             DependencyProperty.Register("Event", typeof(string), typeof(EventTrigger), string.Empty);
 
 
-        protected override void OnInit(UIElement host)
+        protected override void OnInit()
         {
-            host.OnEventInvoke += Host_OnEventInvoke;
+            if (m_targetObj is UIElement uiTarget)
+                uiTarget.OnEventInvoke += Host_OnEventInvoke;
         }
 
         private void Host_OnEventInvoke(object sender, Events.Event e)

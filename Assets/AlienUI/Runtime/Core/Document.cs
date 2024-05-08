@@ -18,11 +18,13 @@ namespace AlienUI.Core
         internal UIElement m_templateChildRoot;
         internal DependencyObject m_dataContext;
         internal XmlNodeElement m_templateHost;
+        internal Object m_xmlAsset;
 
-        public Document(DependencyObject dataContext, XmlNodeElement templateHost)
+        public Document(DependencyObject dataContext, XmlNodeElement templateHost, Object xmlAsset)
         {
             m_dataContext = dataContext;
             m_templateHost = templateHost;
+            m_xmlAsset = xmlAsset;
         }
 
         public void SetDocumentHost(UIElement root)
@@ -83,6 +85,9 @@ namespace AlienUI.Core
 
         public T Query<T>(string name) where T : DependencyObject
         {
+            if (name == "#TemplateHost") return m_templateHost as T;
+            else if (name == "#DataContext") return m_templateHost as T;
+
             m_dpObjectsNameMap.TryGetValue(name, out var dpObjects);
             if (dpObjects == null || dpObjects.Count == 0) return null;
             return dpObjects[0] as T;
@@ -149,7 +154,7 @@ namespace AlienUI.Core
                         case EnumBindingType.Binding: source = m_dataContext; break;
                         case EnumBindingType.TemplateBinding: source = m_templateHost; break;
                         default:
-                            Debug.LogError("BindType Invalid");
+                            Engine.LogError("BindType Invalid");
                             break;
                     }
                     if (source != null)
