@@ -120,6 +120,7 @@ namespace AlienUI.UIElements.ToolsScript
         internal static GameObject CreateEmptyUIGameObject(string name)
         {
             var go = new GameObject(name);
+            go.layer = LayerMask.NameToLayer("UI");
             var rect = go.AddComponent<RectTransform>();
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.localScale = Vector3.one;
