@@ -12,14 +12,14 @@ namespace AlienUI
     [ExecuteInEditMode]
     public class Engine : MonoBehaviour
     {
-        private XmlAttributeParser AttParser = new XmlAttributeParser();
+        internal XmlAttributeParser AttParser = new XmlAttributeParser();
 
         private void Awake()
         {
             if (Application.isPlaying) DontDestroyOnLoad(gameObject);
         }
 
-        internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost, UnityEngine.Object xmlAsset)
+        private UIElement CreateUIInternal(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost, UnityEngine.Object xmlAsset)
         {
             try
             {
@@ -27,6 +27,7 @@ namespace AlienUI
                 currentHandlingDoc.Push(document);
                 var uiIns = Parse(xmlTxt, document) as UIElement;
                 Debug.Assert(uiIns != null);
+
                 document.SetDocumentHost(uiIns);
 
                 document.PrepareStruct(AttParser);
@@ -48,17 +49,27 @@ namespace AlienUI
             {
                 currentHandlingDoc.Pop();
             }
-
         }
+
 
         public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
         {
-            return CreateUI(xmlTxt, parent, dataContext, null, null);
+            return CreateUIInternal(xmlTxt, parent, dataContext, null, null);
         }
 
         public UIElement CreateUI(AmlAsset amlAsset, Transform parent, DependencyObject dataContext)
         {
-            return CreateUI(amlAsset.Text, parent, dataContext, null, amlAsset);
+            return CreateUIInternal(amlAsset.Text, parent, dataContext, null, amlAsset);
+        }
+
+        public UIElement CreateTemplate(AmlAsset amlAsset, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost)
+        {
+            return CreateUIInternal(amlAsset.Text, parent, dataContext, templateHost, amlAsset);
+        }
+
+        public UIElement CreateTemplate(string amlText, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost)
+        {
+            return CreateUIInternal(amlText, parent, dataContext, templateHost, null);
         }
 
         private DependencyObject Parse(string xmlTxt, Document doc)
@@ -66,7 +77,7 @@ namespace AlienUI
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
-
+            
             DependencyObject root = CreateNodeByXml(rootNode, null, doc);
 
             return root;

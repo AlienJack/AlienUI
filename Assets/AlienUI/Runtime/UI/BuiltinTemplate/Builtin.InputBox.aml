@@ -1,4 +1,9 @@
-<Image Name="Bg" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Padding="4,4,4,4">
-	<Label Name="PlaceHolder" AlignHorizontal="Left" AlignVertical="Middle" Horizontal="Stretch" Vertical="Stretch" Content="{TemplateBinding PlaceHolder}" FontSize="15" Color="#b7b7b7"/>
-	<Label Name="TextCom" AlignHorizontal="Left" AlignVertical="Middle"  Horizontal="Stretch" Vertical="Stretch" FontSize="15"/>
-</Image>
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.InputBox">
+	<Image Name="Bg" Horizontal="Stretch" Vertical="Stretch"
+		Padding="4,4,4,4">
+		<Label Name="PlaceHolder" AlignHorizontal="Left" AlignVertical="Middle" Horizontal="Stretch"
+			Vertical="Stretch" Content="{TemplateBinding PlaceHolder}" FontSize="15" Color="#b7b7b7" />
+		<Label Name="TextCom" AlignHorizontal="Left" AlignVertical="Middle" Horizontal="Stretch"
+			Vertical="Stretch" FontSize="15" />
+	</Image>
+</Template>

@@ -99,6 +99,13 @@ namespace AlienUI.Core
             return Activator.CreateInstance(type) as XmlNodeElement;
         }
 
+        internal XmlNodeElement CreateInstance(string nodeName)
+        {
+            m_uiTypes.TryGetValue(nodeName, out var instanceType);
+            return Activator.CreateInstance(instanceType) as XmlNodeElement;
+
+        }
+
         private Type GetDependencyObjectType(XmlNode xnode)
         {
             var shortName = xnode.LocalName;

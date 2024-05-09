@@ -173,6 +173,11 @@ namespace AlienUI.Core
                     if (!xmlParser.ParseValue()) continue;
 
                     node.SetValue(att.Name, xmlParser.ResultValue, false);
+#if UNITY_EDITOR
+                    //this is only for Editor Designer to Instantiate a template aml
+                    if (!Application.isPlaying && m_templateHost == null && node is Template temp)
+                        m_templateHost = temp.Engine.AttParser.Collector.CreateInstance(temp.Type);
+#endif
                 }
             }
 

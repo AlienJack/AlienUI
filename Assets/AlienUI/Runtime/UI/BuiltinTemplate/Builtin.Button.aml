@@ -1,43 +1,47 @@
-<Border Name="Root" xmlns="AlienUI.UIElements" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" 
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button">
+	<Border Name="Root"  Horizontal="Stretch" Vertical="Stretch"
+		Padding="2,2,2,2"
 		FrontColor="#4c4c4c" BorderColor="#00000000" BorderWidth="2">
-	<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" FontSize="24"/>
+		<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch"
+			Vertical="Stretch" FontSize="24" />
 
-	<DataTrigger Target="#TemplateHost">
-		<Condition PropertyName="Pressed" CompareType="Equal" Value="true"/>
-		<PlayStoryboard Target="Press"/>
-	</DataTrigger>
-	
-	<EventTrigger Target="#TemplateHost" Event="OnPointerEnter">
-		<PlayStoryboard Target="Hover"/>
-	</EventTrigger>
-	<EventTrigger Event="OnPointerExit">
-		<PlayStoryboard Target="Normal"/>
-	</EventTrigger>
+		<DataTrigger Target="#TemplateHost">
+			<Condition PropertyName="Pressed" CompareType="Equal" Value="true" />
+			<PlayStoryboard Target="Press" />
+		</DataTrigger>
 
-	<StoryboardGroup>
-		<Storyboard Name="Hover">
-			<Animation Target="Root" PropertyName="FrontColor">
-				<AnimationKey Time="0.2" Value="#353535"/>
-			</Animation>
-			<Animation Target="Root" PropertyName="BorderColor">
-				<AnimationKey Time="0.2" Value="#46607cff"/>
-			</Animation>
-		</Storyboard>
-		<Storyboard Name="Normal">
-			<Animation Target="Root" PropertyName="FrontColor">
-				<AnimationKey Time="0.2" Value="#2d2d2d"/>
-			</Animation>
-			<Animation Target="Root" PropertyName="BorderColor">
-				<AnimationKey Time="0.2" Value="#00000000"/>
-			</Animation>
-		</Storyboard>
-		<Storyboard Name="Press">
-			<Animation Target="Root" PropertyName="FrontColor">
-				<AnimationKey Time="0.2" Value="#6a6a6a"/>
-			</Animation>
-			<Animation Target="Root" PropertyName="BorderColor">
-				<AnimationKey Time="0.2" Value="#46607cff"/>
-			</Animation>
-		</Storyboard>
-	</StoryboardGroup>
-</Border>
+		<EventTrigger Target="#TemplateHost" Event="OnPointerEnter">
+			<PlayStoryboard Target="Hover" />
+		</EventTrigger>
+		<EventTrigger Event="OnPointerExit">
+			<PlayStoryboard Target="Normal" />
+		</EventTrigger>
+
+		<StoryboardGroup>
+			<Storyboard Name="Hover">
+				<Animation Target="Root" PropertyName="FrontColor">
+					<AnimationKey Time="0.2" Value="#353535" />
+				</Animation>
+				<Animation Target="Root" PropertyName="BorderColor">
+					<AnimationKey Time="0.2" Value="#46607cff" />
+				</Animation>
+			</Storyboard>
+			<Storyboard Name="Normal">
+				<Animation Target="Root" PropertyName="FrontColor">
+					<AnimationKey Time="0.2" Value="#2d2d2d" />
+				</Animation>
+				<Animation Target="Root" PropertyName="BorderColor">
+					<AnimationKey Time="0.2" Value="#00000000" />
+				</Animation>
+			</Storyboard>
+			<Storyboard Name="Press">
+				<Animation Target="Root" PropertyName="FrontColor">
+					<AnimationKey Time="0.2" Value="#6a6a6a" />
+				</Animation>
+				<Animation Target="Root" PropertyName="BorderColor">
+					<AnimationKey Time="0.2" Value="#46607cff" />
+				</Animation>
+			</Storyboard>
+		</StoryboardGroup>
+	</Border>
+</Template>
