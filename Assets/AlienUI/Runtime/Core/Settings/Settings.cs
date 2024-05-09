@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace AlienUI
 {
-    [CreateAssetMenu(fileName = "Settings", menuName = "AlienUI/CreateSettings")]
-    public class Settings : ScriptableObject
+    public partial class Settings : ScriptableObject
     {
         [SerializeField]
         private Font m_defaultLabelFont;
@@ -14,6 +13,8 @@ namespace AlienUI
         private List<Template> m_templates = new List<Template>();
 
         private Dictionary<string, Template> m_templatesDict = new Dictionary<string, Template>();
+
+        public static Func<Settings> SettingGetter;
 
         public void OptimizeData()
         {
@@ -28,6 +29,20 @@ namespace AlienUI
             return template.Xml;
         }
 
+#if UNITY_EDITOR
+        private static Settings m_cacheInstance;
+#endif
+
+        public static Settings Get()
+        {
+            if (m_cacheInstance != null) return m_cacheInstance;
+#if UNITY_EDITOR
+            m_cacheInstance = UnityEditor.AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+            return m_cacheInstance;
+#else
+            return SettingGetter?.Invoke();
+#endif
+        }
 
         [Serializable]
         public class Template

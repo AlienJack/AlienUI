@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEditor.Callbacks;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace AlienUI.Editors
@@ -22,6 +23,7 @@ namespace AlienUI.Editors
 
         public override void OnInspectorGUI()
         {
+
         }
     }
 
@@ -40,6 +42,23 @@ namespace AlienUI.Editors
             ctx.AddObjectToAsset("main obj", amlAsset);
             ctx.SetMainObject(amlAsset);
         }
-    }
 
+        [OnOpenAsset(1, OnOpenAssetAttributeMode.Execute)]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            Object asset = EditorUtility.InstanceIDToObject(instanceID);
+
+            // 检查资源是否是自定义资源类型
+            if (asset is AmlAsset aa)
+            {
+                
+                string assetPath = AssetDatabase.GetAssetPath(instanceID);
+                PrefabStageUtility.OpenPrefab(assetPath);
+                return false;
+            }
+
+            // 不是自定义资源，返回false让Unity处理
+            return false;
+        }
+    }
 }

@@ -92,7 +92,7 @@ namespace AlienUI.UIElements
         {
             var self = sender as Label;
 
-            self.m_text.font = (Font)newValue ?? self.Engine.Settings.DefaultLabelFont;
+            self.m_text.font = (Font)newValue ?? Settings.Get().DefaultLabelFont;
             OnLayoutParamDirty(sender, oldValue, newValue);
         }
 

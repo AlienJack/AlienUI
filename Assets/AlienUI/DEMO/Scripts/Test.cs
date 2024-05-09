@@ -7,13 +7,15 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     public AmlAsset ta;
+    public Settings settings;
     public Engine e;
     public RectTransform uiRoot;
-    private Window m_window;
 
     private void Start()
     {
-        m_window = e.CreateUI(ta.Text, uiRoot, new LoginVM()) as Window;
+        //resolve not in Editor Environment
+        Settings.SettingGetter = () => settings;
+        e.CreateUI(ta.Text, uiRoot, new LoginVM());
     }
 
     private void Update()

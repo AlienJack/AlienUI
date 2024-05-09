@@ -2,6 +2,7 @@ using AlienUI.Models;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,10 +18,9 @@ namespace AlienUI.Editors
 
         public override void OnInspectorGUI()
         {
-            //base.OnInspectorGUI();
             EditorGUILayout.BeginVertical();
             var tar = target as AmlAsset;
-            EditorGUILayout.TextArea(tar.Text);
+            EditorGUILayout.TextArea(tar.Text, new GUIStyle(EditorStyles.textArea) { wordWrap = true });
             EditorGUILayout.EndVertical();
         }
     }

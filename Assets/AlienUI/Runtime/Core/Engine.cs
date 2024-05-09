@@ -12,15 +12,13 @@ namespace AlienUI
     public class Engine : MonoBehaviour
     {
         private XmlAttributeParser AttParser = new XmlAttributeParser();
-        [SerializeField]
-        private Settings m_setting;
-        public Settings Settings => m_setting;
+
         [SerializeField]
         private RectTransform UIRoot;
 
         private void Awake()
         {
-            Settings.OptimizeData();
+            Settings.Get().OptimizeData();
             DontDestroyOnLoad(gameObject);
         }
 
