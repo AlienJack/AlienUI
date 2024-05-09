@@ -18,9 +18,4 @@ public class Test : MonoBehaviour
         e.CreateUI(ta.Text, uiRoot, new LoginVM());
     }
 
-    private void Update()
-    {
-        //m_window.Width += 10 * Time.deltaTime;
-        //m_window.Height += 10 * Time.deltaTime;
-    }
 }

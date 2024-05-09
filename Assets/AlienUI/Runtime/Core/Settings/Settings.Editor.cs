@@ -26,6 +26,7 @@ namespace AlienUI
 
 
         private static ReorderableList m_templateList;
+
         private static void OnDrawSettingGUI(string searchContext)
         {
             var setting = prepareSettingObject();
@@ -36,8 +37,28 @@ namespace AlienUI
             DrawDefaultFont(setting);
             DrawTemplate(setting);
 
+            EditorGUILayout.Space(20);
+
+            EditorGUILayout.BeginVertical(new GUIStyle(EditorStyles.helpBox) { padding = new RectOffset(5, 5, 5, 5) });
+            EditorGUILayout.LabelField("Design Mode Settings", new GUIStyle(EditorStyles.label) { fontSize = 16 });
+            EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(5, 5, 5, 5) });
+            DrawEditPrefab(setting);
+            DrawDesignSize(setting);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndVertical();
+
             if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
             EditorGUILayout.EndVertical();
+        }
+
+        private static void DrawDesignSize(Settings setting)
+        {
+            setting.DesignSize = EditorGUILayout.Vector2Field("DesignSize", setting.DesignSize);
+        }
+
+        private static void DrawEditPrefab(Settings setting)
+        {
+            setting.EditPrefab = EditorGUILayout.ObjectField("EditPrefab", setting.EditPrefab, typeof(GameObject), false) as GameObject;
         }
 
         private static void DrawTemplate(Settings setting)
@@ -74,6 +95,12 @@ namespace AlienUI
 
             return set;
         }
+    }
+
+    public partial class Settings : ScriptableObject
+    {
+        public GameObject EditPrefab;
+        public Vector2 DesignSize = new Vector2(1920, 1080);
     }
 }
 #endif

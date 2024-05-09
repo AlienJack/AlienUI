@@ -12,19 +12,23 @@ namespace AlienUI
         [SerializeField]
         private List<Template> m_templates = new List<Template>();
 
+        [NonSerialized]
         private Dictionary<string, Template> m_templatesDict = new Dictionary<string, Template>();
 
         public static Func<Settings> SettingGetter;
-
+        [NonSerialized]
+        bool m_optimized;
         public void OptimizeData()
         {
             m_templates.ForEach(t => m_templatesDict[t.Name] = t);
+            m_optimized = true;
         }
 
         public Font DefaultLabelFont => m_defaultLabelFont;
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
+            if (!m_optimized) OptimizeData();
             m_templatesDict.TryGetValue(templateName, out Template template);
             return template.Xml;
         }

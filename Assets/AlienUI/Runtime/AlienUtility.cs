@@ -5,6 +5,14 @@ namespace AlienUI.UIElements.ToolsScript
 {
     internal static class AlienUtility
     {
+        internal static T AddMissingComponemt<T>(this GameObject go) where T : Component
+        {
+            var t = go.GetComponent<T>();
+            if (t != null) return t;
+
+            t = go.AddComponent<T>();
+            return t;
+        }
         internal static void PerformRectTransform(this UIElement uiElement)
         {
             var anchorMin = new Vector2();

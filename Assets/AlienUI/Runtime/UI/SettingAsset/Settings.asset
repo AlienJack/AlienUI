@@ -17,3 +17,4 @@ MonoBehaviour:
   - Xml: {fileID: 5022602860645237092, guid: 07d9b3baa8f96824b8e45f6ac61c6679, type: 3}
   - Xml: {fileID: 5022602860645237092, guid: 48440c2ca59705e4ab7e1b2a98673b41, type: 3}
   - Xml: {fileID: 5022602860645237092, guid: 0632dfc972312aa439d529eedcf4a54f, type: 3}
+  EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}

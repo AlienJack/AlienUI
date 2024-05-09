@@ -9,17 +9,14 @@ using UnityEngine;
 
 namespace AlienUI
 {
+    [ExecuteInEditMode]
     public class Engine : MonoBehaviour
     {
         private XmlAttributeParser AttParser = new XmlAttributeParser();
 
-        [SerializeField]
-        private RectTransform UIRoot;
-
         private void Awake()
         {
-            Settings.Get().OptimizeData();
-            DontDestroyOnLoad(gameObject);
+            if (Application.isPlaying) DontDestroyOnLoad(gameObject);
         }
 
         internal UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext, XmlNodeElement templateHost, UnityEngine.Object xmlAsset)
@@ -43,12 +40,9 @@ namespace AlienUI
 
                 SetDirty(uiIns);
 
+                uiGameObj.hideFlags = HideFlags.DontSave;
+
                 return uiIns;
-            }
-            catch (Exception ex)
-            {
-                LogError(ex);
-                throw ex;
             }
             finally
             {

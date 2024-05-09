@@ -51,9 +51,15 @@ namespace AlienUI.Editors
             // 检查资源是否是自定义资源类型
             if (asset is AmlAsset aa)
             {
-                
-                string assetPath = AssetDatabase.GetAssetPath(instanceID);
-                PrefabStageUtility.OpenPrefab(assetPath);
+                var prefab = Settings.Get().EditPrefab;
+                var path = AssetDatabase.GetAssetPath(prefab);
+                var stage=PrefabStageUtility.OpenPrefab(path);
+                var engine = stage.prefabContentsRoot.GetComponent<Engine>();
+                var canvas = engine.transform.parent.GetComponent<Canvas>();
+                if (canvas) canvas.renderMode = RenderMode.WorldSpace;
+                (canvas.transform as RectTransform).sizeDelta = Settings.Get().DesignSize;
+                engine.CreateUI(aa, engine.transform, null);                
+
                 return false;
             }
 

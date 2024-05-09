@@ -57,5 +57,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1c32ab652e8f34eb1189ba86222c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_setting: {fileID: 11400000, guid: 2ec2f41d973e9f248b778741b8154b30, type: 2}
-  UIRoot: {fileID: 1851791360748681238}
