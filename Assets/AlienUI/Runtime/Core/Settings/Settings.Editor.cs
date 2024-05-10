@@ -39,26 +39,23 @@ namespace AlienUI
 
             EditorGUILayout.Space(20);
 
-            EditorGUILayout.BeginVertical(new GUIStyle(EditorStyles.helpBox) { padding = new RectOffset(5, 5, 5, 5) });
-            EditorGUILayout.LabelField("Design Mode Settings", new GUIStyle(EditorStyles.label) { fontSize = 16 });
-            EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(5, 5, 5, 5) });
-            DrawEditPrefab(setting);
-            DrawDesignSize(setting);
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndVertical();
+            DrawDesignerSettings(setting);
 
             if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
             EditorGUILayout.EndVertical();
         }
 
-        private static void DrawDesignSize(Settings setting)
+        private static void DrawDesignerSettings(Settings setting)
         {
-            setting.DesignSize = EditorGUILayout.Vector2Field("DesignSize", setting.DesignSize);
-        }
-
-        private static void DrawEditPrefab(Settings setting)
-        {
+            EditorGUILayout.BeginVertical(new GUIStyle(EditorStyles.helpBox) { padding = new RectOffset(5, 5, 5, 5) });
+            EditorGUILayout.LabelField("Design Mode Settings", new GUIStyle(EditorStyles.label) { fontSize = 16 });
+            EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(5, 5, 5, 5) });
             setting.EditPrefab = EditorGUILayout.ObjectField("EditPrefab", setting.EditPrefab, typeof(GameObject), false) as GameObject;
+            setting.DesignSize = EditorGUILayout.Vector2Field("DesignSize", setting.DesignSize);
+            setting.DesignerLayout = EditorGUILayout.ObjectField("DesignerLayoutFile", setting.DesignerLayout, typeof(DefaultAsset), false) as DefaultAsset;
+            setting.BackLayout = EditorGUILayout.ObjectField("QuitDesignerLayoutFile", setting.BackLayout, typeof(DefaultAsset), false) as DefaultAsset;
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndVertical();
         }
 
         private static void DrawTemplate(Settings setting)
@@ -101,6 +98,8 @@ namespace AlienUI
     {
         public GameObject EditPrefab;
         public Vector2 DesignSize = new Vector2(1920, 1080);
+        public DefaultAsset DesignerLayout;
+        public DefaultAsset BackLayout;
     }
 }
 #endif

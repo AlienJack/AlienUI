@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEditor.Callbacks;
 using UnityEditor.SceneManagement;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace AlienUI.Editors
@@ -51,16 +52,21 @@ namespace AlienUI.Editors
             // 检查资源是否是自定义资源类型
             if (asset is AmlAsset aa)
             {
+                if (Settings.Get().DesignerLayout)
+                    EditorUtility.LoadWindowLayout(AssetDatabase.GetAssetPath(Settings.Get().DesignerLayout));
+
                 var prefab = Settings.Get().EditPrefab;
                 var path = AssetDatabase.GetAssetPath(prefab);
-                var stage=PrefabStageUtility.OpenPrefab(path);
+                var stage = PrefabStageUtility.OpenPrefab(path);
                 var engine = stage.prefabContentsRoot.GetComponent<Engine>();
                 var canvas = engine.transform.parent.GetComponent<Canvas>();
                 if (canvas) canvas.renderMode = RenderMode.WorldSpace;
                 (canvas.transform as RectTransform).sizeDelta = Settings.Get().DesignSize;
-                engine.CreateUI(aa, engine.transform, null);                
+                var ui = engine.CreateUI(aa, engine.transform, null);
 
-                return false;
+                Designer.GetWindow<Designer>().SetTarget(ui, aa);
+
+                return true;
             }
 
             // 不是自定义资源，返回false让Unity处理
