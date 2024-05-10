@@ -48,7 +48,8 @@ namespace AlienUI.Editors
         {
             var rect = new Rect();
             rect.position += new Vector2(5, 5);
-            if (PrefabStageUtility.GetCurrentPrefabStage() is PrefabStage stage)
+            var stage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (stage != null)
             {
                 rect.width = Mathf.Min(position.width, 100);
                 rect.height = Mathf.Min(position.height, 30);
@@ -77,6 +78,11 @@ namespace AlienUI.Editors
 
             DrawTree(rect);
             DrawInspector(rect);
+
+            if (GUI.changed)
+            {
+                Canvas.ForceUpdateCanvases();
+            }
         }
 
         private void DrawInspector(Rect rect)
