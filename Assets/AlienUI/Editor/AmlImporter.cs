@@ -44,9 +44,11 @@ namespace AlienUI.Editors
             ctx.SetMainObject(amlAsset);
         }
 
+        internal static bool OverrideAMLOpen = true;
         [OnOpenAsset(1, OnOpenAssetAttributeMode.Execute)]
         public static bool OnOpenAsset(int instanceID, int line)
         {
+            if (!OverrideAMLOpen) return false;
             Object asset = EditorUtility.InstanceIDToObject(instanceID);
 
             // 检查资源是否是自定义资源类型

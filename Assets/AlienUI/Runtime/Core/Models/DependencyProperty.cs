@@ -5,6 +5,7 @@ namespace AlienUI.Models
 {
     public partial class DependencyProperty
     {
+        public string Group { get; private set; }
         public string PropName { get; private set; }
         public Type PropType { get; private set; }
         public object DefaultValue { get; private set; }
@@ -13,13 +14,14 @@ namespace AlienUI.Models
 
         private int m_hash;
 
-        private DependencyProperty(string propName, Type propType, object defaultValue, OnValueChangedHandle onValueChanged)
+        private DependencyProperty(string propName, Type propType, object defaultValue, OnValueChangedHandle onValueChanged, string group = null)
         {
             PropName = propName;
             PropType = propType;
             DefaultValue = defaultValue;
             m_hash = PropName.GetHashCode();
             OnValueChanged += onValueChanged;
+            Group = group;
         }
 
         public void RaiseChangeEvent(DependencyObject sender, object oldValue, object newValue)
@@ -57,7 +59,7 @@ namespace AlienUI.Models
                 return targetDp;
         }
 
-        public static void GetAllDP(Type owenClassType, ref List<DependencyProperty> result)
+        internal static void GetAllDP(Type owenClassType, ref List<DependencyProperty> result)
         {
             if (owenClassType.IsGenericType) owenClassType = owenClassType.GetGenericTypeDefinition();
             m_dependencyProperties.TryGetValue(owenClassType, out var dps);

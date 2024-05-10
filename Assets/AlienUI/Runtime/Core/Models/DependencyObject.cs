@@ -28,6 +28,13 @@ namespace AlienUI.Models
             return dp;
         }
 
+        public List<DependencyProperty> GetAllDependencyProperties()
+        {
+            List<DependencyProperty> results = new List<DependencyProperty>();
+            DependencyProperty.GetAllDP(m_selfType, ref results);
+            return results;
+        }
+
         public void SetValue(string propName, object value, bool notify = true)
         {
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);

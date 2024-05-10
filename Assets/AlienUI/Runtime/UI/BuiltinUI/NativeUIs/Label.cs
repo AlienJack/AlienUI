@@ -99,6 +99,7 @@ namespace AlienUI.UIElements
         protected override void OnContentChanged(string oldValue, string newValue)
         {
             m_text.text = Content;
+            SetLayoutDirty();
         }
 
         private static void OnAlignChanged(DependencyObject sender, object oldValue, object newValue)
