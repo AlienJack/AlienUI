@@ -14,7 +14,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(Button), "BUTTON_TEXT");
+            DependencyProperty.Register("Text", typeof(string), typeof(Button), new PropertyMeta("BUTTON_TEXT"));
 
         public bool Pressed
         {
@@ -23,7 +23,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty PressedProperty =
-            DependencyProperty.Register("Pressed", typeof(bool), typeof(Button), false);
+            DependencyProperty.Register("Pressed", typeof(bool), typeof(Button), new PropertyMeta(false));
 
         public CommandBase Command
         {
@@ -32,7 +32,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.Register("Command", typeof(CommandBase), typeof(Button), null);
+            DependencyProperty.Register("Command", typeof(CommandBase), typeof(Button), new PropertyMeta(null));
 
         protected override void OnInitialized()
         {

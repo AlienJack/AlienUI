@@ -5,23 +5,21 @@ namespace AlienUI.Models
 {
     public partial class DependencyProperty
     {
-        public string Group { get; private set; }
+        public PropertyMeta Meta { get; private set; }
         public string PropName { get; private set; }
         public Type PropType { get; private set; }
-        public object DefaultValue { get; private set; }
         public delegate void OnValueChangedHandle(DependencyObject sender, object oldValue, object newValue);
         public event OnValueChangedHandle OnValueChanged;
 
         private int m_hash;
 
-        private DependencyProperty(string propName, Type propType, object defaultValue, OnValueChangedHandle onValueChanged, string group = null)
+        private DependencyProperty(string propName, Type propType, PropertyMeta metaData, OnValueChangedHandle onValueChanged, string group = null)
         {
             PropName = propName;
             PropType = propType;
-            DefaultValue = defaultValue;
+            Meta = metaData;
             m_hash = PropName.GetHashCode();
             OnValueChanged += onValueChanged;
-            Group = group;
         }
 
         public void RaiseChangeEvent(DependencyObject sender, object oldValue, object newValue)
@@ -37,12 +35,14 @@ namespace AlienUI.Models
 
         private static Type bottomType = typeof(DependencyObject);
         private static Dictionary<Type, Dictionary<string, DependencyProperty>> m_dependencyProperties = new Dictionary<Type, Dictionary<string, DependencyProperty>>();
-        public static DependencyProperty Register(string propName, Type propType, Type owenClassType, object defaultValue, OnValueChangedHandle onValueChanged = null)
+        public static DependencyProperty Register(string propName, Type propType, Type owenClassType, PropertyMeta metaData, OnValueChangedHandle onValueChanged = null)
         {
             if (!m_dependencyProperties.ContainsKey(owenClassType))
                 m_dependencyProperties[owenClassType] = new Dictionary<string, DependencyProperty>();
 
-            var newDP = new DependencyProperty(propName, propType, defaultValue, onValueChanged);
+            metaData.Group ??= owenClassType.Name;
+
+            var newDP = new DependencyProperty(propName, propType, metaData, onValueChanged);
             m_dependencyProperties[owenClassType][newDP.PropName] = newDP;
             return newDP;
         }
@@ -68,9 +68,5 @@ namespace AlienUI.Models
             if (owenClassType.BaseType == bottomType || owenClassType.IsSubclassOf(bottomType))
                 GetAllDP(owenClassType.BaseType, ref result);
         }
-    }
-    public class PropertyMeta
-    {
-        public PropertyMeta(object defaultValue) { }
     }
 }

@@ -16,7 +16,7 @@ namespace AlienUI.Core.Triggers
         }
 
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Trigger), default(DependencyObjectRef));
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Trigger), new PropertyMeta(default(DependencyObjectRef)));
 
         protected DependencyObject m_targetObj { get; private set; }
 

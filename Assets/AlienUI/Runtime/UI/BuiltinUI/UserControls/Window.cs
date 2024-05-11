@@ -14,7 +14,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty CloseProperty =
-            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new Command());
+            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMeta(new Command()).ReadOnly());
 
         protected override void OnInitialized()
         {

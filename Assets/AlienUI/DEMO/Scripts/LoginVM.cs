@@ -11,7 +11,7 @@ public class LoginVM : ViewModel
         set { SetValue(UsernameProperty, value); }
     }
     public static readonly DependencyProperty UsernameProperty =
-        DependencyProperty.Register("Username", typeof(string), typeof(LoginVM), string.Empty);
+        DependencyProperty.Register("Username", typeof(string), typeof(LoginVM), new PropertyMeta(string.Empty));
 
     public string Password
     {
@@ -20,7 +20,7 @@ public class LoginVM : ViewModel
     }
 
     public static readonly DependencyProperty PasswordProperty =
-        DependencyProperty.Register("Password", typeof(string), typeof(LoginVM), string.Empty);
+        DependencyProperty.Register("Password", typeof(string), typeof(LoginVM), new PropertyMeta(string.Empty));
 
 
 
@@ -30,9 +30,9 @@ public class LoginVM : ViewModel
         set { SetValue(LoginCmdProperty, value); }
     }
     public static readonly DependencyProperty LoginCmdProperty =
-        DependencyProperty.Register("LoginCmd", typeof(Command), typeof(LoginVM), new Command());
+        DependencyProperty.Register("LoginCmd", typeof(Command), typeof(LoginVM), new PropertyMeta(new Command()));
 
-    public LoginVM() 
+    public LoginVM()
     {
         LoginCmd.OnExecute += LoginCmd_OnExecute;
     }

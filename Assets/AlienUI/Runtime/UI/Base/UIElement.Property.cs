@@ -10,8 +10,7 @@ namespace AlienUI.UIElements
             set { SetValue(IsPointerHoverProperty, value); }
         }
         public static readonly DependencyProperty IsPointerHoverProperty =
-            DependencyProperty.Register("IsPointerHover", typeof(bool), typeof(UIElement), false);
-
+            DependencyProperty.Register("IsPointerHover", typeof(bool), typeof(UIElement), new PropertyMeta(false));
 
 
         public float Alpha
@@ -20,7 +19,7 @@ namespace AlienUI.UIElements
             set { SetValue(AlphaProperty, value); }
         }
         public static readonly DependencyProperty AlphaProperty =
-            DependencyProperty.Register("Alpha", typeof(float), typeof(UIElement), 1f, OnAlphaChanged);
+            DependencyProperty.Register("Alpha", typeof(float), typeof(UIElement), new PropertyMeta(1f), OnAlphaChanged);
 
         private static void OnAlphaChanged(DependencyObject sender, object oldValue, object newValue)
         {

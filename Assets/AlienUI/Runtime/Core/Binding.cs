@@ -47,7 +47,7 @@ namespace AlienUI.Core
             if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
 
             //首先同步一次数值
-            Target.SetValue(TargetProperty, srcValue, false);
+            Target.FillDependencyValue(TargetProperty, srcValue);
 
             switch (bindMode)
             {
@@ -75,7 +75,7 @@ namespace AlienUI.Core
             m_dataSync = true;
 
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
-            try { Source.SetValue(SourceProperty, newValue, true); }
+            try { Source.SetValue(SourceProperty, newValue); }
             finally { m_dataSync = false; }
         }
 
@@ -87,7 +87,7 @@ namespace AlienUI.Core
 
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
 
-            try { Target.SetValue(TargetProperty, newValue, true); }
+            try { Target.SetValue(TargetProperty, newValue); }
             finally { m_dataSync = false; }
         }
 

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace AlienUI
 {
     [ExecuteInEditMode]
-    internal class NodeProxy : MonoBehaviour,
+    public class NodeProxy : MonoBehaviour,
         IPointerEnterHandler,
         IPointerExitHandler,
         IPointerDownHandler,

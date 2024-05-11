@@ -172,7 +172,7 @@ namespace AlienUI.Core
                     if (!xmlParser.ParseType()) continue;
                     if (!xmlParser.ParseValue()) continue;
 
-                    node.SetValue(att.Name, xmlParser.ResultValue, false);
+                    node.FillDependencyValue(att.Name, xmlParser.ResultValue);
 #if UNITY_EDITOR
                     //this is only for Editor Designer to Instantiate a template aml
                     if (!Application.isPlaying && m_templateHost == null && node is Template temp)

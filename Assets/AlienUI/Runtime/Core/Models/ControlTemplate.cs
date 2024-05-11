@@ -8,6 +8,7 @@ namespace AlienUI
     {
         private readonly string m_name;
         public readonly bool Valid => m_name != null;
+        public string Name => m_name;
 
         public ControlTemplate(string name)
         {

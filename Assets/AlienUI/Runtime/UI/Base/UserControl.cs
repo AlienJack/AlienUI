@@ -14,7 +14,7 @@ namespace AlienUI.UIElements
             set { SetValue(TemplateProperty, value); }
         }
         public static readonly DependencyProperty TemplateProperty =
-            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), default(ControlTemplate));
+            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMeta(default(ControlTemplate), "Data"));
 
         internal UIElement m_templateInstance;
 

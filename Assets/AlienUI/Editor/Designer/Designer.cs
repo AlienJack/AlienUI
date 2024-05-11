@@ -78,11 +78,6 @@ namespace AlienUI.Editors
 
             DrawTree(rect);
             DrawInspector(rect);
-
-            if (GUI.changed)
-            {
-                Canvas.ForceUpdateCanvases();
-            }
         }
 
         private void DrawInspector(Rect rect)
@@ -91,55 +86,93 @@ namespace AlienUI.Editors
             rect.height = position.height - 45;
             rect.position = new Vector2(position.width * 0.3f + 10, rect.position.y);
             GUI.Box(rect, string.Empty, EditorStyles.helpBox);
-
             if (m_selection == null) return;
+            if (m_selection.NodeProxy == null) return;
 
+            Selection.activeObject = m_selection.NodeProxy.gameObject;
             var propties = m_selection.GetAllDependencyProperties();
-            var groups = propties.GroupBy(p => p.Group).ToList();
+            var groups = propties.GroupBy(p => p.Meta.Group).ToList();
+            rect.position += new Vector2(10, 10);
+            rect.height -= 10;
             rect.width -= 10;
-            rect.height = 30;
+            GUILayout.BeginArea(rect);
 
             foreach (var group in groups)
             {
-                rect.position += new Vector2(5, 5);
-
-                var groupName = group.Key ?? "MISC";
-                if (EditorGUI.Foldout(rect, true, groupName))
+                var groupName = group.Key;
+                if (EditorGUILayout.Foldout(true, groupName))
                 {
-                    var drawerRect = new Rect(rect);
-                    var totalWidth = rect.width;
-                    drawerRect.position += new Vector2(5, 0);
-
                     foreach (var property in group)
                     {
-                        drawerRect.position += new Vector2(0, 20);
-                        drawerRect.width = totalWidth * 0.5f;
-                        drawerRect.height = 20;
+                        EditorGUILayout.BeginHorizontal(new GUIStyle { padding = new RectOffset(10, 10, 0, 0) });
+                        EditorGUILayout.LabelField(property.PropName);
 
-                        EditorGUI.LabelField(drawerRect, property.PropName);
-                        var drawerContentRect = new Rect(drawerRect);
-                        drawerContentRect.width = totalWidth * 0.5f - 10;
-                        drawerContentRect.position += new Vector2(drawerContentRect.width, 0);
-
-                        m_defaultDrawers.TryGetValue(property.PropType, out var drawer);
+                        var drawer = FindDrawer(property.PropType);
                         if (drawer == null)
                         {
                             var color = GUI.color;
                             GUI.color = Color.red;
-                            EditorGUI.LabelField(drawerContentRect, $"Not find [{property.PropType}] drawer", new GUIStyle(EditorStyles.label));
+                            EditorGUILayout.LabelField($"Not find [{property.PropType}] drawer", new GUIStyle(EditorStyles.label));
                             GUI.color = color;
                         }
                         else
                         {
-                            var value = drawer.Draw(drawerContentRect, m_selection.GetValue(property));
-                            m_selection.SetValue(property, value, true);
+                            using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly))
+                            {
+                                var value = drawer.Draw(m_selection.GetValue(property));
+                                if (!property.Meta.IsReadOnly)
+                                    m_selection.SetValue(property, value);
+
+                            }
                         }
 
+                        EditorGUILayout.EndHorizontal();
+
+                        GUI.Box(GUILayoutUtility.GetLastRect(), string.Empty);
+                        HandleContextMenu(m_selection, property);
                     }
                 }
-
-                //GUI.Box(rect, string.Empty, EditorStyles.helpBox);
             }
+
+            GUILayout.EndArea();
+        }
+
+        private void HandleContextMenu(UIElement m_selection, DependencyProperty property)
+        {
+            if (Event.current.type != EventType.ContextClick) return;
+            Vector2 mousePos = Event.current.mousePosition;
+            if (!GUILayoutUtility.GetLastRect().Contains(mousePos)) return;
+
+            // 创建一个新的通用菜单
+            GenericMenu menu = new GenericMenu();            
+
+            // Use MenuItem as Title
+            menu.AddDisabledItem(new GUIContent($"---{m_selection}.{property.PropName}---"));
+
+            // Add Set DefaultValue Menu
+            if (property.Meta.IsReadOnly)
+                menu.AddDisabledItem(new GUIContent("Set Default Value (ReadOnly)"));
+            else
+            {
+                menu.AddItem(new GUIContent("Set Default Value"), false, () =>
+                {
+                    m_selection.SetValue(property, property.Meta.DefaultValue);
+                });
+            }
+
+            menu.ShowAsContext();
+
+            Event.current.Use();
+        }
+
+        private PropertyDrawerBase FindDrawer(Type propertyType)
+        {
+            if (m_defaultDrawers.TryGetValue(propertyType, out var drawer))
+                return drawer;
+            else if (propertyType.BaseType != null)
+                return FindDrawer(propertyType.BaseType);
+            else
+                return null;
         }
 
         private void DrawTree(Rect rect)

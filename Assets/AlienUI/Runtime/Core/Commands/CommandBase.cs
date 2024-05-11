@@ -26,7 +26,7 @@ namespace AlienUI.Core.Commnands
         }
     }
 
-    public class Commnad<T> : CommandBase
+    public class Command<T> : CommandBase
     {
         public void Execute(T param)
         {

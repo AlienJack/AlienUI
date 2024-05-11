@@ -14,7 +14,7 @@ namespace AlienUI.UIElements
             set { SetValue(TypeProperty, value); }
         }
         public static readonly DependencyProperty TypeProperty =
-            DependencyProperty.Register("Type", typeof(string), typeof(Template), string.Empty);
+            DependencyProperty.Register("Type", typeof(string), typeof(Template), new PropertyMeta(string.Empty, "Data"));
 
 
         protected override void OnInitialized()

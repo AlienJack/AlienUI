@@ -12,7 +12,7 @@ namespace AlienUI.UIElements
             set { SetValue(TextProperty, value); }
         }
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), string.Empty, OnTextChanged);
+            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new PropertyMeta(string.Empty), OnTextChanged);
 
         public string PlaceHolder
         {
@@ -21,7 +21,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty PlaceHolderProperty =
-            DependencyProperty.Register("PlaceHolder", typeof(string), typeof(InputBox), "Write here");
+            DependencyProperty.Register("PlaceHolder", typeof(string), typeof(InputBox), new PropertyMeta("Write here"));
 
         private static void OnTextChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -38,7 +38,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty InputTypeProperty =
-            DependencyProperty.Register("InputType", typeof(InputField.InputType), typeof(InputBox), InputField.InputType.Standard, OnInputTypeChanged);
+            DependencyProperty.Register("InputType", typeof(InputField.InputType), typeof(InputBox), new PropertyMeta(InputField.InputType.Standard), OnInputTypeChanged);
 
         private static void OnInputTypeChanged(DependencyObject sender, object oldValue, object newValue)
         {

@@ -19,7 +19,18 @@ namespace AlienUI.Models
             List<DependencyProperty> allDp = new List<DependencyProperty>();
             //Ìî³äÒÀÀµÊôÐÔÄ¬ÈÏÖµ
             DependencyProperty.GetAllDP(m_selfType, ref allDp);
-            allDp.ForEach(dp => SetValue(dp, dp.DefaultValue, false));
+            allDp.ForEach(dp => FillDependencyValue(dp, dp.Meta.DefaultValue));
+        }
+
+        internal void FillDependencyValue(DependencyProperty dp, object value)
+        {
+            m_dpPropValues[dp] = value;
+        }
+        internal void FillDependencyValue(string propertyName, object value)
+        {
+            var dp = GetDependencyProperty(propertyName);
+            if (dp != null)
+                m_dpPropValues[dp] = value;
         }
 
         public DependencyProperty GetDependencyProperty(string propName)
@@ -35,7 +46,7 @@ namespace AlienUI.Models
             return results;
         }
 
-        public void SetValue(string propName, object value, bool notify = true)
+        public void SetValue(string propName, object value)
         {
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);
             if (dp == null)
@@ -44,25 +55,32 @@ namespace AlienUI.Models
                 return;
             }
 
-            SetValue(dp, value, notify);
+            SetValue(dp, value);
         }
 
-        public void SetValue(DependencyProperty dp, object value, bool notify = true)
+        public void SetValue(DependencyProperty dp, object value)
         {
             if (dp == null) return;
 
+            if (dp.Meta.IsReadOnly)
+            {
+                throw new Exception("Readonly Property Can not be Set");
+            }
+
+
             m_dpPropValues.TryGetValue(dp, out object oldValue);
 
-            if (notify && oldValue == value) return;
+            if (oldValue == value) return;
 
             var newValue = value;
             m_dpPropValues[dp] = value;
 
-            if (notify)
-            {
-                dp.RaiseChangeEvent(this, oldValue, newValue);
-                OnDependencyPropertyChanged?.Invoke(dp.PropName, oldValue, newValue);
-            }
+            dp.RaiseChangeEvent(this, oldValue, newValue);
+            OnDependencyPropertyChanged?.Invoke(dp.PropName, oldValue, newValue);
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying) Canvas.ForceUpdateCanvases();
+#endif
         }
 
         public object GetValue(string properyName)
@@ -78,7 +96,7 @@ namespace AlienUI.Models
             m_dpPropValues.TryGetValue(dp, out var value);
             if (value != null) return value;
 
-            return dp.DefaultValue;
+            return dp.Meta.DefaultValue;
         }
 
         public T GetValue<T>(DependencyProperty dp)

@@ -13,7 +13,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty WidthProperty =
-            DependencyProperty.Register("Width", typeof(Number), typeof(UIElement), Number.Identity, OnLayoutParamDirty);
+            DependencyProperty.Register("Width", typeof(Number), typeof(UIElement), new PropertyMeta(Number.Identity, "Layout"), OnLayoutParamDirty);
 
         public Number Height
         {
@@ -22,7 +22,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty HeightProperty =
-            DependencyProperty.Register("Height", typeof(Number), typeof(UIElement), Number.Identity, OnLayoutParamDirty);
+            DependencyProperty.Register("Height", typeof(Number), typeof(UIElement), new PropertyMeta(Number.Identity, "Layout"), OnLayoutParamDirty);
 
         public eHorizontalAlign Horizontal
         {
@@ -31,7 +31,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty HorizontalProperty =
-            DependencyProperty.Register("Horizontal", typeof(eHorizontalAlign), typeof(UIElement), eHorizontalAlign.Middle, OnLayoutParamDirty);
+            DependencyProperty.Register("Horizontal", typeof(eHorizontalAlign), typeof(UIElement), new PropertyMeta(eHorizontalAlign.Middle, "Layout"), OnLayoutParamDirty);
 
         public eVerticalAlign Vertical
         {
@@ -40,7 +40,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty VerticalProperty =
-            DependencyProperty.Register("Vertical", typeof(eVerticalAlign), typeof(UIElement), eVerticalAlign.Middle, OnLayoutParamDirty);
+            DependencyProperty.Register("Vertical", typeof(eVerticalAlign), typeof(UIElement), new PropertyMeta(eVerticalAlign.Middle, "Layout"), OnLayoutParamDirty);
 
         public BorderData Padding
         {
@@ -49,7 +49,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty PaddingProperty =
-            DependencyProperty.Register("Padding", typeof(BorderData), typeof(UIElement), default(BorderData), OnLayoutParamDirty);
+            DependencyProperty.Register("Padding", typeof(BorderData), typeof(UIElement), new PropertyMeta(default(BorderData), "Layout"), OnLayoutParamDirty);
 
 
 
@@ -60,7 +60,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty OffsetProperty =
-            DependencyProperty.Register("Offset", typeof(Vector2), typeof(UIElement), Vector2.zero, OnLayoutParamDirty);
+            DependencyProperty.Register("Offset", typeof(Vector2), typeof(UIElement), new PropertyMeta(Vector2.zero, "Layout"), OnLayoutParamDirty);
 
 
 

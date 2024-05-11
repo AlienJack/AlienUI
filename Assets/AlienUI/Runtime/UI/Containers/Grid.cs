@@ -13,7 +13,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty GridDefineProperty =
-            DependencyProperty.Register("GridDefine", typeof(GridDefine), typeof(Grid), GridDefine.Default, OnLayoutParamDirty);
+            DependencyProperty.Register("GridDefine", typeof(GridDefine), typeof(Grid), new PropertyMeta(GridDefine.Default, "Layout"), OnLayoutParamDirty);
 
         protected override Vector2 CalcDesireSize()
         {

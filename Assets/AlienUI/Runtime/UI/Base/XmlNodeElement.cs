@@ -22,7 +22,7 @@ namespace AlienUI.UIElements
             set { SetValue(NameProperty, value); }
         }
         public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(XmlNodeElement), null);
+            DependencyProperty.Register("Name", typeof(string), typeof(XmlNodeElement), new PropertyMeta(null));
 
         public virtual void AddChild(XmlNodeElement childObj)
         {
@@ -40,7 +40,7 @@ namespace AlienUI.UIElements
             foreach (var dp in m_dpPropValues.Keys.ToArray())
             {
                 var value = m_dpPropValues[dp];
-                dp.RaiseChangeEvent(this, dp.DefaultValue, value);
+                dp.RaiseChangeEvent(this, dp.Meta.DefaultValue, value);
             }
             foreach (var child in m_childrens)
                 child.RefreshPropertyNotify();

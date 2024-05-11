@@ -14,9 +14,8 @@ namespace AlienUI.Core.Resources
             set { SetValue(TargetProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Target.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Animation), default(DependencyObjectRef));
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Animation), new PropertyMeta(default(DependencyObjectRef)));
 
         public string PropertyName
         {
@@ -24,7 +23,7 @@ namespace AlienUI.Core.Resources
             set { SetValue(PropertyNameProperty, value); }
         }
         public static readonly DependencyProperty PropertyNameProperty =
-            DependencyProperty.Register("PropertyName", typeof(string), typeof(Animation), string.Empty);
+            DependencyProperty.Register("PropertyName", typeof(string), typeof(Animation), new PropertyMeta(string.Empty));
 
         public float Offset
         {
@@ -34,9 +33,9 @@ namespace AlienUI.Core.Resources
 
         public float Duration => m_duration;
 
-        // Using a DependencyProperty as the backing store for Offset.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty OffsetProperty =
-            DependencyProperty.Register("Offset", typeof(float), typeof(Animation), 0f);
+            DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMeta(0f));
 
         private PropertyResolver m_resolver;
         private Type m_resolverType;

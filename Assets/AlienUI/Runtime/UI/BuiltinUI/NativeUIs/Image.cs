@@ -14,7 +14,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(Image), Color.white, OnColorChanged);
+            DependencyProperty.Register("Color", typeof(Color), typeof(Image), new PropertyMeta(Color.white), OnColorChanged);
 
 
 
@@ -23,10 +23,9 @@ namespace AlienUI.UIElements
             get { return (ImgType)GetValue(ImageTypeProperty); }
             set { SetValue(ImageTypeProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for ImageType.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty ImageTypeProperty =
-            DependencyProperty.Register("ImageType", typeof(ImgType), typeof(Image), ImgType.Simple, OnTypeChanged);
+            DependencyProperty.Register("ImageType", typeof(ImgType), typeof(Image), new PropertyMeta(ImgType.Simple), OnTypeChanged);
 
         private static void OnTypeChanged(DependencyObject sender, object oldValue, object newValue)
         {

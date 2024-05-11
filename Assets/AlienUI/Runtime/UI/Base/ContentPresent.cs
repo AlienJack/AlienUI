@@ -9,10 +9,8 @@ namespace AlienUI.UIElements
             get { return (T)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for Content.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentProperty =
-            DependencyProperty.Register("Content", typeof(T), typeof(ContentPresent<T>), default(T), OnContentChangedHandle);
+            DependencyProperty.Register("Content", typeof(T), typeof(ContentPresent<T>), new PropertyMeta(default(T), "Data"), OnContentChangedHandle);
 
         private static void OnContentChangedHandle(DependencyObject sender, object oldValue, object newValue)
         {

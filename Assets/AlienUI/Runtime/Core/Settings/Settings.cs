@@ -1,6 +1,7 @@
 using AlienUI.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AlienUI
@@ -28,9 +29,13 @@ namespace AlienUI
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
-            if (!m_optimized) OptimizeData();
             m_templatesDict.TryGetValue(templateName, out Template template);
             return template.Xml;
+        }
+
+        public IEnumerable<AmlAsset> GetAllTemplateAssets()
+        {
+            return m_templatesDict.Values.Select(v => v.Xml);
         }
 
 #if UNITY_EDITOR
@@ -39,12 +44,19 @@ namespace AlienUI
 
         public static Settings Get()
         {
-            if (m_cacheInstance != null) return m_cacheInstance;
 #if UNITY_EDITOR
-            m_cacheInstance = UnityEditor.AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+            if (m_cacheInstance == null)
+            {
+                m_cacheInstance = UnityEditor.AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+            }
+
+            if (m_cacheInstance != null && !m_cacheInstance.m_optimized) m_cacheInstance.OptimizeData();
             return m_cacheInstance;
 #else
-            return SettingGetter?.Invoke();
+            var settingObj = SettingGetter?.Invoke();
+            if(settingObj!=null && !settingObj.m_optimized) settingObj.OptimizeData();
+
+            return settingObj;
 #endif
         }
 
