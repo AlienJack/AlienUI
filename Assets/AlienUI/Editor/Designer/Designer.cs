@@ -107,10 +107,9 @@ namespace AlienUI.Editors
             Selection.activeObject = m_selection.NodeProxy.gameObject;
             var propties = m_selection.GetAllDependencyProperties();
             var groups = propties.GroupBy(p => p.Meta.Group).ToList();
-            rect.position += new Vector2(10, 10);
-            rect.height -= 10;
-            rect.width -= 10;
             GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
+
+            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 40 });
 
             foreach (var group in groups)
             {
@@ -210,7 +209,14 @@ namespace AlienUI.Editors
             rect.position += new Vector2(5, 5);
             rect.width -= 10; rect.height -= 10;
             if (m_logicTree != null)
-                m_logicTree.OnGUI(rect);
+            {
+                var treeRect = rect;
+                treeRect.height = Mathf.Max(rect.height, m_logicTree.totalHeight);
+
+                GUI.BeginScrollView(rect, default, treeRect);
+                m_logicTree.OnGUI(treeRect);
+                GUI.EndScrollView();
+            }
         }
     }
 }
