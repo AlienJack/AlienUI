@@ -1,7 +1,9 @@
 using AlienUI.Models;
+using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using UnityEngine;
 
 namespace AlienUI
@@ -11,17 +13,33 @@ namespace AlienUI
         [SerializeField]
         private Font m_defaultLabelFont;
         [SerializeField]
-        private List<Template> m_templates = new List<Template>();
+        private List<AmlResouces> m_amlResources = new List<AmlResouces>();
 
         [NonSerialized]
-        private Dictionary<string, Template> m_templatesDict = new Dictionary<string, Template>();
+        private Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
+        [NonSerialized]
+        private Dictionary<Type, HashSet<AmlResouces>> m_userControl2TemplatesDict = new Dictionary<Type, HashSet<AmlResouces>>();
 
-        public static Func<Settings> SettingGetter;
         [NonSerialized]
         bool m_optimized;
-        public void OptimizeData()
+
+        public static Func<Settings> SettingGetter;
+
+
+        void OptimizeData()
         {
-            m_templates.ForEach(t => m_templatesDict[t.Name] = t);
+            foreach (var item in m_amlResources)
+            {
+                item.CalcResourcesType();
+                if (item.IsTemplateAsset)
+                {
+                    m_templatesDict[item.Name] = item;
+                    var type = Type.GetType(item.TemplateTarget);
+                    if (!m_userControl2TemplatesDict.ContainsKey(type)) m_userControl2TemplatesDict[type] = new HashSet<AmlResouces>();
+                    m_userControl2TemplatesDict[type].Add(item);
+                }
+            }
+
             m_optimized = true;
         }
 
@@ -29,13 +47,14 @@ namespace AlienUI
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
-            m_templatesDict.TryGetValue(templateName, out Template template);
-            return template.Xml;
+            m_templatesDict.TryGetValue(templateName, out AmlResouces template);
+            return template.Aml;
         }
 
-        public IEnumerable<AmlAsset> GetAllTemplateAssets()
+        public IEnumerable<AmlAsset> GetAllTemplateAssetsByTargetType(Type targetType)
         {
-            return m_templatesDict.Values.Select(v => v.Xml);
+            m_userControl2TemplatesDict.TryGetValue(targetType, out var value);
+            return value.Select(r => r.Aml);
         }
 
 #if UNITY_EDITOR
@@ -61,10 +80,26 @@ namespace AlienUI
         }
 
         [Serializable]
-        public class Template
+        public class AmlResouces
         {
-            public string Name => Xml.name;
-            public AmlAsset Xml;
+            public string Name => Aml.name;
+            public AmlAsset Aml;
+
+            public string TemplateTarget { get; private set; }
+            public bool IsTemplateAsset { get; private set; }
+
+            public void CalcResourcesType()
+            {
+                if (Aml == null) return;
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(Aml.Text);
+                XmlNode rootNode = xmlDoc.DocumentElement;
+                if (rootNode.NamespaceURI + "." + rootNode.Name != typeof(Template).FullName) return;
+
+                TemplateTarget = rootNode.Attributes["Type"]?.Value;
+                if (TemplateTarget != null) IsTemplateAsset = true;
+            }
         }
     }
 }

@@ -35,6 +35,7 @@ namespace AlienUI.UIElements
             templateRoot.sizeDelta = Vector2.zero;
             templateRoot.anchoredPosition = Vector2.zero;
             templateRoot.SetAsFirstSibling();
+
             if (m_templateInstance.Document.m_templateChildRoot != null)
             {
                 m_childRoot = m_templateInstance.Document.m_templateChildRoot.m_childRoot;

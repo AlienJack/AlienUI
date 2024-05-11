@@ -62,13 +62,13 @@ namespace AlienUI
         {
             if (m_templateList == null)
             {
-                m_templateList = new ReorderableList(setting.m_templates, typeof(Template));
+                m_templateList = new ReorderableList(setting.m_amlResources, typeof(AmlResouces));
                 m_templateList.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "TemplateResouce");
                 m_templateList.drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     EditorGUI.BeginChangeCheck();
-                    var tempItem = m_templateList.list[index] as Template;
-                    tempItem.Xml = EditorGUI.ObjectField(rect, tempItem.Xml, typeof(AmlAsset), false) as AmlAsset;
+                    var tempItem = m_templateList.list[index] as AmlResouces;
+                    tempItem.Aml = EditorGUI.ObjectField(rect, tempItem.Aml, typeof(AmlAsset), false) as AmlAsset;
                     if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
                 };
             }

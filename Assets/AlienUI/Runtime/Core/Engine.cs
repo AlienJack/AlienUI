@@ -77,7 +77,7 @@ namespace AlienUI
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
-            
+
             DependencyObject root = CreateNodeByXml(rootNode, null, doc);
 
             return root;
@@ -153,5 +153,12 @@ namespace AlienUI
                 Debug.LogError(message, doc.m_xmlAsset);
             else Debug.LogError(message);
         }
+
+#if UNITY_EDITOR
+        public void ForceHanldeDirty()
+        {
+            LateUpdate();
+        }
+#endif
     }
 }

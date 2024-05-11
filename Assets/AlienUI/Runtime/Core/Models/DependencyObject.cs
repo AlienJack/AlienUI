@@ -70,7 +70,12 @@ namespace AlienUI.Models
 
             m_dpPropValues.TryGetValue(dp, out object oldValue);
 
-            if (oldValue == value) return;
+            if (oldValue == null && value == null) return;
+            if (oldValue != null)
+            {
+                //dont use == operator cause unity's mono is suck
+                if (oldValue.Equals(value)) return;
+            }
 
             var newValue = value;
             m_dpPropValues[dp] = value;

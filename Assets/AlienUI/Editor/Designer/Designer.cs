@@ -26,6 +26,16 @@ namespace AlienUI.Editors
             }
         }
 
+        private void OnEnable()
+        {
+            EditorApplication.update += OnUpdate;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.update -= OnUpdate;
+        }
+
         private UIElement m_target;
         private AmlAsset m_amlFile;
         private LogicTree m_logicTree;
@@ -37,6 +47,11 @@ namespace AlienUI.Editors
             m_amlFile = amlFile;
             m_logicTree = new LogicTree(m_target);
             m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
+        }
+
+        private void OnUpdate()
+        {
+            if (m_target != null && m_target.Engine != null) m_target.Engine.ForceHanldeDirty();
         }
 
         private void M_logicTree_OnSelectItem(UIElement obj)
@@ -95,31 +110,33 @@ namespace AlienUI.Editors
             rect.position += new Vector2(10, 10);
             rect.height -= 10;
             rect.width -= 10;
-            GUILayout.BeginArea(rect);
+            GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
 
             foreach (var group in groups)
             {
                 var groupName = group.Key;
+
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
                 if (EditorGUILayout.Foldout(true, groupName))
                 {
                     foreach (var property in group)
                     {
-                        EditorGUILayout.BeginHorizontal(new GUIStyle { padding = new RectOffset(10, 10, 0, 0) });
-                        EditorGUILayout.LabelField(property.PropName);
+                        EditorGUILayout.BeginHorizontal();
 
                         var drawer = FindDrawer(property.PropType);
                         if (drawer == null)
                         {
                             var color = GUI.color;
-                            GUI.color = Color.red;
-                            EditorGUILayout.LabelField($"Not find [{property.PropType}] drawer", new GUIStyle(EditorStyles.label));
+                            GUI.color = Color.yellow;
+                            EditorGUILayout.LabelField(property.PropName, $"[{property.PropType}]");
                             GUI.color = color;
                         }
                         else
                         {
                             using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly))
                             {
-                                var value = drawer.Draw(m_selection.GetValue(property));
+                                var value = drawer.Draw(m_selection, property.PropName, m_selection.GetValue(property));
                                 if (!property.Meta.IsReadOnly)
                                     m_selection.SetValue(property, value);
 
@@ -128,10 +145,19 @@ namespace AlienUI.Editors
 
                         EditorGUILayout.EndHorizontal();
 
-                        GUI.Box(GUILayoutUtility.GetLastRect(), string.Empty);
-                        HandleContextMenu(m_selection, property);
+                        {
+                            var rightClickRect = GUILayoutUtility.GetLastRect();
+                            rightClickRect.width -= 10;
+                            var color = GUI.color;
+                            GUI.color = new Color(0, 0, 0, 0);
+                            GUI.Box(rightClickRect, string.Empty);
+                            GUI.color = color;
+                            HandleContextMenu(m_selection, property);
+                        }
                     }
                 }
+
+                EditorGUILayout.EndVertical();
             }
 
             GUILayout.EndArea();
@@ -144,7 +170,7 @@ namespace AlienUI.Editors
             if (!GUILayoutUtility.GetLastRect().Contains(mousePos)) return;
 
             // 创建一个新的通用菜单
-            GenericMenu menu = new GenericMenu();            
+            GenericMenu menu = new GenericMenu();
 
             // Use MenuItem as Title
             menu.AddDisabledItem(new GUIContent($"---{m_selection}.{property.PropName}---"));
