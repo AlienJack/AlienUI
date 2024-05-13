@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : XmlNodeElement
+    public abstract partial class UIElement : AmlNodeElement
     {
         public Number Width
         {

@@ -143,7 +143,7 @@ namespace AlienUI.Core.Resources
             m_target.SetValue(PropertyName, value);
         }
 
-        protected override void OnAddChild(XmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {

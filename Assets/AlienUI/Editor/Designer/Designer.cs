@@ -109,7 +109,7 @@ namespace AlienUI.Editors
             var groups = propties.GroupBy(p => p.Meta.Group).ToList();
             GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
 
-            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 40 });
+            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 30 },GUILayout.Height(30));
 
             foreach (var group in groups)
             {
@@ -133,6 +133,8 @@ namespace AlienUI.Editors
                         }
                         else
                         {
+                            if (property.Meta.NotAllowEdit) continue;
+
                             using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly))
                             {
                                 var value = drawer.Draw(m_selection, property.PropName, m_selection.GetValue(property));
@@ -176,10 +178,10 @@ namespace AlienUI.Editors
 
             // Add Set DefaultValue Menu
             if (property.Meta.IsReadOnly)
-                menu.AddDisabledItem(new GUIContent("Set Default Value (ReadOnly)"));
+                menu.AddDisabledItem(new GUIContent("set default value (ReadOnly)"));
             else
             {
-                menu.AddItem(new GUIContent("Set Default Value"), false, () =>
+                menu.AddItem(new GUIContent("set default value"), false, () =>
                 {
                     m_selection.SetValue(property, property.Meta.DefaultValue);
                 });

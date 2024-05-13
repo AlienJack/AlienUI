@@ -27,7 +27,7 @@ namespace AlienUI.Core
             m_collector.Collect();
         }
 
-        public XmlNodeElement CreateNode(XmlNode xnode)
+        public AmlNodeElement CreateNode(XmlNode xnode)
         {
             return m_collector.CreateInstance(xnode);
         }

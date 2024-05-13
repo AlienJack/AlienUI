@@ -10,16 +10,16 @@ namespace AlienUI.Core
 {
     public class Document : IDependencyObjectResolver
     {
-        private HashSet<XmlNodeElement> m_dpObjects = new HashSet<XmlNodeElement>();
-        private Dictionary<XmlNodeElement, XmlNode> m_dpObjectsXmlMap = new Dictionary<XmlNodeElement, XmlNode>();
-        private Dictionary<string, List<XmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<XmlNodeElement>>();
-        private Dictionary<XmlNodeElement, HashSet<XmlNodeElement>> m_parentChildrenRecords = new Dictionary<XmlNodeElement, HashSet<XmlNodeElement>>();
+        private HashSet<AmlNodeElement> m_dpObjects = new HashSet<AmlNodeElement>();
+        private Dictionary<AmlNodeElement, XmlNode> m_dpObjectsXmlMap = new Dictionary<AmlNodeElement, XmlNode>();
+        private Dictionary<string, List<AmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<AmlNodeElement>>();
+        private Dictionary<AmlNodeElement, HashSet<AmlNodeElement>> m_parentChildrenRecords = new Dictionary<AmlNodeElement, HashSet<AmlNodeElement>>();
         private UIElement m_rootElement;
         internal DependencyObject m_dataContext;
-        internal XmlNodeElement m_templateHost;
+        internal AmlNodeElement m_templateHost;
         internal Object m_xmlAsset;
 
-        public Document(DependencyObject dataContext, XmlNodeElement templateHost, Object xmlAsset)
+        public Document(DependencyObject dataContext, AmlNodeElement templateHost, Object xmlAsset)
         {
             m_dataContext = dataContext;
             m_templateHost = templateHost;
@@ -59,7 +59,7 @@ namespace AlienUI.Core
             }
         }
 
-        internal void RecordDependencyObject(XmlNodeElement dependencyObject, XmlNode xnode)
+        internal void RecordDependencyObject(AmlNodeElement dependencyObject, XmlNode xnode)
         {
             m_dpObjects.Add(dependencyObject);
             m_dpObjectsXmlMap[dependencyObject] = xnode;
@@ -69,24 +69,21 @@ namespace AlienUI.Core
             var nameValue = nameProperty.Value;
             if (!string.IsNullOrWhiteSpace(nameValue))
             {
-                if (!m_dpObjectsNameMap.ContainsKey(nameValue)) m_dpObjectsNameMap[nameValue] = new List<XmlNodeElement>();
+                if (!m_dpObjectsNameMap.ContainsKey(nameValue)) m_dpObjectsNameMap[nameValue] = new List<AmlNodeElement>();
                 m_dpObjectsNameMap[nameValue].Add(dependencyObject);
             }
         }
 
-        internal void RecordAddChild(XmlNodeElement parentNode, XmlNodeElement newNodeIns)
+        internal void RecordAddChild(AmlNodeElement parentNode, AmlNodeElement newNodeIns)
         {
             if (!m_parentChildrenRecords.ContainsKey(parentNode))
-                m_parentChildrenRecords[parentNode] = new HashSet<XmlNodeElement>();
+                m_parentChildrenRecords[parentNode] = new HashSet<AmlNodeElement>();
 
             m_parentChildrenRecords[parentNode].Add(newNodeIns);
         }
 
         public T Query<T>(string name) where T : DependencyObject
         {
-            if (name == "#TemplateHost") return m_templateHost as T;
-            else if (name == "#DataContext") return m_templateHost as T;
-
             m_dpObjectsNameMap.TryGetValue(name, out var dpObjects);
             if (dpObjects == null || dpObjects.Count == 0) return null;
             return dpObjects[0] as T;
@@ -138,11 +135,20 @@ namespace AlienUI.Core
             uiRoot.RefreshPropertyNotify();
         }
 
-        void ResolveAttributes(XmlNodeElement node, XmlNode xNode, XmlAttributeParser xmlParser)
+        void ResolveAttributes(AmlNodeElement node, XmlNode xNode, XmlAttributeParser xmlParser)
         {
             foreach (XmlAttribute att in xNode.Attributes)
             {
                 if (att.Name.StartsWith("xmlns")) continue; //xml保留字符跳过
+
+                var dp = node.GetDependencyProperty(att.Name);
+                if (dp == null) continue;
+
+                if (dp.Meta.NotAllowEdit)
+                {
+                    Engine.LogError($"Not allow to set {dp.PropName} in AML file");
+                    continue;
+                }
 
                 if (BindUtility.IsBindingString(att.Value, out Match match))
                 {

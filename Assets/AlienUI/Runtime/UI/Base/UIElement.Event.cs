@@ -2,7 +2,7 @@ using AlienUI.Events;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : XmlNodeElement
+    public abstract partial class UIElement : AmlNodeElement
     {
         public delegate void OnEventInvokeHandle(object sender, Event e);
         internal event OnEventInvokeHandle OnEventInvoke;

@@ -12,6 +12,17 @@ namespace AlienUI.Models
         public delegate void OnDependencyPropertyChangedHandle(string propName, object oldValue, object newValue);
         public event OnDependencyPropertyChangedHandle OnDependencyPropertyChanged;
 
+
+
+        public DependencyObject Self
+        {
+            get { return (DependencyObject)GetValue(SelfProperty); }
+            set { SetValue(SelfProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelfProperty =
+            DependencyProperty.Register("Self", typeof(DependencyObject), typeof(DependencyObject), new PropertyMetadata(null).DisableEdit());
+
         public DependencyObject()
         {
             m_selfType = GetType();
@@ -20,6 +31,8 @@ namespace AlienUI.Models
             //Ìî³äÒÀÀµÊôÐÔÄ¬ÈÏÖµ
             DependencyProperty.GetAllDP(m_selfType, ref allDp);
             allDp.ForEach(dp => FillDependencyValue(dp, dp.Meta.DefaultValue));
+
+            Self = this;
         }
 
         internal void FillDependencyValue(DependencyProperty dp, object value)
@@ -30,7 +43,7 @@ namespace AlienUI.Models
         {
             var dp = GetDependencyProperty(propertyName);
             if (dp != null)
-                m_dpPropValues[dp] = value;
+                FillDependencyValue(dp, value);
         }
 
         public DependencyProperty GetDependencyProperty(string propName)
@@ -66,7 +79,6 @@ namespace AlienUI.Models
             {
                 throw new Exception("Readonly Property Can not be Set");
             }
-
 
             m_dpPropValues.TryGetValue(dp, out object oldValue);
 

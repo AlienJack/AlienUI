@@ -9,7 +9,7 @@ namespace AlienUI
         private List<Storyboard> stories = new List<Storyboard>();
         private Storyboard m_currentPlay;
 
-        protected override void OnAddChild(XmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {

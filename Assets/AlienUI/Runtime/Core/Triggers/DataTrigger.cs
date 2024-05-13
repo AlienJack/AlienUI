@@ -21,7 +21,7 @@ namespace AlienUI.Core.Triggers
         }
 
         HashSet<string> m_focusProperties = new HashSet<string>();
-        protected override void OnAddChild(XmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {

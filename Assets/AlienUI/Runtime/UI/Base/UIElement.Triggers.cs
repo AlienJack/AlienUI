@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : XmlNodeElement
+    public abstract partial class UIElement : AmlNodeElement
     {
         private List<Trigger> m_triggers = new List<Trigger>();
 

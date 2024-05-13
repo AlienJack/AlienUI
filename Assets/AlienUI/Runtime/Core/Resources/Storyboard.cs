@@ -16,7 +16,7 @@ namespace AlienUI.Core.Resources
         internal delegate void OnPlayHanlde(Storyboard sender);
         internal event OnPlayHanlde OnPlay;
 
-        protected override void OnAddChild(XmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {

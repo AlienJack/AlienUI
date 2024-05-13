@@ -2,7 +2,7 @@
 
 namespace AlienUI.UIElements
 {
-    public partial class UIElement : XmlNodeElement
+    public partial class UIElement : AmlNodeElement
     {
         public bool IsPointerHover
         {

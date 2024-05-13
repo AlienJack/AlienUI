@@ -28,7 +28,6 @@ namespace AlienUI.UIElements
             DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
 
 
-
         protected override void OnInitialized()
         {
             this.Horizontal = eHorizontalAlign.Stretch;

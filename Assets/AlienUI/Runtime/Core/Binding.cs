@@ -11,7 +11,7 @@ namespace AlienUI.Core
     {
         public DependencyObject Source { get; private set; }
         public string SourceProperty { get; private set; }
-        public XmlNodeElement Target { get; private set; }
+        public AmlNodeElement Target { get; private set; }
         public string TargetProperty { get; private set; }
 
         private ConverterBase m_converter;
@@ -118,7 +118,7 @@ namespace AlienUI.Core
                 this.bind = bind;
             }
 
-            public BindTargetProperty SetTarget(XmlNodeElement target)
+            public BindTargetProperty SetTarget(AmlNodeElement target)
             {
                 bind.Target = target;
                 return new BindTargetProperty(bind);

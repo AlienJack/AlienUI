@@ -16,7 +16,7 @@ namespace AlienUI
             m_name = name;
         }
 
-        public readonly UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext, XmlNodeElement templateHost)
+        public readonly UIElement Instantiate(Engine engine, RectTransform parent, DependencyObject dataContext, AmlNodeElement templateHost)
         {
             var templateAsset = Settings.Get().GetTemplateAsset(m_name);
             if (templateAsset == null) return null;

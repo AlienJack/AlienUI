@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlienUI.Core.Triggers
 {
-    public abstract class Trigger : XmlNodeElement
+    public abstract class Trigger : AmlNodeElement
     {
         private UIElement m_host;
         private List<TriggerAction> m_actions = new List<TriggerAction>();
@@ -27,7 +27,7 @@ namespace AlienUI.Core.Triggers
             OnInit();
         }
 
-        protected override void OnAddChild(XmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {

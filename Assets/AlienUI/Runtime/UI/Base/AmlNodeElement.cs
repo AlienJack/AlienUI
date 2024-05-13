@@ -5,16 +5,26 @@ using System.Linq;
 
 namespace AlienUI.UIElements
 {
-    public abstract class XmlNodeElement : DependencyObject, IDependencyObjectResolver
+    public abstract class AmlNodeElement : DependencyObject, IDependencyObjectResolver
     {
-        private List<XmlNodeElement> m_childrens = new List<XmlNodeElement>();
-        protected List<XmlNodeElement> Children => m_childrens;
+        private List<AmlNodeElement> m_childrens = new List<AmlNodeElement>();
+        protected List<AmlNodeElement> Children => m_childrens;
 
 
         public Engine Engine { get; set; }
         public DependencyObject DataContext { get; set; }
-        public DependencyObject TemplateHost { get; internal set; }
         public Document Document { get; set; }
+
+        public DependencyObject TemplateHost
+        {
+            get { return (DependencyObject)GetValue(TemplateHostProperty); }
+            set { SetValue(TemplateHostProperty, value); }
+        }
+
+        public static readonly DependencyProperty TemplateHostProperty =
+            DependencyProperty.Register("TemplateHost", typeof(DependencyObject), typeof(AmlNodeElement), new PropertyMetadata(null).DisableEdit());
+
+
 
         public string Name
         {
@@ -22,16 +32,16 @@ namespace AlienUI.UIElements
             set { SetValue(NameProperty, value); }
         }
         public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(XmlNodeElement), new PropertyMetadata(null));
+            DependencyProperty.Register("Name", typeof(string), typeof(AmlNodeElement), new PropertyMetadata(null));
 
-        public virtual void AddChild(XmlNodeElement childObj)
+        public virtual void AddChild(AmlNodeElement childObj)
         {
             m_childrens.Add(childObj);
 
             OnAddChild(childObj);
         }
 
-        protected virtual void OnAddChild(XmlNodeElement childObj) { }
+        protected virtual void OnAddChild(AmlNodeElement childObj) { }
 
 
 

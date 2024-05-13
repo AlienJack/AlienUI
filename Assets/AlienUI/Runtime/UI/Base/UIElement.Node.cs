@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public abstract partial class UIElement : XmlNodeElement
+    public abstract partial class UIElement : AmlNodeElement
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
@@ -38,7 +38,7 @@ namespace AlienUI.UIElements
 
         public NodeProxy NodeProxy => m_proxy;
 
-        public sealed override void AddChild(XmlNodeElement childObj)
+        public sealed override void AddChild(AmlNodeElement childObj)
         {
             base.AddChild(childObj);
 

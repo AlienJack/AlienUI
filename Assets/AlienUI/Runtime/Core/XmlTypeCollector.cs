@@ -91,18 +91,18 @@ namespace AlienUI.Core
             return null;
         }
 
-        internal XmlNodeElement CreateInstance(XmlNode xnode)
+        internal AmlNodeElement CreateInstance(XmlNode xnode)
         {
             var type = GetDependencyObjectType(xnode);
             if (type == null) return null;
 
-            return Activator.CreateInstance(type) as XmlNodeElement;
+            return Activator.CreateInstance(type) as AmlNodeElement;
         }
 
-        internal XmlNodeElement CreateInstance(string nodeName)
+        internal AmlNodeElement CreateInstance(string nodeName)
         {
             m_uiTypes.TryGetValue(nodeName, out var instanceType);
-            return Activator.CreateInstance(instanceType) as XmlNodeElement;
+            return Activator.CreateInstance(instanceType) as AmlNodeElement;
 
         }
 
