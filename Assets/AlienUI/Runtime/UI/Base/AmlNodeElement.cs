@@ -22,7 +22,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty TemplateHostProperty =
-            DependencyProperty.Register("TemplateHost", typeof(DependencyObject), typeof(AmlNodeElement), new PropertyMetadata(null).DisableEdit());
+            DependencyProperty.Register("TemplateHost", typeof(DependencyObject), typeof(AmlNodeElement), new PropertyMetadata(null).SetNotAllowEdit());
 
 
 

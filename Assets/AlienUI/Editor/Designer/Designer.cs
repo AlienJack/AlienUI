@@ -109,18 +109,21 @@ namespace AlienUI.Editors
             var groups = propties.GroupBy(p => p.Meta.Group).ToList();
             GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
 
-            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 30 },GUILayout.Height(30));
+            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 30 }, GUILayout.Height(30));
 
             foreach (var group in groups)
             {
                 var groupName = group.Key;
+                var drawingPropertys = group.Where(property => !property.Meta.NotAllowEdit).ToList();
+                if (drawingPropertys.Count == 0) continue;
 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
                 if (EditorGUILayout.Foldout(true, groupName))
                 {
-                    foreach (var property in group)
+                    foreach (var property in drawingPropertys)
                     {
+                        if (property.Meta.NotAllowEdit) continue;
                         EditorGUILayout.BeginHorizontal();
 
                         var drawer = FindDrawer(property.PropType);
@@ -133,7 +136,6 @@ namespace AlienUI.Editors
                         }
                         else
                         {
-                            if (property.Meta.NotAllowEdit) continue;
 
                             using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly))
                             {

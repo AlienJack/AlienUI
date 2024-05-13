@@ -9,7 +9,7 @@ namespace AlienUI.Models
         public object DefaultValue { get; private set; }
         public string Group { get; internal set; }
         public bool IsReadOnly { get; private set; }
-        public bool NotAllowEdit {  get; private set; }
+        public bool NotAllowEdit { get; private set; }
         public PropertyMetadata(object defaultValue)
         {
             DefaultValue = defaultValue;
@@ -26,7 +26,7 @@ namespace AlienUI.Models
             return this;
         }
 
-        public PropertyMetadata DisableEdit()
+        public PropertyMetadata SetNotAllowEdit()
         {
             NotAllowEdit = true;
             return this;
