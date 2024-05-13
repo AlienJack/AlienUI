@@ -126,6 +126,17 @@ namespace AlienUI.Editors
                         if (property.Meta.NotAllowEdit) continue;
                         EditorGUILayout.BeginHorizontal();
 
+                        var currentDPValue = m_selection.GetValue(property);
+                        var defaultDPValue = property.Meta.DefaultValue;
+                        if (currentDPValue != defaultDPValue)
+                        {
+                            var color = GUI.color;
+                            ColorUtility.TryParseHtmlString("#0f80be", out var dirtyColor);
+                            GUI.color = dirtyColor;
+                            GUILayout.Box(string.Empty, EditorStyles.selectionRect, GUILayout.Width(2));
+                            GUI.color = color;
+                        }
+
                         var drawer = FindDrawer(property.PropType);
                         if (drawer == null)
                         {
