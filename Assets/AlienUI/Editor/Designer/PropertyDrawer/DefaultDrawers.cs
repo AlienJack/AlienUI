@@ -175,6 +175,12 @@ namespace AlienUI.Editors.PropertyDrawer
                     Handles.DrawLine(posRB, posLB, 2);
                     Handles.DrawLine(posLB, posLT, 2);
 
+                    Handles.BeginGUI();
+                    var screenPos = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posLT + new Vector3(size.x * 0.5f, -size.y * 0.5f, 0));
+                    screenPos.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPos.y;
+                    //screenPos.y *= -1f;
+                    GUI.Button(new Rect { position = screenPos, width =100, height = 30 }, "Test");
+                    Handles.EndGUI();
                     //EditorGUI.LabelField(posLT, "Hello!");
                     //EditorGUILayout.LabelField("!!!")
 
