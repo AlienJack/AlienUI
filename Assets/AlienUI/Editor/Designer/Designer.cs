@@ -153,7 +153,6 @@ namespace AlienUI.Editors
                                 var value = drawer.Draw(m_selection, property.PropName, m_selection.GetValue(property));
                                 if (!property.Meta.IsReadOnly)
                                     m_selection.SetValue(property, value);
-
                             }
                         }
 
@@ -189,16 +188,22 @@ namespace AlienUI.Editors
             // Use MenuItem as Title
             menu.AddDisabledItem(new GUIContent($"---{m_selection}.{property.PropName}---"));
 
-            // Add Set DefaultValue Menu
-            if (property.Meta.IsReadOnly)
-                menu.AddDisabledItem(new GUIContent("set default value (ReadOnly)"));
-            else
+            var currentDPValue = m_selection.GetValue(property);
+            var defaultDPValue = property.Meta.DefaultValue;
+            if (currentDPValue != defaultDPValue)
             {
-                menu.AddItem(new GUIContent("set default value"), false, () =>
+                // Add Set DefaultValue Menu
+                if (property.Meta.IsReadOnly)
+                    menu.AddDisabledItem(new GUIContent("set default value (ReadOnly)"));
+                else
                 {
-                    m_selection.SetValue(property, property.Meta.DefaultValue);
-                });
+                    menu.AddItem(new GUIContent("set default value"), false, () =>
+                    {
+                        m_selection.SetValue(property, property.Meta.DefaultValue);
+                    });
+                }
             }
+
 
             menu.ShowAsContext();
 
