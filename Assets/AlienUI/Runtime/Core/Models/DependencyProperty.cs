@@ -5,7 +5,7 @@ namespace AlienUI.Models
 {
     public partial class DependencyProperty
     {
-        public PropertyMeta Meta { get; private set; }
+        public PropertyMetadata Meta { get; private set; }
         public string PropName { get; private set; }
         public Type PropType { get; private set; }
         public delegate void OnValueChangedHandle(DependencyObject sender, object oldValue, object newValue);
@@ -13,7 +13,7 @@ namespace AlienUI.Models
 
         private int m_hash;
 
-        private DependencyProperty(string propName, Type propType, PropertyMeta metaData, OnValueChangedHandle onValueChanged, string group = null)
+        private DependencyProperty(string propName, Type propType, PropertyMetadata metaData, OnValueChangedHandle onValueChanged, string group = null)
         {
             PropName = propName;
             PropType = propType;
@@ -35,7 +35,7 @@ namespace AlienUI.Models
 
         private static Type bottomType = typeof(DependencyObject);
         private static Dictionary<Type, Dictionary<string, DependencyProperty>> m_dependencyProperties = new Dictionary<Type, Dictionary<string, DependencyProperty>>();
-        public static DependencyProperty Register(string propName, Type propType, Type owenClassType, PropertyMeta metaData, OnValueChangedHandle onValueChanged = null)
+        public static DependencyProperty Register(string propName, Type propType, Type owenClassType, PropertyMetadata metaData, OnValueChangedHandle onValueChanged = null)
         {
             if (!m_dependencyProperties.ContainsKey(owenClassType))
                 m_dependencyProperties[owenClassType] = new Dictionary<string, DependencyProperty>();

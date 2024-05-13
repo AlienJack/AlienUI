@@ -11,7 +11,7 @@ namespace AlienUI.Core.Resources
         }
 
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("Time", typeof(float), typeof(AnimationKey), new PropertyMeta(0f));
+            DependencyProperty.Register("Time", typeof(float), typeof(AnimationKey), new PropertyMetadata(0f));
 
 
         public string Value
@@ -21,7 +21,7 @@ namespace AlienUI.Core.Resources
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string), typeof(AnimationKey), new PropertyMeta(string.Empty));
+            DependencyProperty.Register("Value", typeof(string), typeof(AnimationKey), new PropertyMetadata(string.Empty));
 
         public object ActualValue;
     }

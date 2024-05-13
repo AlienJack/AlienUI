@@ -15,7 +15,6 @@ namespace AlienUI.Core
         private Dictionary<string, List<XmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<XmlNodeElement>>();
         private Dictionary<XmlNodeElement, HashSet<XmlNodeElement>> m_parentChildrenRecords = new Dictionary<XmlNodeElement, HashSet<XmlNodeElement>>();
         private UIElement m_rootElement;
-        internal UIElement m_templateChildRoot;
         internal DependencyObject m_dataContext;
         internal XmlNodeElement m_templateHost;
         internal Object m_xmlAsset;
@@ -180,9 +179,6 @@ namespace AlienUI.Core
 #endif
                 }
             }
-
-            if (node is UIElement uiEle && uiEle.TemplateRoot)
-                m_templateChildRoot = uiEle;
         }
 
 

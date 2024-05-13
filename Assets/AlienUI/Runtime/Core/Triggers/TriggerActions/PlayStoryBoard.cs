@@ -11,7 +11,7 @@ namespace AlienUI.Core.Triggers
             set { SetValue(TargetProperty, value); }
         }
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(PlayStoryboard), new PropertyMeta(default(DependencyObjectRef), "Data"));
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(PlayStoryboard), new PropertyMetadata(default(DependencyObjectRef), "Data"));
 
 
         public override void Excute()

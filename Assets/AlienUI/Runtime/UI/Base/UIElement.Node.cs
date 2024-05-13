@@ -36,14 +36,6 @@ namespace AlienUI.UIElements
             }
         }
 
-        public bool TemplateRoot
-        {
-            get { return (bool)GetValue(TemplateRootProperty); }
-            set { SetValue(TemplateRootProperty, value); }
-        }
-        public static readonly DependencyProperty TemplateRootProperty =
-            DependencyProperty.Register("TemplateRoot", typeof(bool), typeof(UIElement), new PropertyMeta(false,"Template"));
-
         public NodeProxy NodeProxy => m_proxy;
 
         public sealed override void AddChild(XmlNodeElement childObj)

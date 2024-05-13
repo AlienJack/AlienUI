@@ -12,7 +12,7 @@ namespace AlienUI.Core.Resources
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string), typeof(Condition), new PropertyMeta(string.Empty));
+            DependencyProperty.Register("Value", typeof(string), typeof(Condition), new PropertyMetadata(string.Empty));
 
 
 
@@ -23,7 +23,7 @@ namespace AlienUI.Core.Resources
         }
 
         public static readonly DependencyProperty PropertyNameProperty =
-            DependencyProperty.Register("PropertyName", typeof(string), typeof(Condition), new PropertyMeta(string.Empty));
+            DependencyProperty.Register("PropertyName", typeof(string), typeof(Condition), new PropertyMetadata(string.Empty));
 
 
         public EnumCompareType CompareType
@@ -32,7 +32,7 @@ namespace AlienUI.Core.Resources
             set { SetValue(CompareTypeProperty, value); }
         }
         public static readonly DependencyProperty CompareTypeProperty =
-            DependencyProperty.Register("CompareType", typeof(EnumCompareType), typeof(Condition), new PropertyMeta(default(EnumCompareType)));
+            DependencyProperty.Register("CompareType", typeof(EnumCompareType), typeof(Condition), new PropertyMetadata(default(EnumCompareType)));
 
         private object m_rawValue;
         private DependencyObject m_target;

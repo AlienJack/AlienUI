@@ -15,7 +15,7 @@ namespace AlienUI.UIElements
             set { SetValue(BorderColorProperty, value); }
         }
         public static readonly DependencyProperty BorderColorProperty =
-            DependencyProperty.Register("BorderColor", typeof(Color), typeof(Border), new PropertyMeta(Color.black), OnBorderColorChanged);
+            DependencyProperty.Register("BorderColor", typeof(Color), typeof(Border), new PropertyMetadata(Color.black), OnBorderColorChanged);
 
         private static void OnBorderColorChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -29,7 +29,7 @@ namespace AlienUI.UIElements
             set { SetValue(FrontColorProperty, value); }
         }
         public static readonly DependencyProperty FrontColorProperty =
-            DependencyProperty.Register("FrontColor", typeof(Color), typeof(Border), new PropertyMeta(Color.white), OnFrontColorChanged);
+            DependencyProperty.Register("FrontColor", typeof(Color), typeof(Border), new PropertyMetadata(Color.white), OnFrontColorChanged);
 
         private static void OnFrontColorChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -43,7 +43,7 @@ namespace AlienUI.UIElements
             set { SetValue(BorderWidthProperty, value); }
         }
         public static readonly DependencyProperty BorderWidthProperty =
-            DependencyProperty.Register("BorderWidth", typeof(float), typeof(Border), new PropertyMeta(2f), OnBorderWidthChanged);
+            DependencyProperty.Register("BorderWidth", typeof(float), typeof(Border), new PropertyMetadata(2f), OnBorderWidthChanged);
 
         private static void OnBorderWidthChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -61,7 +61,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty DivisionProperty =
-            DependencyProperty.Register("Division", typeof(int), typeof(Border), new PropertyMeta(20), OnDivisionChanged);
+            DependencyProperty.Register("Division", typeof(int), typeof(Border), new PropertyMetadata(20), OnDivisionChanged);
 
         private static void OnDivisionChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -78,7 +78,7 @@ namespace AlienUI.UIElements
             set { SetValue(BorderRadiusProperty, value); }
         }
         public static readonly DependencyProperty BorderRadiusProperty =
-            DependencyProperty.Register("BorderRadius", typeof(float), typeof(Border), new PropertyMeta(5f), OnRadiusChanged);
+            DependencyProperty.Register("BorderRadius", typeof(float), typeof(Border), new PropertyMetadata(5f), OnRadiusChanged);
 
         private static void OnRadiusChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -97,7 +97,7 @@ namespace AlienUI.UIElements
             set { SetValue(AAProperty, value); }
         }
         public static readonly DependencyProperty AAProperty =
-            DependencyProperty.Register("AA", typeof(float), typeof(Border), new PropertyMeta(0.5f), OnAntiAliasChanged);
+            DependencyProperty.Register("AA", typeof(float), typeof(Border), new PropertyMetadata(0.5f), OnAntiAliasChanged);
 
         private static void OnAntiAliasChanged(DependencyObject sender, object oldValue, object newValue)
         {

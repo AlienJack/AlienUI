@@ -22,7 +22,7 @@ namespace AlienUI.UIElements
             set { SetValue(NameProperty, value); }
         }
         public static readonly DependencyProperty NameProperty =
-            DependencyProperty.Register("Name", typeof(string), typeof(XmlNodeElement), new PropertyMeta(null));
+            DependencyProperty.Register("Name", typeof(string), typeof(XmlNodeElement), new PropertyMetadata(null));
 
         public virtual void AddChild(XmlNodeElement childObj)
         {

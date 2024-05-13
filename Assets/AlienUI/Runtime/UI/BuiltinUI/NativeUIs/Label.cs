@@ -19,7 +19,7 @@ namespace AlienUI.UIElements
             set { SetValue(ColorProperty, value); }
         }
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(Label), new PropertyMeta(Color.black), OnColorChange);
+            DependencyProperty.Register("Color", typeof(Color), typeof(Label), new PropertyMetadata(Color.black), OnColorChange);
 
         public TextAlignHorizontal AlignHorizontal
         {
@@ -27,7 +27,7 @@ namespace AlienUI.UIElements
             set { SetValue(AlignHorizontalProperty, value); }
         }
         public static readonly DependencyProperty AlignHorizontalProperty =
-            DependencyProperty.Register("AlignHorizontal", typeof(TextAlignHorizontal), typeof(Label), new PropertyMeta(TextAlignHorizontal.Middle), OnAlignChanged);
+            DependencyProperty.Register("AlignHorizontal", typeof(TextAlignHorizontal), typeof(Label), new PropertyMetadata(TextAlignHorizontal.Middle), OnAlignChanged);
 
         public TextAlignVertical AlignVertical
         {
@@ -35,7 +35,7 @@ namespace AlienUI.UIElements
             set { SetValue(AlignVerticalProperty, value); }
         }
         public static readonly DependencyProperty AlignVerticalProperty =
-            DependencyProperty.Register("AlignVertical", typeof(TextAlignVertical), typeof(Label), new PropertyMeta(TextAlignVertical.Middle), OnAlignChanged);
+            DependencyProperty.Register("AlignVertical", typeof(TextAlignVertical), typeof(Label), new PropertyMetadata(TextAlignVertical.Middle), OnAlignChanged);
 
         public int FontSize
         {
@@ -43,7 +43,7 @@ namespace AlienUI.UIElements
             set { SetValue(FontSizeProperty, value); }
         }
         public static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register("FontSize", typeof(int), typeof(Label), new PropertyMeta(32), OnFontSizeChanged);
+            DependencyProperty.Register("FontSize", typeof(int), typeof(Label), new PropertyMetadata(32), OnFontSizeChanged);
 
         private static void OnFontSizeChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -55,7 +55,7 @@ namespace AlienUI.UIElements
             (sender as Label).m_text.color = (Color)newValue;
         }
         public static readonly DependencyProperty FontProperty =
-            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMeta(null), OnFontChanged);
+            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(null), OnFontChanged);
 
         public bool AutoWarp
         {
@@ -63,7 +63,7 @@ namespace AlienUI.UIElements
             set { SetValue(AutoWarpProperty, value); }
         }
         public static readonly DependencyProperty AutoWarpProperty =
-            DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), new PropertyMeta(false), OnAutoWarpChanged);
+            DependencyProperty.Register("AutoWarp", typeof(bool), typeof(Label), new PropertyMetadata(false), OnAutoWarpChanged);
 
         public bool Truncate
         {
@@ -72,7 +72,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty TruncateProperty =
-            DependencyProperty.Register("Truncate", typeof(bool), typeof(Label), new PropertyMeta(false), OnTruncateChanged);
+            DependencyProperty.Register("Truncate", typeof(bool), typeof(Label), new PropertyMetadata(false), OnTruncateChanged);
 
         private Text m_text;
 

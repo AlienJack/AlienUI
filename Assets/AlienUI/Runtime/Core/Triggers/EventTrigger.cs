@@ -12,7 +12,7 @@ namespace AlienUI.Core.Triggers
         }
 
         public static readonly DependencyProperty EventProperty =
-            DependencyProperty.Register("Event", typeof(string), typeof(EventTrigger), new PropertyMeta(string.Empty));
+            DependencyProperty.Register("Event", typeof(string), typeof(EventTrigger), new PropertyMetadata(string.Empty));
 
 
         protected override void OnInit()

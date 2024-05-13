@@ -14,9 +14,9 @@ namespace AlienUI.UIElements
             set { SetValue(TemplateProperty, value); }
         }
         public static readonly DependencyProperty TemplateProperty =
-            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMeta(default(ControlTemplate), "Data"));
+            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate), "Data"));
 
-        internal UIElement m_templateInstance;
+        internal Template m_templateInstance;
 
         protected override Vector2 CalcDesireSize()
         {
@@ -27,7 +27,7 @@ namespace AlienUI.UIElements
         {
             var targetTemplate = Template.Valid ? Template : DefaultTemplate;
 
-            m_templateInstance = targetTemplate.Instantiate(Engine, m_rectTransform, DataContext, this);
+            m_templateInstance = targetTemplate.Instantiate(Engine, m_rectTransform, DataContext, this) as Template;
             var templateRoot = m_templateInstance.m_rectTransform;
             templateRoot.anchorMin = new Vector2(0, 0);
             templateRoot.anchorMax = new Vector2(1, 1);
@@ -36,10 +36,9 @@ namespace AlienUI.UIElements
             templateRoot.anchoredPosition = Vector2.zero;
             templateRoot.SetAsFirstSibling();
 
-            if (m_templateInstance.Document.m_templateChildRoot != null)
-            {
-                m_childRoot = m_templateInstance.Document.m_templateChildRoot.m_childRoot;
-            }
+            var rootUI = m_templateInstance.TemplateRoot.Get(m_templateInstance) as UIElement;
+            if (rootUI != null)
+                m_childRoot = rootUI.m_childRoot;
         }
 
         protected sealed override void OnPrepared()

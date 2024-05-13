@@ -14,7 +14,19 @@ namespace AlienUI.UIElements
             set { SetValue(TypeProperty, value); }
         }
         public static readonly DependencyProperty TypeProperty =
-            DependencyProperty.Register("Type", typeof(string), typeof(Template), new PropertyMeta(string.Empty, "Data"));
+            DependencyProperty.Register("Type", typeof(string), typeof(Template), new PropertyMetadata(string.Empty, "Data"));
+
+
+
+        public DependencyObjectRef TemplateRoot
+        {
+            get { return (DependencyObjectRef)GetValue(TemplateRootProperty); }
+            set { SetValue(TemplateRootProperty, value); }
+        }
+
+        public static readonly DependencyProperty TemplateRootProperty =
+            DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
+
 
 
         protected override void OnInitialized()

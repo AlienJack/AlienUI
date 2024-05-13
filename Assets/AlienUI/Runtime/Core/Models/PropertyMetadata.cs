@@ -4,23 +4,23 @@ using UnityEngine;
 
 namespace AlienUI.Models
 {
-    public class PropertyMeta
+    public class PropertyMetadata
     {
         public object DefaultValue { get; private set; }
         public string Group { get; internal set; }
         public bool IsReadOnly { get; private set; }
 
-        public PropertyMeta(object defaultValue)
+        public PropertyMetadata(object defaultValue)
         {
             DefaultValue = defaultValue;
         }
 
-        public PropertyMeta(object defaultValue, string group) : this(defaultValue)
+        public PropertyMetadata(object defaultValue, string group) : this(defaultValue)
         {
             Group = group;
         }
 
-        public PropertyMeta ReadOnly()
+        public PropertyMetadata ReadOnly()
         {
             IsReadOnly = true;
             return this;

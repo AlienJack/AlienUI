@@ -1,5 +1,5 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window">
-	<Image Name="WndBottom"  Horizontal="Stretch" Vertical="Stretch"
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content">
+	<Image Name="WndBottom" Horizontal="Stretch" Vertical="Stretch"
 		Color="#000000ff" Padding="2,2,2,2">
 		<Grid Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*)|(30px,1*)">
 			<Image Name="Title" Color="#000000ff">
@@ -8,7 +8,7 @@
 				<Button Text="X" Width="25" Height="25" Horizontal="Right" Vertical="Middle"
 					Offset="-5,0" Command="{TemplateBinding CloseCmd}" />
 			</Image>
-			<Image Name="Content" Horizontal="Stretch" Vertical="Stretch" TemplateRoot="true" />
+			<Image Name="Content" Horizontal="Stretch" Vertical="Stretch" />
 		</Grid>
 
 		<EventTrigger Event="OnShow">
