@@ -12,6 +12,7 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         public abstract Type ValueType { get; }
         public abstract object Draw(UIElement host, string label, object value);
+        public abstract object OnSceneGUI(UIElement host, string label, object value);
     }
 
     public abstract class PropertyDrawer<T> : PropertyDrawerBase
@@ -23,6 +24,12 @@ namespace AlienUI.Editors.PropertyDrawer
             return OnDraw(host, label, (T)value);
         }
 
+        public override sealed object OnSceneGUI(UIElement host, string label, object value)
+        {
+            return OnDrawSceneGUI(host, label, (T)value);
+        }
+
         protected abstract T OnDraw(UIElement host, string label, T value);
+        protected virtual T OnDrawSceneGUI(UIElement host, string label, T value) { return value; }
     }
 }

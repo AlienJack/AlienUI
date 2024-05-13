@@ -140,4 +140,89 @@ namespace AlienUI.Editors.PropertyDrawer
             return EditorGUILayout.FloatField(label, value);
         }
     }
+
+    public class GridDefineDrawer : PropertyDrawer<GridDefine>
+    {
+        protected override GridDefine OnDrawSceneGUI(UIElement host, string label, GridDefine value)
+        {
+            if (host is UIElements.Grid grid)
+            {
+                int col = grid.GridDefine.Column;
+                int row = grid.GridDefine.Row;
+                for (int i = 0; i < col * row; i++)
+                {
+                    int x = i % col;
+                    int y = i / col;
+                    var size = grid.GridDefine.GetCellSize(x, y);
+                    var pos = grid.GridDefine.GetCellOffset(x, y);
+
+                    var gridRect = grid.NodeProxy.transform as RectTransform;
+                    size *= gridRect.localScale;
+
+                    Vector2 offset = (Vector3)gridRect.rect.size * 0.5f;
+                    offset.Scale(new Vector3(1, -1, 1));
+                    pos -= offset;
+
+                    var posLT = gridRect.TransformPoint(pos);
+                    var posRT = posLT + new Vector3(size.x, 0, 0);
+                    var posRB = posRT + new Vector3(0, -size.y, 0);
+                    var posLB = posRB + new Vector3(-size.x, 0, 0);
+
+                    var color = Handles.color;
+                    Handles.color = Color.yellow;
+                    Handles.DrawLine(posLT, posRT, 2);
+                    Handles.DrawLine(posRT, posRB, 2);
+                    Handles.DrawLine(posRB, posLB, 2);
+                    Handles.DrawLine(posLB, posLT, 2);
+
+                    //EditorGUI.LabelField(posLT, "Hello!");
+                    //EditorGUILayout.LabelField("!!!")
+
+                    Handles.color = color;
+                }
+            }
+
+            return value;
+        }
+
+        protected override GridDefine OnDraw(UIElement host, string label, GridDefine value)
+        {
+            EditorGUILayout.LabelField(label, new GUIStyle(EditorStyles.label), GUILayout.Height(25));
+            var rect = GUILayoutUtility.GetLastRect();
+            rect.position += new Vector2(80, 0);
+            rect.width -= 80;
+            ////GUILayout.BeginArea(rect);
+            //GUILayout.Button("!!!!!");
+            ////GUILayout.EndArea();
+
+            GUI.BeginGroup(rect);
+            EditorGUI.LabelField(new Rect(0, 0, 30, 20), "Col");
+            int newColumn = EditorGUI.IntField(new Rect(35, 0, 30, 20), value.Column);
+            EditorGUI.LabelField(new Rect(80, 0, 30, 20), "Row");
+            int newRow = EditorGUI.IntField(new Rect(115, 0, 30, 20), value.Row);
+            GUI.EndGroup();
+
+            value.GetDefines(out var colDefs, out var rowDefs);
+
+            if (newColumn != value.Column || newRow != value.Row)
+            {
+                while (newColumn != colDefs.Count || newRow != rowDefs.Count)
+                {
+                    if (newColumn > colDefs.Count)
+                        colDefs.Add(new GridDefine.Define { DefineType = GridDefine.EnumDefineType.Weight, Value = 1 });
+                    else if (newColumn < colDefs.Count)
+                        colDefs.RemoveAt(colDefs.Count - 1);
+
+                    if (newRow > rowDefs.Count)
+                        rowDefs.Add(new GridDefine.Define { DefineType = GridDefine.EnumDefineType.Weight, Value = 1 });
+                    else if (newRow < rowDefs.Count)
+                        rowDefs.RemoveAt(newRow - 1);
+                }
+
+                value = new GridDefine(colDefs.ToArray(), rowDefs.ToArray());
+            }
+
+            return value;
+        }
+    }
 }

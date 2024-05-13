@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AlienUI.Models
@@ -16,6 +17,12 @@ namespace AlienUI.Models
         private float[] m_cellHeight;
         private float[] m_cellOffsetX;
         private float[] m_cellOffsetY;
+
+        public readonly void GetDefines(out List<Define> colDefines, out List<Define> m_rowDefines)
+        {
+            colDefines = new List<Define>(this.m_columnDef);
+            m_rowDefines = new List<Define>(this.m_rowDef);
+        }
 
         public GridDefine(Define[] columnDefine, Define[] rowDefine)
         {
@@ -128,6 +135,32 @@ namespace AlienUI.Models
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is GridDefine other)
+            {
+                if (m_rowDef.Length != other.m_rowDef.Length) return false;
+                if (m_columnDef.Length != other.m_columnDef.Length) return false;
+
+                for (int i = 0; i < m_columnDef.Length; i++)
+                {
+                    var selfCol = m_columnDef[i];
+                    var otherCol = other.m_columnDef[i];
+                    if (selfCol != otherCol) return false;
+                }
+
+                for (int i = 0; i < m_rowDef.Length; i++)
+                {
+                    var selfRow = m_rowDef[i];
+                    var otherRow = other.m_rowDef[i];
+                    if (selfRow != otherRow) return false;
+                }
+
+                return true;
+            }
+            else return false;
+        }
+
         public enum EnumDefineType
         {
             /// <summary> ¾ø¶ÔÖµ </summary>
@@ -140,6 +173,33 @@ namespace AlienUI.Models
         {
             public EnumDefineType DefineType;
             public float Value;
+
+            public override readonly bool Equals(object obj)
+            {
+                if (obj is Define other)
+                {
+                    var self = (Define)this;
+
+                    return self.DefineType == other.DefineType && self.Value == other.Value;
+                }
+                else return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return DefineType.GetHashCode() ^ (Value.GetHashCode() << 2);
+            }
+
+            public static bool operator ==(Define lhs, Define rhs)
+            {
+                return lhs.Equals(rhs);
+            }
+
+            public static bool operator !=(Define lhs, Define rhs)
+            {
+                return !(lhs == rhs);
+            }
+
         }
     }
 }

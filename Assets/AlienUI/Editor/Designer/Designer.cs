@@ -29,11 +29,42 @@ namespace AlienUI.Editors
         private void OnEnable()
         {
             EditorApplication.update += OnUpdate;
+            SceneView.duringSceneGui += SceneView_duringSceneGui;
+        }
+
+        private void SceneView_duringSceneGui(SceneView obj)
+        {
+            if (m_selection == null) return;
+            if (m_selection.NodeProxy == null) return;
+
+            var propties = m_selection.GetAllDependencyProperties();
+            var groups = propties.GroupBy(p => p.Meta.Group).ToList();
+
+            foreach (var group in groups)
+            {
+                var groupName = group.Key;
+                var drawingPropertys = group.Where(property => !property.Meta.NotAllowEdit).ToList();
+                if (drawingPropertys.Count == 0) continue;
+
+                foreach (var property in drawingPropertys)
+                {
+                    if (property.Meta.NotAllowEdit) continue;
+
+                    var drawer = FindDrawer(property.PropType);
+                    if (drawer == null) continue;
+
+                    if (!property.Meta.IsReadOnly)
+                    {
+                        var value = drawer.OnSceneGUI(m_selection, property.PropName, m_selection.GetValue(property));
+                    }
+                }
+            }
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdate;
+            SceneView.duringSceneGui -= SceneView_duringSceneGui;
         }
 
         private UIElement m_target;
@@ -182,7 +213,6 @@ namespace AlienUI.Editors
             Vector2 mousePos = Event.current.mousePosition;
             if (!GUILayoutUtility.GetLastRect().Contains(mousePos)) return;
 
-            // 创建一个新的通用菜单
             GenericMenu menu = new GenericMenu();
 
             // Use MenuItem as Title
