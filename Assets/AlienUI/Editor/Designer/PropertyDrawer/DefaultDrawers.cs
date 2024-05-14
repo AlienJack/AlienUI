@@ -149,6 +149,7 @@ namespace AlienUI.Editors.PropertyDrawer
             {
                 int col = grid.GridDefine.Column;
                 int row = grid.GridDefine.Row;
+                grid.GridDefine.GetDefines(out var colDefs, out var rowDefs);
                 for (int i = 0; i < col * row; i++)
                 {
                     int x = i % col;
@@ -156,39 +157,48 @@ namespace AlienUI.Editors.PropertyDrawer
                     var size = grid.GridDefine.GetCellSize(x, y);
                     var pos = grid.GridDefine.GetCellOffset(x, y);
 
-                    var gridRect = grid.NodeProxy.transform as RectTransform;
-                    size *= gridRect.localScale;
+                    var labelStyle = new GUIStyle(EditorStyles.label);
+                    labelStyle.normal.background = AlienEditorUtility.MakeTex(2, 2, Color.gray);
+                    grid.Rect.DrawSceneBorder(pos, size, Color.yellow, (rect) =>
+                    {
+                        GUI.Box(new Rect(0, 0, rect.width, rect.height), string.Empty);
+                        GUILayout.FlexibleSpace();
+                        if (y == 0 && colDefs.Count > 1)
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.LabelField("Col:", labelStyle, GUILayout.Width(30));
+                            var colDef = colDefs[x];
+                            colDef.DefineType = (GridDefine.EnumDefineType)EditorGUILayout.EnumPopup(colDef.DefineType, GUILayout.Width(60));
+                            colDef.Value = EditorGUILayout.FloatField(colDef.Value, GUILayout.Width(30));
+                            colDefs[x] = colDef;
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.EndHorizontal();
+                        }
 
-                    Vector2 offset = (Vector3)gridRect.rect.size * 0.5f;
-                    offset.Scale(new Vector3(1, -1, 1));
-                    pos -= offset;
+                        if (x == 0 && rowDefs.Count > 1)
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.LabelField("Row:", labelStyle, GUILayout.Width(30));
+                            var rowDef = rowDefs[y];
+                            rowDef.DefineType = (GridDefine.EnumDefineType)EditorGUILayout.EnumPopup(rowDef.DefineType, GUILayout.Width(60));
+                            rowDef.Value = EditorGUILayout.FloatField(rowDef.Value, GUILayout.Width(30));
+                            rowDefs[y] = rowDef;
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.EndHorizontal();
+                        }
 
-                    var posLT = gridRect.TransformPoint(pos);
-                    var posRT = posLT + new Vector3(size.x, 0, 0);
-                    var posRB = posRT + new Vector3(0, -size.y, 0);
-                    var posLB = posRB + new Vector3(-size.x, 0, 0);
-
-                    var color = Handles.color;
-                    Handles.color = Color.yellow;
-                    Handles.DrawLine(posLT, posRT, 2);
-                    Handles.DrawLine(posRT, posRB, 2);
-                    Handles.DrawLine(posRB, posLB, 2);
-                    Handles.DrawLine(posLB, posLT, 2);
-
-                    Handles.BeginGUI();
-                    var screenPos = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posLT + new Vector3(size.x * 0.5f, -size.y * 0.5f, 0));
-                    screenPos.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPos.y;
-                    //screenPos.y *= -1f;
-                    GUI.Button(new Rect { position = screenPos, width =100, height = 30 }, "Test");
-                    Handles.EndGUI();
-                    //EditorGUI.LabelField(posLT, "Hello!");
-                    //EditorGUILayout.LabelField("!!!")
-
-                    Handles.color = color;
+                        GUILayout.FlexibleSpace();
+                    });
                 }
-            }
 
-            return value;
+                return new GridDefine(colDefs.ToArray(), rowDefs.ToArray());
+            }
+            else
+            {
+                return value;
+            }
         }
 
         protected override GridDefine OnDraw(UIElement host, string label, GridDefine value)

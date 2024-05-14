@@ -56,6 +56,7 @@ namespace AlienUI.Editors
                     if (!property.Meta.IsReadOnly)
                     {
                         var value = drawer.OnSceneGUI(m_selection, property.PropName, m_selection.GetValue(property));
+                        m_selection.SetValue(property, value);
                     }
                 }
             }
