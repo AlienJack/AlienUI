@@ -20,7 +20,7 @@ namespace AlienUI
         IDropHandler,
         IScrollHandler
     {
-        internal UIElement TargetObject { get; set; }
+        public UIElement TargetObject { get; set; }
         internal float Alpha
         {
             get => m_canvasRenderer.alpha;

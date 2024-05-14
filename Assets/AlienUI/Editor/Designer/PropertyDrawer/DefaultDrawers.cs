@@ -162,17 +162,13 @@ namespace AlienUI.Editors.PropertyDrawer
                     labelStyle.alignment = TextAnchor.MiddleCenter;
                     grid.Rect.DrawSceneBorder(pos, size, Color.yellow, (rect) =>
                     {
-                        GUI.Box(new Rect(0, 0, rect.width, rect.height), string.Empty);
-
                         GUILayout.FlexibleSpace();
-
 
                         EditorGUILayout.BeginHorizontal();
                         GUILayout.FlexibleSpace();
                         EditorGUILayout.LabelField($"{x},{y}", labelStyle, GUILayout.Width(30));
                         GUILayout.FlexibleSpace();
                         EditorGUILayout.EndHorizontal();
-
 
                         if (y == 0 && colDefs.Count > 1)
                         {

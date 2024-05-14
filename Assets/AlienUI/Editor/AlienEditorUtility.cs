@@ -27,7 +27,7 @@ namespace AlienUI.Editors
             var gridRect = rectTrans;
             size *= gridRect.localScale;
 
-            Vector2 offset = (Vector3)gridRect.rect.size * 0.5f;
+            Vector2 offset = (Vector3)gridRect.rect.size * new Vector2(rectTrans.pivot.x, 1 - rectTrans.pivot.y);
             offset.Scale(new Vector3(1, -1, 1));
             leftTopPos -= offset;
 

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.EditorTools;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -30,6 +31,29 @@ namespace AlienUI.Editors
         {
             EditorApplication.update += OnUpdate;
             SceneView.duringSceneGui += SceneView_duringSceneGui;
+            DesignerTool.OnSelected += DesignerTool_OnSelected;
+        }
+
+
+
+        private void OnUpdate()
+        {
+            if (m_target != null && m_target.Engine != null) m_target.Engine.ForceHanldeDirty();
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.update -= OnUpdate;
+            SceneView.duringSceneGui -= SceneView_duringSceneGui;
+            DesignerTool.OnSelected -= DesignerTool_OnSelected;
+        }
+
+        private void DesignerTool_OnSelected(UIElement obj)
+        {
+            m_logicTree.SelectWithoutNotify(obj);
+            m_selection = obj;
+            SceneView.RepaintAll();
+            Repaint();
         }
 
         private void SceneView_duringSceneGui(SceneView obj)
@@ -64,6 +88,8 @@ namespace AlienUI.Editors
             var stage = PrefabStageUtility.GetCurrentPrefabStage();
             if (stage != null)
             {
+                ToolManager.SetActiveTool<DesignerTool>();
+
                 rect.width = Mathf.Min(position.width, 100);
                 rect.height = Mathf.Min(position.height, 30);
                 if (GUI.Button(rect, "ExitEdit"))
@@ -93,11 +119,6 @@ namespace AlienUI.Editors
             DrawInspector(rect);
         }
 
-        private void OnDisable()
-        {
-            EditorApplication.update -= OnUpdate;
-            SceneView.duringSceneGui -= SceneView_duringSceneGui;
-        }
 
         private UIElement m_target;
         private AmlAsset m_amlFile;
@@ -112,14 +133,11 @@ namespace AlienUI.Editors
             m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
         }
 
-        private void OnUpdate()
-        {
-            if (m_target != null && m_target.Engine != null) m_target.Engine.ForceHanldeDirty();
-        }
 
         private void M_logicTree_OnSelectItem(UIElement obj)
         {
             m_selection = obj;
+            SceneView.RepaintAll();
         }
 
         private void DrawInspector(Rect rect)
@@ -131,7 +149,6 @@ namespace AlienUI.Editors
             if (m_selection == null) return;
             if (m_selection.NodeProxy == null) return;
 
-            Selection.activeObject = m_selection.NodeProxy.gameObject;
             List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups();
             GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
 
