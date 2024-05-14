@@ -21,6 +21,18 @@ namespace AlienUI.Editors
 
         public static event Action<UIElement> OnSelected;
 
+        public override void OnActivated()
+        {
+            currentPick = null;
+            targetUI = null;
+        }
+
+        public override void OnWillBeDeactivated()
+        {
+            currentPick = null;
+            targetUI = null;
+        }
+
         public override void OnToolGUI(EditorWindow window)
         {
             var evt = Event.current;
@@ -48,7 +60,10 @@ namespace AlienUI.Editors
 
             if (targetUI != null)
             {
-                AlienEditorUtility.DrawSceneBorder(targetUI.Rect, Vector2.zero, new Vector2(targetUI.ActualWidth, targetUI.ActualHeight), Color.cyan);
+                if (targetUI.Rect != null)
+                    AlienEditorUtility.DrawSceneBorder(targetUI.Rect, Vector2.zero, new Vector2(targetUI.ActualWidth, targetUI.ActualHeight), Color.cyan);
+                else
+                    targetUI = null;
             }
         }
     }

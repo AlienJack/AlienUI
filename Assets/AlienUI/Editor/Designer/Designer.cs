@@ -166,16 +166,7 @@ namespace AlienUI.Editors
                     {
                         EditorGUILayout.BeginHorizontal();
 
-                        var currentDPValue = m_selection.GetValue(property);
-                        var defaultDPValue = property.Meta.DefaultValue;
-                        if (currentDPValue != defaultDPValue)
-                        {
-                            var color = GUI.color;
-                            ColorUtility.TryParseHtmlString("#0f80be", out var dirtyColor);
-                            GUI.color = dirtyColor;
-                            GUILayout.Box(string.Empty, EditorStyles.selectionRect, GUILayout.Width(2));
-                            GUI.color = color;
-                        }
+                        DrawDirtyMark(property);
 
                         var drawer = FindDrawer(property.PropType);
                         if (drawer == null)
@@ -214,6 +205,17 @@ namespace AlienUI.Editors
             }
 
             GUILayout.EndArea();
+        }
+
+        private void DrawDirtyMark(DependencyProperty property)
+        {
+            var currentDPValue = m_selection.GetValue(property);
+            var defaultDPValue = property.Meta.DefaultValue;
+            var color = GUI.color;
+            ColorUtility.TryParseHtmlString(currentDPValue != defaultDPValue ? "#0f80be" : "00000000", out var dirtyColor);
+            GUI.color = dirtyColor;
+            GUILayout.Box(string.Empty, EditorStyles.selectionRect, GUILayout.Width(2));
+            GUI.color = color;
         }
 
         private List<IGrouping<string, DependencyProperty>> GetDependencyGroups()
