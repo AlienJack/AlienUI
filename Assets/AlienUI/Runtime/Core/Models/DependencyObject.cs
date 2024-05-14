@@ -1,3 +1,4 @@
+using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,9 @@ namespace AlienUI.Models
 {
     public abstract class DependencyObject
     {
-        protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
         private Type m_selfType;
+
+        protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
 
         public delegate void OnDependencyPropertyChangedHandle(string propName, object oldValue, object newValue);
         public event OnDependencyPropertyChangedHandle OnDependencyPropertyChanged;

@@ -39,17 +39,9 @@ namespace AlienUI.Core
             m_xNode = xnode;
         }
 
-        public bool ParseType()
+        public void SetPropertyType(Type propType)
         {
-            var pType = m_node.GetDependencyPropertyType(m_xAtt.Name);
-            if (pType == null)
-            {
-                Engine.LogError($"no such DependencyProperty named: <color=yellow>{m_xAtt.Name}</color> in node <color=white>{m_xNode.Name}</color>");
-                return false;
-            }
-
-            m_pType = pType;
-            return true;
+            m_pType = propType;
         }
 
         public PropertyResolver GetAttributeResolver(Type propType)

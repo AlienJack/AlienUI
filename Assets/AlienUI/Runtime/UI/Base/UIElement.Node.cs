@@ -19,7 +19,7 @@ namespace AlienUI.UIElements
 
         public RectTransform Rect => m_rectTransform;
 
-        protected UIElement Parent => m_parent;
+        public UIElement Parent => m_parent;
 
         public UIElement TopParent
         {

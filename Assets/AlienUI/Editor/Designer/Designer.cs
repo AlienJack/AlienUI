@@ -37,19 +37,14 @@ namespace AlienUI.Editors
             if (m_selection == null) return;
             if (m_selection.NodeProxy == null) return;
 
-            var propties = m_selection.GetAllDependencyProperties();
-            var groups = propties.GroupBy(p => p.Meta.Group).ToList();
+            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups();
 
             foreach (var group in groups)
             {
                 var groupName = group.Key;
-                var drawingPropertys = group.Where(property => !property.Meta.NotAllowEdit).ToList();
-                if (drawingPropertys.Count == 0) continue;
 
-                foreach (var property in drawingPropertys)
+                foreach (var property in group)
                 {
-                    if (property.Meta.NotAllowEdit) continue;
-
                     var drawer = FindDrawer(property.PropType);
                     if (drawer == null) continue;
 
@@ -60,35 +55,6 @@ namespace AlienUI.Editors
                     }
                 }
             }
-        }
-
-        private void OnDisable()
-        {
-            EditorApplication.update -= OnUpdate;
-            SceneView.duringSceneGui -= SceneView_duringSceneGui;
-        }
-
-        private UIElement m_target;
-        private AmlAsset m_amlFile;
-        private LogicTree m_logicTree;
-        private UIElement m_selection;
-
-        public void SetTarget(UIElement ui, AmlAsset amlFile)
-        {
-            m_target = ui;
-            m_amlFile = amlFile;
-            m_logicTree = new LogicTree(m_target);
-            m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
-        }
-
-        private void OnUpdate()
-        {
-            if (m_target != null && m_target.Engine != null) m_target.Engine.ForceHanldeDirty();
-        }
-
-        private void M_logicTree_OnSelectItem(UIElement obj)
-        {
-            m_selection = obj;
         }
 
         private void OnGUI()
@@ -127,6 +93,35 @@ namespace AlienUI.Editors
             DrawInspector(rect);
         }
 
+        private void OnDisable()
+        {
+            EditorApplication.update -= OnUpdate;
+            SceneView.duringSceneGui -= SceneView_duringSceneGui;
+        }
+
+        private UIElement m_target;
+        private AmlAsset m_amlFile;
+        private LogicTree m_logicTree;
+        private UIElement m_selection;
+
+        public void SetTarget(UIElement ui, AmlAsset amlFile)
+        {
+            m_target = ui;
+            m_amlFile = amlFile;
+            m_logicTree = new LogicTree(m_target);
+            m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
+        }
+
+        private void OnUpdate()
+        {
+            if (m_target != null && m_target.Engine != null) m_target.Engine.ForceHanldeDirty();
+        }
+
+        private void M_logicTree_OnSelectItem(UIElement obj)
+        {
+            m_selection = obj;
+        }
+
         private void DrawInspector(Rect rect)
         {
             rect.width = position.width * 0.7f - 15;
@@ -137,8 +132,7 @@ namespace AlienUI.Editors
             if (m_selection.NodeProxy == null) return;
 
             Selection.activeObject = m_selection.NodeProxy.gameObject;
-            var propties = m_selection.GetAllDependencyProperties();
-            var groups = propties.GroupBy(p => p.Meta.Group).ToList();
+            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups();
             GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
 
             EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 30 }, GUILayout.Height(30));
@@ -146,16 +140,13 @@ namespace AlienUI.Editors
             foreach (var group in groups)
             {
                 var groupName = group.Key;
-                var drawingPropertys = group.Where(property => !property.Meta.NotAllowEdit).ToList();
-                if (drawingPropertys.Count == 0) continue;
 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
                 if (EditorGUILayout.Foldout(true, groupName))
                 {
-                    foreach (var property in drawingPropertys)
+                    foreach (var property in group)
                     {
-                        if (property.Meta.NotAllowEdit) continue;
                         EditorGUILayout.BeginHorizontal();
 
                         var currentDPValue = m_selection.GetValue(property);
@@ -206,6 +197,18 @@ namespace AlienUI.Editors
             }
 
             GUILayout.EndArea();
+        }
+
+        private List<IGrouping<string, DependencyProperty>> GetDependencyGroups()
+        {
+            var propties = m_selection.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && !p.IsAttachedProerty);
+            if (m_selection.Parent != null)
+            {
+                var parentAttProps = m_selection.Parent.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && p.IsAttachedProerty);
+                propties = propties.Concat(parentAttProps);
+            }
+            var groups = propties.GroupBy(p => p.IsAttachedProerty ? $"AttachedProperty From {p.AttachHostType}" : p.Meta.Group).ToList();
+            return groups;
         }
 
         private void HandleContextMenu(UIElement m_selection, DependencyProperty property)

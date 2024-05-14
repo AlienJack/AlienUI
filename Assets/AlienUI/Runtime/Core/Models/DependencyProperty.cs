@@ -10,6 +10,8 @@ namespace AlienUI.Models
         public Type PropType { get; private set; }
         public delegate void OnValueChangedHandle(DependencyObject sender, object oldValue, object newValue);
         public event OnValueChangedHandle OnValueChanged;
+        public bool IsAttachedProerty { get; internal set; }
+        public Type AttachHostType { get; internal set; }
 
         private int m_hash;
 
@@ -67,6 +69,16 @@ namespace AlienUI.Models
 
             if (owenClassType.BaseType == bottomType || owenClassType.IsSubclassOf(bottomType))
                 GetAllDP(owenClassType.BaseType, ref result);
+        }
+
+
+        private static Dictionary<string, Dictionary<Type, DependencyProperty>> m_attachedProperties = new Dictionary<string, Dictionary<Type, DependencyProperty>>();
+        internal static DependencyProperty RegisterAttached(string propName, Type propType, Type owenClassType, PropertyMetadata metaData, OnValueChangedHandle onValueChanged = null)
+        {
+            var newDP = Register(propName, propType, owenClassType, metaData, onValueChanged);
+            newDP.IsAttachedProerty = true;
+            newDP.AttachHostType = owenClassType;
+            return newDP;
         }
     }
 }

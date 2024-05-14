@@ -135,7 +135,7 @@ namespace AlienUI.Models
             }
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj is GridDefine other)
             {
@@ -160,6 +160,7 @@ namespace AlienUI.Models
             }
             else return false;
         }
+
 
         public enum EnumDefineType
         {

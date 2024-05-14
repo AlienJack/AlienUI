@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using UnityEngine;
 
 namespace AlienUI.Core
@@ -14,6 +15,7 @@ namespace AlienUI.Core
         private Dictionary<AmlNodeElement, XmlNode> m_dpObjectsXmlMap = new Dictionary<AmlNodeElement, XmlNode>();
         private Dictionary<string, List<AmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<AmlNodeElement>>();
         private Dictionary<AmlNodeElement, HashSet<AmlNodeElement>> m_parentChildrenRecords = new Dictionary<AmlNodeElement, HashSet<AmlNodeElement>>();
+        private Dictionary<AmlNodeElement, AmlNodeElement> m_childParentRecords = new Dictionary<AmlNodeElement, AmlNodeElement>();
         private UIElement m_rootElement;
         internal DependencyObject m_dataContext;
         internal AmlNodeElement m_templateHost;
@@ -80,6 +82,7 @@ namespace AlienUI.Core
                 m_parentChildrenRecords[parentNode] = new HashSet<AmlNodeElement>();
 
             m_parentChildrenRecords[parentNode].Add(newNodeIns);
+            m_childParentRecords[newNodeIns] = parentNode;
         }
 
         public T Query<T>(string name) where T : DependencyObject
@@ -113,7 +116,8 @@ namespace AlienUI.Core
         {
             foreach (var item in m_dpObjectsXmlMap)
             {
-                ResolveAttributes(item.Key, item.Value, xmlParser);
+                m_childParentRecords.TryGetValue(item.Key, out var parent);
+                ResolveAttributes(item.Key, parent, item.Value, xmlParser);
             }
             foreach (var item in m_parentChildrenRecords)
             {
@@ -135,14 +139,26 @@ namespace AlienUI.Core
             uiRoot.RefreshPropertyNotify();
         }
 
-        void ResolveAttributes(AmlNodeElement node, XmlNode xNode, XmlAttributeParser xmlParser)
+        void ResolveAttributes(AmlNodeElement node, AmlNodeElement parent, XmlNode xNode, XmlAttributeParser xmlParser)
         {
             foreach (XmlAttribute att in xNode.Attributes)
             {
                 if (att.Name.StartsWith("xmlns")) continue; //xml保留字符跳过
 
                 var dp = node.GetDependencyProperty(att.Name);
-                if (dp == null) continue;
+                if (dp == null && parent != null)
+                {
+                    dp = parent.GetDependencyProperty(att.Name);
+                }
+
+                if (dp == null)
+                {
+                    Engine.LogError($"no such DependencyProperty named: <color=yellow>{att.Name}</color> in node <color=white>{xNode.Name}</color>");
+                    if (parent != null)
+                        Engine.LogError($"no such AttenchedProperty named: <color=yellow>{att.Name}</color> in node <color=white>{parent.GetType()}</color>");
+
+                    continue;
+                }
 
                 if (dp.Meta.NotAllowEdit)
                 {
@@ -174,10 +190,10 @@ namespace AlienUI.Core
                 else
                 {
                     xmlParser.Begin(node, xNode, att);
-                    if (!xmlParser.ParseType()) continue;
+                    xmlParser.SetPropertyType(dp.PropType);
                     if (!xmlParser.ParseValue()) continue;
 
-                    node.FillDependencyValue(att.Name, xmlParser.ResultValue);
+                    node.FillDependencyValue(dp, xmlParser.ResultValue);
 #if UNITY_EDITOR
                     //this is only for Editor Designer to Instantiate a template aml
                     if (!Application.isPlaying && m_templateHost == null && node is Template temp)

@@ -159,10 +159,21 @@ namespace AlienUI.Editors.PropertyDrawer
 
                     var labelStyle = new GUIStyle(EditorStyles.label);
                     labelStyle.normal.background = AlienEditorUtility.MakeTex(2, 2, Color.gray);
+                    labelStyle.alignment = TextAnchor.MiddleCenter;
                     grid.Rect.DrawSceneBorder(pos, size, Color.yellow, (rect) =>
                     {
                         GUI.Box(new Rect(0, 0, rect.width, rect.height), string.Empty);
+
                         GUILayout.FlexibleSpace();
+
+
+                        EditorGUILayout.BeginHorizontal();
+                        GUILayout.FlexibleSpace();
+                        EditorGUILayout.LabelField($"{x},{y}", labelStyle, GUILayout.Width(30));
+                        GUILayout.FlexibleSpace();
+                        EditorGUILayout.EndHorizontal();
+
+
                         if (y == 0 && colDefs.Count > 1)
                         {
                             EditorGUILayout.BeginHorizontal();
@@ -239,6 +250,14 @@ namespace AlienUI.Editors.PropertyDrawer
             }
 
             return value;
+        }
+    }
+
+    public class Vector2IntDrawer : PropertyDrawer<Vector2Int>
+    {
+        protected override Vector2Int OnDraw(UIElement host, string label, Vector2Int value)
+        {
+            return EditorGUILayout.Vector2IntField(label, value);
         }
     }
 }

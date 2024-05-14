@@ -1,11 +1,33 @@
 using AlienUI.Models;
 using AlienUI.UIElements.Containers;
+using System;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
     public class Grid : Container
     {
+        public static Vector2Int GetGridPos(DependencyObject obj)
+        {
+            return (Vector2Int)obj.GetValue(PositionProperty);
+        }
+
+        public static void SetGridPos(DependencyObject obj, Vector2Int value)
+        {
+            obj.SetValue(PositionProperty, value);
+        }
+
+        public static readonly DependencyProperty PositionProperty =
+            DependencyProperty.RegisterAttached("GridPos", typeof(Vector2Int), typeof(Grid), new PropertyMetadata(Vector2Int.zero), OnValueChanged);
+
+        private static void OnValueChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            if (sender is UIElement element && element.Parent is Grid grid)
+            {
+                grid.SetLayoutDirty();
+            }
+        }
+
         public GridDefine GridDefine
         {
             get { return (GridDefine)GetValue(GridDefineProperty); }
@@ -36,8 +58,10 @@ namespace AlienUI.UIElements
             {
                 UIElement uiChild = UIChildren[i];
 
-                int x = i % GridDefine.Column;
-                int y = i / GridDefine.Column;
+                var pos = GetGridPos(uiChild);
+
+                int x = pos.x;
+                int y = pos.y;
                 var size = GridDefine.GetCellSize(x, y);
                 uiChild.ActualWidth = size.x;
                 uiChild.ActualHeight = size.y;
