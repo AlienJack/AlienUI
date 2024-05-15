@@ -5,6 +5,14 @@
         private string m_uniqueTag;
         private DependencyObject m_referenceCache;
 
+        public readonly string GetUniqueTag() => m_uniqueTag;
+
+        public DependencyObjectRef SetUniqueTag(string tag)
+        {
+            m_uniqueTag = tag;
+            return this;
+        }
+
         public DependencyObjectRef(string uniqueTag)
         {
             m_uniqueTag = uniqueTag;

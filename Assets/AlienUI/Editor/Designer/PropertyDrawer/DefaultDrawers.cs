@@ -31,7 +31,9 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         protected override CommandBase OnDraw(UIElement host, string label, CommandBase value)
         {
-            var type = value.GetType();
+            var dp = host.GetDependencyProperty(label);
+            var type = dp.PropType;
+
             var paramTypes = type.GenericTypeArguments;
             if (paramTypes == null || paramTypes.Length == 0)
                 EditorGUILayout.LabelField(label, "()");
@@ -278,6 +280,15 @@ namespace AlienUI.Editors.PropertyDrawer
         protected override Font OnDraw(UIElement host, string label, Font value)
         {
             return (Font)EditorGUILayout.ObjectField(label, value, typeof(Font), false);
+        }
+    }
+
+    public class DependencyObjectRefDrawer : PropertyDrawer<DependencyObjectRef>
+    {
+        protected override DependencyObjectRef OnDraw(UIElement host, string label, DependencyObjectRef value)
+        {
+            var tag = EditorGUILayout.TextField(label, value.GetUniqueTag());
+            return value.SetUniqueTag(tag);
         }
     }
 }

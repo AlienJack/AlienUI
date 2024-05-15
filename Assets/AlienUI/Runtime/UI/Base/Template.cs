@@ -25,8 +25,12 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty TemplateRootProperty =
-            DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
+            DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)), OnRootChanged);
 
+        private static void OnRootChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            
+        }
 
         protected override void OnInitialized()
         {
