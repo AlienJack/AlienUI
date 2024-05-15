@@ -53,7 +53,7 @@ namespace AlienUI.Editors
             DesignerTool.OnSelected -= DesignerTool_OnSelected;
 
             Instance = null;
-        }        
+        }
 
         private void DesignerTool_OnSelected(UIElement obj)
         {
@@ -97,9 +97,9 @@ namespace AlienUI.Editors
             {
                 ToolManager.SetActiveTool<DesignerTool>();
 
-                rect.width = Mathf.Min(position.width, 100);
-                rect.height = Mathf.Min(position.height, 30);
-                if (GUI.Button(rect, "ExitEdit"))
+                GUILayout.BeginArea(new Rect(rect) { height = 30, width = position.width });
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("ExitEdit"))
                 {
                     StageUtility.GoToMainStage();
                     if (Settings.Get().BackLayout)
@@ -108,19 +108,22 @@ namespace AlienUI.Editors
                         EditorUtility.LoadWindowLayout(path);
                     }
                 }
-                if (m_amlFile != null)
+                if (m_amlFile != null && GUILayout.Button("OpenAml"))
                 {
-                    rect.position += new Vector2(rect.width, 0);
-                    if (GUI.Button(rect, "OpenAml"))
-                    {
-                        AmlImporter.OverrideAMLOpen = false;
-                        AssetDatabase.OpenAsset(m_amlFile);
-                        AmlImporter.OverrideAMLOpen = true;
-                    }
+                    AmlImporter.OverrideAMLOpen = false;
+                    AssetDatabase.OpenAsset(m_amlFile);
+                    AmlImporter.OverrideAMLOpen = true;
                 }
+                if (m_amlFile != null && GUILayout.Button("Save"))
+                {
+                    Debug.Log(AmlGenerator.Gen(m_target));
+                }
+                EditorGUILayout.EndHorizontal();
+                GUILayout.EndArea();
+
             }
 
-            rect.position = new Vector2(5, rect.height + 10);
+            rect.position = new Vector2(5, rect.height + 30);
 
             DrawTree(rect);
             DrawInspector(rect);

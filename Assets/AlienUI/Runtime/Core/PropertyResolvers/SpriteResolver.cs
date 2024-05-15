@@ -17,5 +17,10 @@ namespace AlienUI.PropertyResolvers
             else
                 return from;
         }
+
+        protected override string Reverse(Sprite value)
+        {
+            return value.name;
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace AlienUI.Models
         public abstract Type GetResolveType();
         public abstract object Resolve(string originStr, Type valueType);
         public abstract object Lerp(object from, object to, float progress);
+        public abstract string ToOriString(object value);
 
         public PropertyResolver() { }
     }
@@ -29,6 +30,12 @@ namespace AlienUI.Models
         {
             return OnLerp((T)from, (T)to, progress);
         }
+
+        protected abstract string Reverse(T value);
+        public sealed override string ToOriString(object value)
+        {
+            return Reverse((T)value);
+        }
     }
 
     public class EnumResolver : PropertyResolver
@@ -48,6 +55,18 @@ namespace AlienUI.Models
         {
             if (progress >= 1) return to;
             else return from;
+        }
+
+        public override string ToOriString(object value)
+        {
+            if (value is Enum enumValue)
+            {
+                return Enum.GetName(value.GetType(), value);
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

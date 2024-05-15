@@ -14,5 +14,10 @@ namespace AlienUI.PropertyResolvers
             if (progress >= 1) return to;
             else return from;
         }
+
+        protected override string Reverse(ControlTemplate value)
+        {
+            return value.Name;
+        }
     }
 }

@@ -15,5 +15,10 @@ namespace AlienUI.PropertyResolvers
         {
             return Mathf.Lerp(from, to, progress);
         }
+
+        protected override string Reverse(float value)
+        {
+            return value.ToString();
+        }
     }
 }

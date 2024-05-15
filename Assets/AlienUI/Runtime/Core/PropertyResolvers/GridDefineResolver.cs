@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using static AlienUI.Models.GridDefine;
 
@@ -52,6 +53,37 @@ namespace AlienUI.PropertyResolvers
             }
         }
 
+        protected override string Reverse(GridDefine value)
+        {
+            value.GetDefines(out var cols, out var rows);
 
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < cols.Count; i++)
+            {
+                var item = cols[i];
+                if (item.DefineType == EnumDefineType.Abslute)
+                    sb.Append($"{item.Value}px");
+                else if (item.DefineType == EnumDefineType.Weight)
+                    sb.Append($"{item.Value}*");
+
+                if (i < cols.Count - 1)
+                    sb.Append(',');
+            }
+            sb.Append('|');
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var item = rows[i];
+                if (item.DefineType == EnumDefineType.Abslute)
+                    sb.Append($"{item.Value}px");
+                else if (item.DefineType == EnumDefineType.Weight)
+                    sb.Append($"{item.Value}*");
+
+                if (i < rows.Count - 1)
+                    sb.Append(',');
+            }
+
+            return sb.ToString();
+        }
     }
 }

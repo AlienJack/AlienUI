@@ -143,7 +143,13 @@ namespace AlienUI.Core
         {
             foreach (XmlAttribute att in xNode.Attributes)
             {
-                if (att.Name.StartsWith("xmlns")) continue; //xml保留字符跳过
+                if (att.Name.StartsWith("xmlns"))
+                {
+#if UNITY_EDITOR
+                    node.xmlnsList.Add(new(att.Name, att.Value));
+#endif
+                    continue;
+                }
 
                 var dp = node.GetDependencyProperty(att.Name);
                 if (dp == null && parent != null)

@@ -26,6 +26,7 @@ namespace AlienUI
                 Document document = new Document(dataContext, templateHost, xmlAsset);
                 currentHandlingDoc.Push(document);
                 var uiIns = Parse(xmlTxt, document) as UIElement;
+                
                 Debug.Assert(uiIns != null);
 
                 document.SetDocumentHost(uiIns);
@@ -77,7 +78,7 @@ namespace AlienUI
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlTxt);
             XmlNode rootNode = xmlDoc.DocumentElement;
-
+            
             DependencyObject root = CreateNodeByXml(rootNode, null, doc);
 
             return root;

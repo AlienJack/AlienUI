@@ -16,5 +16,10 @@ namespace AlienUI.PropertyResolvers
             var lerpValue = Mathf.Lerp(from, to, progress);
             return Mathf.RoundToInt(lerpValue);
         }
+
+        protected override string Reverse(int value)
+        {
+            return value.ToString();
+        }
     }
 }

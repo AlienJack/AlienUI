@@ -19,5 +19,10 @@ namespace AlienUI.PropertyResolvers
         {
             return Vector2.Lerp(from, to, progress);
         }
+
+        protected override string Reverse(Vector2 value)
+        {
+            return $"{value.x},{value.y}";
+        }
     }
 }

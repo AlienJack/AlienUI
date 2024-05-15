@@ -28,5 +28,10 @@ namespace AlienUI.PropertyResolvers
 
             return result;
         }
+
+        protected override string Reverse(Number value)
+        {
+            return value.Auto ? "*" : value.Value.ToString();
+        }
     }
 }

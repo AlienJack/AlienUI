@@ -34,6 +34,11 @@ namespace AlienUI.PropertyResolvers
 
             return border;
         }
+
+        protected override string Reverse(BorderData value)
+        {
+            return $"{value.top},{value.bottom},{value.left},{value.right}";
+        }
     }
 
 }

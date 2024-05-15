@@ -16,5 +16,10 @@ namespace AlienUI.PropertyResolvers
         {
             return Color.Lerp(from, to, progress);
         }
+
+        protected override string Reverse(Color value)
+        {
+            return ColorUtility.ToHtmlStringRGBA(value);
+        }
     }
 }

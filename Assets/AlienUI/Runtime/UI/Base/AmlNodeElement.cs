@@ -8,7 +8,7 @@ namespace AlienUI.UIElements
     public abstract class AmlNodeElement : DependencyObject, IDependencyObjectResolver
     {
         private List<AmlNodeElement> m_childrens = new List<AmlNodeElement>();
-        protected List<AmlNodeElement> Children => m_childrens;
+        public List<AmlNodeElement> Children => m_childrens;
 
 
         public Engine Engine { get; set; }
@@ -64,5 +64,10 @@ namespace AlienUI.UIElements
         }
 
         protected virtual void OnPrepared() { }
+
+#if UNITY_EDITOR
+        public List<(string, string)> xmlnsList = new List<(string, string)>();
+        public string xmlNodeName;
+#endif
     }
 }
