@@ -2,6 +2,8 @@ using AlienUI.Core.Resources;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections.Generic;
+using UnityEngine;
+using static AlienUI.UIElements.Button;
 
 namespace AlienUI.Core.Triggers
 {
@@ -14,10 +16,16 @@ namespace AlienUI.Core.Triggers
             m_targetObj.OnDependencyPropertyChanged += M_targetObj_OnDependencyPropertyChanged;
         }
 
-        private void M_targetObj_OnDependencyPropertyChanged(string propName, object oldValue, object newValue)
+        private void M_targetObj_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {
-            if (Test(propName))
+            if (Test(dp.PropName))
+            {
+                if((EnumButtonState)oldValue == EnumButtonState.Pressing)
+                {
+                    Debug.Log("!");
+                }
                 Execute();
+            }
         }
 
         HashSet<string> m_focusProperties = new HashSet<string>();

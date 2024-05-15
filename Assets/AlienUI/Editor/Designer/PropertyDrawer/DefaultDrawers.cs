@@ -272,4 +272,12 @@ namespace AlienUI.Editors.PropertyDrawer
             return (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
         }
     }
+
+    public class FontDrawer : PropertyDrawer<Font>
+    {
+        protected override Font OnDraw(UIElement host, string label, Font value)
+        {
+            return (Font)EditorGUILayout.ObjectField(label, value, typeof(Font), false);
+        }
+    }
 }

@@ -41,6 +41,7 @@ namespace AlienUI.Models
         {
             OnValueChanged?.Invoke(sender, oldValue, newValue);
             BroadcastEvent(sender, PropName, oldValue, newValue);
+            sender.RaisePropertyChanged(this, oldValue, newValue);
         }
 
         public override int GetHashCode()

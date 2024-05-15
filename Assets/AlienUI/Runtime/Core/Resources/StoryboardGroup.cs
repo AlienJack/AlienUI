@@ -22,9 +22,8 @@ namespace AlienUI
             if (m_currentPlay != null && sender != m_currentPlay)
             {
                 m_currentPlay.Stop();
-
-                m_currentPlay = sender;
             }
+            m_currentPlay = sender;
         }
     }
 }

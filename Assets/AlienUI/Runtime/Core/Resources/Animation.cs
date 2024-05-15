@@ -3,6 +3,7 @@ using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AlienUI.Core.Resources
 {
@@ -97,7 +98,6 @@ namespace AlienUI.Core.Resources
             object to = right != null ? right.ActualValue : from;
 
             value = m_resolver.Lerp(from, to, progress);
-
             return true;
         }
 

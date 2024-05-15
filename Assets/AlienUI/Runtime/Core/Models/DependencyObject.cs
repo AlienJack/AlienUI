@@ -11,7 +11,7 @@ namespace AlienUI.Models
 
         protected Dictionary<DependencyProperty, object> m_dpPropValues = new Dictionary<DependencyProperty, object>();
 
-        public delegate void OnDependencyPropertyChangedHandle(string propName, object oldValue, object newValue);
+        public delegate void OnDependencyPropertyChangedHandle(DependencyProperty dp, object oldValue, object newValue);
         public event OnDependencyPropertyChangedHandle OnDependencyPropertyChanged;
 
 
@@ -95,11 +95,15 @@ namespace AlienUI.Models
             m_dpPropValues[dp] = value;
 
             dp.RaiseChangeEvent(this, oldValue, newValue);
-            OnDependencyPropertyChanged?.Invoke(dp.PropName, oldValue, newValue);
 
 #if UNITY_EDITOR
             if (!Application.isPlaying) Canvas.ForceUpdateCanvases();
 #endif
+        }
+
+        public void RaisePropertyChanged(DependencyProperty dp, object oldValue, object newValue)
+        {
+            OnDependencyPropertyChanged?.Invoke(dp, oldValue, newValue);
         }
 
         public object GetValue(string properyName)

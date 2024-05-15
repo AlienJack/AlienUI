@@ -4,13 +4,13 @@ namespace AlienUI.UIElements
 {
     public partial class UIElement : AmlNodeElement
     {
-        public bool IsPointerHover
+        public bool IsPointerOver
         {
             get { return (bool)GetValue(IsPointerHoverProperty); }
             set { SetValue(IsPointerHoverProperty, value); }
         }
         public static readonly DependencyProperty IsPointerHoverProperty =
-            DependencyProperty.Register("IsPointerHover", typeof(bool), typeof(UIElement), new PropertyMetadata(false).SetNotAllowEdit());
+            DependencyProperty.Register("IsPointerOver", typeof(bool), typeof(UIElement), new PropertyMetadata(false).SetNotAllowEdit());
 
 
         public float Alpha
@@ -35,12 +35,12 @@ namespace AlienUI.UIElements
         private void UIElement_OnPointerEnter(object sender, Events.OnPointerEnterEvent e)
         {
             var self = sender as UIElement;
-            self.IsPointerHover = true;
+            self.IsPointerOver = true;
         }
         private void UIElement_OnPointerExit(object sender, Events.OnPointerExitEvent e)
         {
             var self = sender as UIElement;
-            self.IsPointerHover = false;
+            self.IsPointerOver = false;
         }
     }
 }

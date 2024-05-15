@@ -12,6 +12,8 @@ namespace AlienUI.UIElements
             get { return (Font)GetValue(FontProperty); }
             set { SetValue(FontProperty, value); }
         }
+        public static readonly DependencyProperty FontProperty =
+            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(Settings.Get().DefaultLabelFont), OnFontChanged);
 
         public Color Color
         {
@@ -54,8 +56,7 @@ namespace AlienUI.UIElements
         {
             (sender as Label).m_text.color = (Color)newValue;
         }
-        public static readonly DependencyProperty FontProperty =
-            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(null), OnFontChanged);
+
 
         public bool AutoWarp
         {
@@ -92,7 +93,7 @@ namespace AlienUI.UIElements
         {
             var self = sender as Label;
 
-            self.m_text.font = (Font)newValue ?? Settings.Get().DefaultLabelFont;
+            self.m_text.font = (Font)newValue;
             OnLayoutParamDirty(sender, oldValue, newValue);
         }
 

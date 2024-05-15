@@ -36,8 +36,7 @@ namespace AlienUI.UIElements
             templateRoot.anchoredPosition = Vector2.zero;
             templateRoot.SetAsFirstSibling();
 
-            var rootUI = m_templateInstance.TemplateRoot.Get(m_templateInstance) as UIElement;
-            if (rootUI != null)
+            if (m_templateInstance.TemplateRoot.Get(m_templateInstance) is UIElement rootUI)
                 m_childRoot = rootUI.m_childRoot;
         }
 
