@@ -25,17 +25,11 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty TemplateRootProperty =
-            DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)), OnRootChanged);
+            DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
 
-        private static void OnRootChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            
-        }
 
         protected override void OnInitialized()
         {
-            this.Horizontal = eHorizontalAlign.Stretch;
-            this.Vertical = eVerticalAlign.Stretch;
         }
 
         protected override Vector2 CalcDesireSize()

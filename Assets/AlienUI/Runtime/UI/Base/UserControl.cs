@@ -38,6 +38,9 @@ namespace AlienUI.UIElements
 
             if (m_templateInstance.TemplateRoot.Get(m_templateInstance) is UIElement rootUI)
                 m_childRoot = rootUI.m_childRoot;
+
+            m_templateInstance.Horizontal = eHorizontalAlign.Stretch;
+            m_templateInstance.Vertical = eVerticalAlign.Stretch;
         }
 
         protected sealed override void OnPrepared()

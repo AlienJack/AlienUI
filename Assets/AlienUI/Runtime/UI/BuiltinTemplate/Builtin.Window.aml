@@ -1,9 +1,9 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content">
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
 	<Image Name="WndBottom" Horizontal="Stretch" Vertical="Stretch"
 		Color="#000000ff" Padding="2,2,2,2">
 		<Grid Horizontal="Stretch" Vertical="Stretch" GridDefine="(1*)|(30px,1*)">
 			<Image Name="Title" Color="#000000ff" GridPos="0,0">
-				<Label Content="{TemplateBinding Name}" Horizontal="Left" Vertical="Middle"
+				<Label Content="{TemplateBinding Title}" Horizontal="Left" Vertical="Middle"
 					Color="#FFFFFF" FontSize="18" Offset="2,0" />
 				<Button Text="X" Width="25" Height="25" Horizontal="Right" Vertical="Middle"
 					Offset="-5,0" Command="{TemplateBinding CloseCmd}" />

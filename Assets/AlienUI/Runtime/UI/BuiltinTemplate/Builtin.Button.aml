@@ -1,4 +1,4 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp">
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp" Width="200" Height="80">
 	<Image Name="Root" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Color="#383838">
 		<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch"
 			Vertical="Stretch" FontSize="24" />

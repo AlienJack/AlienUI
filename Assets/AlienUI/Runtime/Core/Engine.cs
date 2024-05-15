@@ -130,11 +130,15 @@ namespace AlienUI
 
         private void LateUpdate()
         {
-            foreach (UIElement element in layoutTask)
+            if (layoutTask.Count > 0)
             {
-                if (element.TopParent == null) element.BeginLayout();
+                foreach (UIElement element in layoutTask)
+                {
+                    if (element.TopParent == null) element.BeginLayout();
+                }
+                layoutTask.Clear();
+                Canvas.ForceUpdateCanvases();
             }
-            layoutTask.Clear();
         }
 
         private static Stack<Document> currentHandlingDoc = new Stack<Document>();

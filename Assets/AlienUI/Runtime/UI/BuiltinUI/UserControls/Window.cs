@@ -16,6 +16,19 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty CloseProperty =
             DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().SetNotAllowEdit());
 
+
+
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(Window), new PropertyMetadata(nameof(Window)));
+
+
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

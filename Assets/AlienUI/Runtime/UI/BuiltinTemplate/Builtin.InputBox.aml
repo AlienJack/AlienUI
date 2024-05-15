@@ -1,4 +1,4 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.InputBox">
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.InputBox" Width="200" Height="40">
 	<Image Name="Bg" Horizontal="Stretch" Vertical="Stretch"
 		Padding="4,4,4,4">
 		<Label Name="PlaceHolder" AlignHorizontal="Left" AlignVertical="Middle" Horizontal="Stretch"
