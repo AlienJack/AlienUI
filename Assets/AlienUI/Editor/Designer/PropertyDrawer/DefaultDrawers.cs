@@ -256,4 +256,20 @@ namespace AlienUI.Editors.PropertyDrawer
             return EditorGUILayout.Vector2IntField(label, value);
         }
     }
+
+    public class ColorDrawer : PropertyDrawer<Color>
+    {
+        protected override Color OnDraw(UIElement host, string label, Color value)
+        {
+            return EditorGUILayout.ColorField(label, value);
+        }
+    }
+
+    public class SpriteDrawer : PropertyDrawer<Sprite>
+    {
+        protected override Sprite OnDraw(UIElement host, string label, Sprite value)
+        {
+            return (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
+        }
+    }
 }

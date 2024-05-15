@@ -1,7 +1,9 @@
+using AlienUI.Core;
 using AlienUI.UIElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
@@ -17,6 +19,11 @@ namespace AlienUI.Editors
             m_root = uiRoot;
 
             Reload();
+        }
+
+        public IEnumerable<UIElement> GetUIs()
+        {
+            return m_uiMaps.Values;
         }
 
         public event Action<UIElement> OnSelectItem;
@@ -60,23 +67,24 @@ namespace AlienUI.Editors
             var treeItem = ToTreeViewItem(m_root, 0);
             allItems.Add(treeItem);
             m_uiMaps[treeItem.id] = m_root;
-            FillTreeItemData(m_root, ref allItems, 1);
+            FillTreeItemData(m_root, m_root.Document, ref allItems, 1);
             SetupParentsAndChildrenFromDepths(rootItem, allItems);
             return rootItem;
         }
 
-        private void FillTreeItemData(UIElement parent, ref List<TreeViewItem> items, int depth)
+        private void FillTreeItemData(UIElement parent, Document doc, ref List<TreeViewItem> items, int depth)
         {
             foreach (var child in parent.UIChildren)
             {
                 var treeItem = ToTreeViewItem(child, depth);
-                if (child.TemplateHost == null)
+
+                if (child.Document == doc)
                 {
                     items.Add(treeItem);
                     m_uiMaps[treeItem.id] = child;
                 }
 
-                FillTreeItemData(child, ref items, depth + 1);
+                FillTreeItemData(child, doc, ref items, depth + 1);
             }
         }
 

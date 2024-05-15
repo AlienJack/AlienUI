@@ -178,14 +178,12 @@ namespace AlienUI.Core
                             Engine.LogError("BindType Invalid");
                             break;
                     }
-                    if (source != null)
-                    {
-                        source.BeginBind()
+
+                    source?.BeginBind(att.Value)
                         .SetSourceProperty(propName)
                         .SetTarget(node)
                         .SetTargetProperty(att.Name)
                         .Apply(converterName, modeName);
-                    }
                 }
                 else
                 {

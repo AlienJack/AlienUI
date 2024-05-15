@@ -13,6 +13,7 @@ namespace AlienUI.Core
         public string SourceProperty { get; private set; }
         public AmlNodeElement Target { get; private set; }
         public string TargetProperty { get; private set; }
+        public string SourceCode { get; private set; }
 
         private ConverterBase m_converter;
 
@@ -32,6 +33,8 @@ namespace AlienUI.Core
             {
                 var dstPropType = Target.GetDependencyPropertyType(TargetProperty);
                 var srcPropType = Source.GetDependencyPropertyType(SourceProperty);
+                if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetProperty}");
+                if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourceProperty}");
                 if (dstPropType != srcPropType && !srcPropType.IsSubclassOf(dstPropType))
                 {
                     m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
@@ -59,13 +62,29 @@ namespace AlienUI.Core
                     DependencyProperty.Subscribe(Target, TargetProperty, OnTargetDataChanged);
                     break;
             }
+
+            var targetproperty = Target.GetDependencyProperty(TargetProperty);
+
+            if (targetproperty != null)
+            {
+                targetproperty.SetBinding(this);
+            }
         }
 
         private bool m_dataSync = false;
 
+        public Binding(string sourceCode)
+        {
+            SourceCode = sourceCode;
+        }
+
         public void Disconnect()
         {
             DependencyProperty.Unsubscribe(Source, SourceProperty, OnSourceDataChanged);
+            DependencyProperty.Unsubscribe(Target, TargetProperty, OnTargetDataChanged);
+
+            var p = Target.GetDependencyProperty(TargetProperty);
+            if (p != null) p.RemoveBinding(this);
         }
 
         private void OnTargetDataChanged(DependencyObject sender, object oldValue, object newValue)
@@ -141,9 +160,9 @@ namespace AlienUI.Core
             }
         }
 
-        public static BindSourceProperty Create(DependencyObject source)
+        public static BindSourceProperty Create(DependencyObject source, string sourceCode)
         {
-            var bind = new Binding();
+            var bind = new Binding(sourceCode);
             return new BindSourceProperty(bind, source);
         }
     }
@@ -155,9 +174,9 @@ namespace AlienUI.Core
     }
     public static class BindUtility
     {
-        public static Binding.BindSourceProperty BeginBind(this DependencyObject source)
+        public static Binding.BindSourceProperty BeginBind(this DependencyObject source, string sourceCode)
         {
-            return Binding.Create(source);
+            return Binding.Create(source, sourceCode);
         }
 
         public static bool IsBindingString(string input, out Match match)

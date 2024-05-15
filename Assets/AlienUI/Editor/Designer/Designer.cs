@@ -1,3 +1,4 @@
+using AlienUI.Core;
 using AlienUI.Editors.PropertyDrawer;
 using AlienUI.Models;
 using AlienUI.UIElements;
@@ -5,11 +6,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace AlienUI.Editors
 {
@@ -27,14 +30,16 @@ namespace AlienUI.Editors
             }
         }
 
+        public static Designer Instance { get; private set; }
+
         private void OnEnable()
         {
             EditorApplication.update += OnUpdate;
             SceneView.duringSceneGui += SceneView_duringSceneGui;
             DesignerTool.OnSelected += DesignerTool_OnSelected;
+
+            Instance = this;
         }
-
-
 
         private void OnUpdate()
         {
@@ -46,7 +51,9 @@ namespace AlienUI.Editors
             EditorApplication.update -= OnUpdate;
             SceneView.duringSceneGui -= SceneView_duringSceneGui;
             DesignerTool.OnSelected -= DesignerTool_OnSelected;
-        }
+
+            Instance = null;
+        }        
 
         private void DesignerTool_OnSelected(UIElement obj)
         {
@@ -138,6 +145,8 @@ namespace AlienUI.Editors
         {
             m_selection = obj;
             SceneView.RepaintAll();
+
+            DesignerTool.RaiseSelect(m_selection);
         }
 
         private void DrawInspector(Rect rect)
@@ -178,12 +187,20 @@ namespace AlienUI.Editors
                         }
                         else
                         {
-
-                            using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly))
+                            using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly || m_selection.GetBinding(property) != null))
                             {
                                 var value = drawer.Draw(m_selection, property.PropName, m_selection.GetValue(property));
                                 if (!property.Meta.IsReadOnly)
                                     m_selection.SetValue(property, value);
+                            }
+
+                            if (m_selection.GetBinding(property) != null)
+                            {
+                                var bindRect = GUILayoutUtility.GetLastRect();
+                                bindRect.width += 2;
+                                bindRect.height += 2;
+                                bindRect.position -= new Vector2(1, 1);
+                                AlienEditorUtility.DrawBorder(bindRect, Color.yellow);
                             }
                         }
 
@@ -191,11 +208,11 @@ namespace AlienUI.Editors
 
                         {
                             var rightClickRect = GUILayoutUtility.GetLastRect();
-                            rightClickRect.width -= 10;
                             var color = GUI.color;
                             GUI.color = new Color(0, 0, 0, 0);
                             GUI.Box(rightClickRect, string.Empty);
                             GUI.color = color;
+
                             HandleContextMenu(m_selection, property);
                         }
                     }
@@ -212,7 +229,7 @@ namespace AlienUI.Editors
             var currentDPValue = m_selection.GetValue(property);
             var defaultDPValue = property.Meta.DefaultValue;
             var color = GUI.color;
-            ColorUtility.TryParseHtmlString(currentDPValue != defaultDPValue ? "#0f80be" : "00000000", out var dirtyColor);
+            ColorUtility.TryParseHtmlString(currentDPValue != defaultDPValue ? "#0f80be" : "#00000000", out var dirtyColor);
             GUI.color = dirtyColor;
             GUILayout.Box(string.Empty, EditorStyles.selectionRect, GUILayout.Width(2));
             GUI.color = color;
@@ -241,22 +258,83 @@ namespace AlienUI.Editors
             // Use MenuItem as Title
             menu.AddDisabledItem(new GUIContent($"---{m_selection}.{property.PropName}---"));
 
-            var currentDPValue = m_selection.GetValue(property);
-            var defaultDPValue = property.Meta.DefaultValue;
-            if (currentDPValue != defaultDPValue)
+            if (m_selection.GetBinding(property) == null)
             {
-                // Add Set DefaultValue Menu
-                if (property.Meta.IsReadOnly)
-                    menu.AddDisabledItem(new GUIContent("set default value (ReadOnly)"));
-                else
+                var currentDPValue = m_selection.GetValue(property);
+                var defaultDPValue = property.Meta.DefaultValue;
+                if (currentDPValue != defaultDPValue)
                 {
-                    menu.AddItem(new GUIContent("set default value"), false, () =>
+                    // Add Set DefaultValue Menu
+                    if (property.Meta.IsReadOnly)
+                        menu.AddDisabledItem(new GUIContent("set default value (ReadOnly)"));
+                    else
                     {
-                        m_selection.SetValue(property, property.Meta.DefaultValue);
-                    });
+                        menu.AddItem(new GUIContent("set default value"), false, () =>
+                        {
+                            m_selection.SetValue(property, property.Meta.DefaultValue);
+                        });
+                    }
                 }
-            }
 
+                menu.AddItem(new GUIContent("Set Binding"), false, () =>
+                {
+                    TextInputWindow.ShowWindow("Set Binding", string.Empty, mousePos, (inputSorce) =>
+                    {
+                        if (BindUtility.IsBindingString(inputSorce, out Match match))
+                        {
+                            var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
+                            DependencyObject source = null;
+                            switch (bindType)
+                            {
+                                case EnumBindingType.Binding: source = m_selection.DataContext; break;
+                                case EnumBindingType.TemplateBinding: source = m_selection.TemplateHost; break;
+                                default:
+                                    Engine.LogError("BindType Invalid");
+                                    break;
+                            }
+
+                            source?.BeginBind(inputSorce)
+                                .SetSourceProperty(propName)
+                                .SetTarget(m_selection)
+                                .SetTargetProperty(property.PropName)
+                                .Apply(converterName, modeName);
+                        }
+                    });
+                });
+            }
+            else
+            {
+                menu.AddItem(new GUIContent("Edit Binding"), false, () =>
+                {
+                    TextInputWindow.ShowWindow("Edit Binding", m_selection.GetBinding(property).SourceCode, mousePos, (inputSorce) =>
+                    {
+                        m_selection.GetBinding(property).Disconnect();
+                        if (BindUtility.IsBindingString(inputSorce, out Match match))
+                        {
+                            var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
+                            DependencyObject source = null;
+                            switch (bindType)
+                            {
+                                case EnumBindingType.Binding: source = m_selection.DataContext; break;
+                                case EnumBindingType.TemplateBinding: source = m_selection.TemplateHost; break;
+                                default:
+                                    Engine.LogError("BindType Invalid");
+                                    break;
+                            }
+
+                            source?.BeginBind(inputSorce)
+                                .SetSourceProperty(propName)
+                                .SetTarget(m_selection)
+                                .SetTargetProperty(property.PropName)
+                                .Apply(converterName, modeName);
+                        }
+                    });
+                });
+                menu.AddItem(new GUIContent("Remove Binding"), false, () =>
+                {
+                    m_selection.GetBinding(property).Disconnect();
+                });
+            }
 
             menu.ShowAsContext();
 
@@ -290,6 +368,11 @@ namespace AlienUI.Editors
                 m_logicTree.OnGUI(treeRect);
                 GUI.EndScrollView();
             }
+        }
+
+        public IEnumerable<UIElement> GetTreeItems()
+        {
+            return m_logicTree.GetUIs();
         }
     }
 }

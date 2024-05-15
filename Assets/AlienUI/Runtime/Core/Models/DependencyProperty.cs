@@ -1,3 +1,4 @@
+using AlienUI.Core;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ namespace AlienUI.Models
         public bool IsAttachedProerty { get; internal set; }
         public Type AttachHostType { get; internal set; }
 
+
         private int m_hash;
 
         private DependencyProperty(string propName, Type propType, PropertyMetadata metaData, OnValueChangedHandle onValueChanged, string group = null)
@@ -22,6 +24,17 @@ namespace AlienUI.Models
             Meta = metaData;
             m_hash = PropName.GetHashCode();
             OnValueChanged += onValueChanged;
+        }
+
+        public void SetBinding(Binding binding)
+        {
+            binding.Target.m_bindings[this] = binding;
+        }
+
+        public void RemoveBinding(Binding binding)
+        {
+            binding.Target.m_bindings.TryGetValue(this, out Binding value);
+            if (value == binding) binding.Target.m_bindings.Remove(this);
         }
 
         public void RaiseChangeEvent(DependencyObject sender, object oldValue, object newValue)
@@ -63,7 +76,6 @@ namespace AlienUI.Models
 
         internal static void GetAllDP(Type owenClassType, ref List<DependencyProperty> result)
         {
-            if (owenClassType.IsGenericType) owenClassType = owenClassType.GetGenericTypeDefinition();
             m_dependencyProperties.TryGetValue(owenClassType, out var dps);
             if (dps != null) result.AddRange(dps.Values);
 

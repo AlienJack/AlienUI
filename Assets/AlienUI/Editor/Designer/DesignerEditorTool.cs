@@ -20,17 +20,29 @@ namespace AlienUI.Editors
         private UIElement targetUI;
 
         public static event Action<UIElement> OnSelected;
+        private static event Action<UIElement> OnRequestSelect;
 
         public override void OnActivated()
         {
             currentPick = null;
             targetUI = null;
+
+            OnRequestSelect += DesignerTool_OnRequestSelect;
+        }
+
+        private void DesignerTool_OnRequestSelect(UIElement obj)
+        {
+            targetUI = obj;
+
+            SceneView.RepaintAll();
         }
 
         public override void OnWillBeDeactivated()
         {
             currentPick = null;
             targetUI = null;
+
+            OnRequestSelect -= DesignerTool_OnRequestSelect;
         }
 
         public override void OnToolGUI(EditorWindow window)
@@ -40,18 +52,16 @@ namespace AlienUI.Editors
             {
                 evt.Use();
 
-                var go = HandleUtility.PickGameObject(evt.mousePosition, false);
-                if (go == null) return;
+                if (Designer.Instance == null) return;
 
-                GameObject topGo = go;
-                while (topGo.transform.parent != null)
-                {
-                    topGo = topGo.transform.parent.gameObject;
-                }
+                var uiElements = Designer.Instance.GetTreeItems();
 
-                var proxys = topGo.GetComponentsInChildren<NodeProxy>();
+                var filter = uiElements.Select(u => u.Rect.gameObject).ToArray();
 
-                currentPick = HandleUtility.PickGameObject(evt.mousePosition, false, currentPick == null ? null : new GameObject[] { currentPick }, proxys.Where(p => p.TargetObject.TemplateHost == null).Select(p => p.gameObject).ToArray());
+                currentPick = HandleUtility.PickGameObject(
+                    evt.mousePosition, false,
+                    currentPick == null ? null : new GameObject[] { currentPick },
+                    filter);
                 if (currentPick == null) return;
 
                 targetUI = currentPick.GetComponent<NodeProxy>().TargetObject;
@@ -65,6 +75,11 @@ namespace AlienUI.Editors
                 else
                     targetUI = null;
             }
+        }
+
+        internal static void RaiseSelect(UIElement m_selection)
+        {
+            OnRequestSelect?.Invoke(m_selection);
         }
     }
 }

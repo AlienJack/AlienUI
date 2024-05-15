@@ -12,18 +12,9 @@ namespace AlienUI.UIElements
 
 
         public Engine Engine { get; set; }
-        public DependencyObject DataContext { get; set; }
+        public DependencyObject DataContext => Document.m_dataContext;
+        public DependencyObject TemplateHost => Document.m_templateHost;
         public Document Document { get; set; }
-
-        public DependencyObject TemplateHost
-        {
-            get { return (DependencyObject)GetValue(TemplateHostProperty); }
-            set { SetValue(TemplateHostProperty, value); }
-        }
-
-        public static readonly DependencyProperty TemplateHostProperty =
-            DependencyProperty.Register("TemplateHost", typeof(DependencyObject), typeof(AmlNodeElement), new PropertyMetadata(null).SetNotAllowEdit());
-
 
 
         public string Name
@@ -43,7 +34,12 @@ namespace AlienUI.UIElements
 
         protected virtual void OnAddChild(AmlNodeElement childObj) { }
 
-
+        internal Dictionary<DependencyProperty, Binding> m_bindings = new Dictionary<DependencyProperty, Binding>();
+        public Binding GetBinding(DependencyProperty dp)
+        {
+            m_bindings.TryGetValue(dp, out var binding);
+            return binding;
+        }
 
         public void RefreshPropertyNotify()
         {

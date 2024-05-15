@@ -91,8 +91,6 @@ namespace AlienUI
             if (newNodeIns == null) return null;
 
             newNodeIns.Engine = this;
-            newNodeIns.DataContext = doc.m_dataContext;
-            newNodeIns.TemplateHost = doc.m_templateHost;
             newNodeIns.Document = doc;
             newNodeIns.Document.RecordDependencyObject(newNodeIns, xnode);
             if (parentNode != null)
@@ -149,7 +147,8 @@ namespace AlienUI
 
         public static void LogError(object message)
         {
-            if (currentHandlingDoc.Peek() is Document doc && doc.m_xmlAsset != null)
+            currentHandlingDoc.TryPeek(out Document doc);
+            if (doc != null && doc.m_xmlAsset != null)
                 Debug.LogError(message, doc.m_xmlAsset);
             else Debug.LogError(message);
         }

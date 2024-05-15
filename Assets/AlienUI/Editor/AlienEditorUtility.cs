@@ -8,6 +8,16 @@ namespace AlienUI.Editors
 {
     public static class AlienEditorUtility
     {
+        public static void DrawBorder(Rect rect, Color color)
+        {
+            Handles.BeginGUI();
+            // 设置线条颜色为黄色
+            Handles.color = color;
+            // 绘制矩形框
+            Handles.DrawWireCube(new Vector3(rect.x + rect.width / 2, rect.y + rect.height / 2, 0), new Vector3(rect.width, rect.height, 0));
+            Handles.EndGUI();
+        }
+
         public static Texture2D MakeTex(int width, int height, Color col)
         {
             Color32[] pix = new Color32[width * height];
