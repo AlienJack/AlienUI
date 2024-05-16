@@ -116,7 +116,9 @@ namespace AlienUI.Editors
                 }
                 if (m_amlFile != null && GUILayout.Button("Save"))
                 {
-                    Debug.Log(AmlGenerator.Gen(m_target));
+                    var str = AmlGenerator.Gen(m_target);
+                    EditorGUIUtility.systemCopyBuffer = str;
+                    Debug.Log(str);
                 }
                 EditorGUILayout.EndHorizontal();
                 GUILayout.EndArea();

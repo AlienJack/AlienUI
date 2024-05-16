@@ -61,6 +61,17 @@ namespace AlienUI.Models
             return results;
         }
 
+        public List<DependencyProperty> GetAttachedProperties()
+        {
+            List<DependencyProperty> result = new List<DependencyProperty>();
+            foreach (var dp in m_dpPropValues.Keys)
+            {
+                if (dp.IsAttachedProerty) result.Add(dp);
+            }
+
+            return result;
+        }
+
         public void SetValue(string propName, object value)
         {
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);

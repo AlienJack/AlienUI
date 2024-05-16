@@ -1,8 +1,10 @@
 using AlienUI.Core;
+using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 using UnityEngine;
 
 namespace AlienUI.Editors
@@ -14,7 +16,7 @@ namespace AlienUI.Editors
             XmlDocument document = new XmlDocument();
             Gen(document, elementRoot, null);
 
-            return document.OuterXml;
+            return XDocument.Parse(document.OuterXml).ToString();
         }
 
         private static void Gen(XmlDocument doc, AmlNodeElement element, XmlElement parent)
@@ -38,22 +40,27 @@ namespace AlienUI.Editors
                 xmlEle.SetAttribute(xmlns.Item1, xmlns.Item2);
             }
 
-            foreach (var dp in element.GetAllDependencyProperties())
+            var allProperties = new List<DependencyProperty>();
+            allProperties.AddRange(element.GetAllDependencyProperties());
+            allProperties.AddRange(element.GetAttachedProperties());
+            foreach (var dp in allProperties)
             {
+                if (dp.Meta.NotAllowEdit) continue;
+
                 var value = element.GetValue(dp);
-                if (value == dp.Meta.DefaultValue) continue;
 
                 if (element.GetBinding(dp) is Binding binding)
                     xmlEle.SetAttribute(dp.PropName, binding.SourceCode);
                 else
                 {
+                    if (value == dp.Meta.DefaultValue) continue;
                     var resolver = element.Engine.GetAttributeResolver(dp.PropType);
                     if (resolver == null) continue;
 
                     xmlEle.SetAttribute(dp.PropName, resolver.ToOriString(value));
                 }
-
             }
+
 
             return xmlEle;
         }

@@ -185,7 +185,7 @@ namespace AlienUI.Core
                             break;
                     }
 
-                    source?.BeginBind(att.Value)
+                    source.BeginBind(att.Value)
                         .SetSourceProperty(propName)
                         .SetTarget(node)
                         .SetTargetProperty(att.Name)

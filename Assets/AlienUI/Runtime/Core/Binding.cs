@@ -28,39 +28,43 @@ namespace AlienUI.Core
         {
             Enum.TryParse<EnumBindMode>(mode, true, out EnumBindMode bindMode);
 
-            m_converter = Target.Engine.GetConverter(convertName);
-            if (m_converter == null)
+            if (Source != null)
             {
-                var dstPropType = Target.GetDependencyPropertyType(TargetProperty);
-                var srcPropType = Source.GetDependencyPropertyType(SourceProperty);
-                if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetProperty}");
-                if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourceProperty}");
-                if (dstPropType != srcPropType && !srcPropType.IsSubclassOf(dstPropType))
+
+                m_converter = Target.Engine.GetConverter(convertName);
+                if (m_converter == null)
                 {
-                    m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
-                    if (m_converter == null)
+                    var dstPropType = Target.GetDependencyPropertyType(TargetProperty);
+                    var srcPropType = Source.GetDependencyPropertyType(SourceProperty);
+                    if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetProperty}");
+                    if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourceProperty}");
+                    if (dstPropType != srcPropType && !srcPropType.IsSubclassOf(dstPropType))
                     {
-                        Engine.LogError($"<color=blue>{Source.GetType()}</color>.<color=white>{srcPropType}</color>与<color=blue>{Target.GetType()}</color>.<color=white>{dstPropType}</color>类型不一致,并且没有找到可用的Converter");
-                        return;
+                        m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
+                        if (m_converter == null)
+                        {
+                            Engine.LogError($"<color=blue>{Source.GetType()}</color>.<color=white>{srcPropType}</color>与<color=blue>{Target.GetType()}</color>.<color=white>{dstPropType}</color>类型不一致,并且没有找到可用的Converter");
+                            return;
+                        }
                     }
                 }
-            }
 
-            var srcValue = Source.GetValue(SourceProperty);
-            if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
+                var srcValue = Source.GetValue(SourceProperty);
+                if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
 
-            //首先同步一次数值
-            Target.FillDependencyValue(TargetProperty, srcValue);
+                //首先同步一次数值
+                Target.FillDependencyValue(TargetProperty, srcValue);
 
-            switch (bindMode)
-            {
-                case EnumBindMode.OneWay:
-                    DependencyProperty.Subscribe(Source, SourceProperty, OnSourceDataChanged);
-                    break;
-                case EnumBindMode.TwoWay:
-                    DependencyProperty.Subscribe(Source, SourceProperty, OnSourceDataChanged);
-                    DependencyProperty.Subscribe(Target, TargetProperty, OnTargetDataChanged);
-                    break;
+                switch (bindMode)
+                {
+                    case EnumBindMode.OneWay:
+                        DependencyProperty.Subscribe(Source, SourceProperty, OnSourceDataChanged);
+                        break;
+                    case EnumBindMode.TwoWay:
+                        DependencyProperty.Subscribe(Source, SourceProperty, OnSourceDataChanged);
+                        DependencyProperty.Subscribe(Target, TargetProperty, OnTargetDataChanged);
+                        break;
+                }
             }
 
             var targetproperty = Target.GetDependencyProperty(TargetProperty);
