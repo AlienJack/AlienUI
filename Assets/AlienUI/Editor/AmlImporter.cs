@@ -28,6 +28,22 @@ namespace AlienUI.Editors
         }
     }
 
+    public class AmlAssetMidificationProcessor : AssetModificationProcessor
+    {
+        static string[] OnWillSaveAssets(string[] assets)
+        {
+            foreach (string path in assets)
+            {
+                if (Path.GetExtension(path) != "aml") continue;
+
+                var aml = AssetDatabase.LoadAssetAtPath<AmlAsset>(path);
+                Debug.Log(aml.Text);
+            }
+
+            return assets;
+        }
+    }
+
     [ScriptedImporter(1, "aml")]
     public class AmlImporter : ScriptedImporter
     {
@@ -38,7 +54,7 @@ namespace AlienUI.Editors
             // 创建MyCustomXml实例并填充数据
             var amlAsset = ScriptableObject.CreateInstance<AmlAsset>();
             amlAsset.Text = xmlContent;
-
+            amlAsset.Path = ctx.assetPath;
             // 添加到导入上下文
             ctx.AddObjectToAsset("main obj", amlAsset);
             ctx.SetMainObject(amlAsset);

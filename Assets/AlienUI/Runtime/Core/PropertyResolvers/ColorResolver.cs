@@ -19,7 +19,7 @@ namespace AlienUI.PropertyResolvers
 
         protected override string Reverse(Color value)
         {
-            return ColorUtility.ToHtmlStringRGBA(value);
+            return $"#{ColorUtility.ToHtmlStringRGBA(value)}";
         }
     }
 }

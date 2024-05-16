@@ -1,15 +1,12 @@
-<Window Name="LoginWindow" xmlns="AlienUI.UIElements" Width="800" Height="600">
-	<Grid GridDefine="(1*,1.5*)|(1*)" Horizontal="Stretch" Vertical="Stretch">
-		<Image Name="Left" Color="#204363ff" GridPos="0,0" />
-		<Image Name="Right" Color="#c2c2c2ff" GridPos="1,0">
-			<Grid GridDefine="(1*)|(1*,1*,1*)" Horizontal="Middle" Vertical="Middle" Height="100"
-				Width="180">
-				<InputBox Name="UserName" PlaceHolder="Type Username"
-					Text="{Binding Username,Mode=TwoWay}" GridPos="0,0" />
-				<InputBox Name="Pwd" InputType="Password" PlaceHolder="Type Password"
-					Text="{Binding Password,Mode=TwoWay}" GridPos="0,1" />
-				<Button Text="Login" Command="{Binding LoginCmd}" GridPos="0,2" />
-			</Grid>
-		</Image>
-	</Grid>
+<Window xmlns="AlienUI.UIElements" Title="LoginWindow" Width="800" Height="600">
+  <Grid GridDefine="1*,1.5*|1*" Horizontal="Stretch" Vertical="Stretch">
+    <Image Color="#204363FF" Name="Left" GridPos="0,0" />
+    <Image Color="#C2C2C2FF" Name="Right" GridPos="1,0">
+      <Grid GridDefine="1*|1*,1*,1*" Width="180" Height="100" Horizontal="Middle" Vertical="Middle">
+        <InputBox Text="{Binding Username,Mode=TwoWay}" PlaceHolder="Type Username" Name="UserName" GridPos="0,0" />
+        <InputBox Text="{Binding Password,Mode=TwoWay}" PlaceHolder="Type Password" InputType="Password" Name="Pwd" GridPos="0,1" />
+        <Button Text="Login" Command="{Binding LoginCmd}" GridPos="0,2" />
+      </Grid>
+    </Image>
+  </Grid>
 </Window>

@@ -38,7 +38,14 @@ namespace AlienUI.Editors
             SceneView.duringSceneGui += SceneView_duringSceneGui;
             DesignerTool.OnSelected += DesignerTool_OnSelected;
 
+            UIElement.NameProperty.OnValueChanged += NameProperty_OnValueChanged;
+
             Instance = this;
+        }
+
+        private void NameProperty_OnValueChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            Refresh();
         }
 
         private void OnUpdate()
@@ -51,6 +58,7 @@ namespace AlienUI.Editors
             EditorApplication.update -= OnUpdate;
             SceneView.duringSceneGui -= SceneView_duringSceneGui;
             DesignerTool.OnSelected -= DesignerTool_OnSelected;
+            UIElement.NameProperty.OnValueChanged -= NameProperty_OnValueChanged;
 
             Instance = null;
         }
@@ -117,12 +125,14 @@ namespace AlienUI.Editors
                 if (m_amlFile != null && GUILayout.Button("Save"))
                 {
                     var str = AmlGenerator.Gen(m_target);
-                    EditorGUIUtility.systemCopyBuffer = str;
-                    Debug.Log(str);
+                    m_amlFile.Text = str;
+                    m_amlFile.SaveToDisk();
+
+                    Refresh();
                 }
+                GUILayout.FlexibleSpace();
                 EditorGUILayout.EndHorizontal();
                 GUILayout.EndArea();
-
             }
 
             rect.position = new Vector2(5, rect.height + 30);
@@ -143,6 +153,11 @@ namespace AlienUI.Editors
             m_amlFile = amlFile;
             m_logicTree = new LogicTree(m_target);
             m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
+        }
+
+        public void Refresh()
+        {
+            m_logicTree?.Reload();
         }
 
 

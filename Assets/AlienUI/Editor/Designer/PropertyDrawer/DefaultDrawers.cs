@@ -23,7 +23,9 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         protected override string OnDraw(UIElement host, string label, string value)
         {
-            return EditorGUILayout.TextField(label, value);
+            var result = EditorGUILayout.TextField(label, value);
+            if (string.IsNullOrEmpty(result)) return null;
+            else return result;
         }
     }
 

@@ -38,16 +38,13 @@ namespace AlienUI.Editors
             OnSelectItem?.Invoke(selection);
         }
 
-        bool noNotify = false;
         public void SelectWithoutNotify(UIElement ui)
         {
             foreach (var item in m_uiMaps)
             {
                 if (item.Value == ui)
                 {
-                    noNotify = true;
                     SetSelection(new List<int> { item.Key }, TreeViewSelectionOptions.RevealAndFrame);
-                    noNotify = false;
                     return;
                 }
             }
