@@ -35,6 +35,14 @@ namespace AlienUI.Core.Triggers
             }
         }
 
+        protected override void OnRemoveChild(AmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case TriggerAction action: m_actions.Remove(action); break;
+            }
+        }
+
         public void Execute()
         {
             if (m_actions == null || m_actions.Count == 0) return;

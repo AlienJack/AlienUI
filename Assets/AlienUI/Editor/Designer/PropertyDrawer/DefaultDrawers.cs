@@ -13,7 +13,7 @@ namespace AlienUI.Editors.PropertyDrawer
 {
     public class IntDrawer : PropertyDrawer<int>
     {
-        protected override int OnDraw(UIElement host, string label, int value)
+        protected override int OnDraw(AmlNodeElement host, string label, int value)
         {
             return EditorGUILayout.IntField(label, value);
         }
@@ -21,7 +21,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class StringDrawer : PropertyDrawer<string>
     {
-        protected override string OnDraw(UIElement host, string label, string value)
+        protected override string OnDraw(AmlNodeElement host, string label, string value)
         {
             var result = EditorGUILayout.TextField(label, value);
             if (string.IsNullOrEmpty(result)) return null;
@@ -31,7 +31,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class CommandDrawer : PropertyDrawer<CommandBase>
     {
-        protected override CommandBase OnDraw(UIElement host, string label, CommandBase value)
+        protected override CommandBase OnDraw(AmlNodeElement host, string label, CommandBase value)
         {
             var dp = host.GetDependencyProperty(label);
             var type = dp.PropType;
@@ -58,7 +58,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class ControlTemplateDrawer : PropertyDrawer<ControlTemplate>
     {
-        protected override ControlTemplate OnDraw(UIElement host, string label, ControlTemplate value)
+        protected override ControlTemplate OnDraw(AmlNodeElement host, string label, ControlTemplate value)
         {
             var templates = Settings.Get().GetAllTemplateAssetsByTargetType(host.GetType());
             var templateNames = templates.Select(t => t.name).ToList();
@@ -72,7 +72,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class NumberDrawer : PropertyDrawer<Number>
     {
-        protected override Number OnDraw(UIElement host, string label, Number value)
+        protected override Number OnDraw(AmlNodeElement host, string label, Number value)
         {
             if (!value.Auto) value.Value = EditorGUILayout.FloatField(label, value.Value);
             else using (new EditorGUI.DisabledGroupScope(true)) EditorGUILayout.TextField(label, "Auto");
@@ -85,7 +85,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class EnumDrawer : PropertyDrawer<Enum>
     {
-        protected override Enum OnDraw(UIElement host, string label, Enum value)
+        protected override Enum OnDraw(AmlNodeElement host, string label, Enum value)
         {
             return EditorGUILayout.EnumPopup(label, value);
         }
@@ -93,7 +93,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class BorderDataDrawer : PropertyDrawer<BorderData>
     {
-        protected override BorderData OnDraw(UIElement host, string label, BorderData value)
+        protected override BorderData OnDraw(AmlNodeElement host, string label, BorderData value)
         {
             EditorGUILayout.LabelField(label);
             using (new EditorGUILayout.VerticalScope())
@@ -122,7 +122,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class Vector2Drawer : PropertyDrawer<Vector2>
     {
-        protected override Vector2 OnDraw(UIElement host, string label, Vector2 value)
+        protected override Vector2 OnDraw(AmlNodeElement host, string label, Vector2 value)
         {
             value = EditorGUILayout.Vector2Field(label, value);
             return value;
@@ -131,7 +131,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class BooleanDrawer : PropertyDrawer<bool>
     {
-        protected override bool OnDraw(UIElement host, string label, bool value)
+        protected override bool OnDraw(AmlNodeElement host, string label, bool value)
         {
             return EditorGUILayout.Toggle(label, value);
         }
@@ -139,7 +139,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class FloatDrawer : PropertyDrawer<float>
     {
-        protected override float OnDraw(UIElement host, string label, float value)
+        protected override float OnDraw(AmlNodeElement host, string label, float value)
         {
             return EditorGUILayout.FloatField(label, value);
         }
@@ -147,7 +147,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class GridDefineDrawer : PropertyDrawer<GridDefine>
     {
-        protected override GridDefine OnDrawSceneGUI(UIElement host, string label, GridDefine value)
+        protected override GridDefine OnDrawSceneGUI(AmlNodeElement host, string label, GridDefine value)
         {
             if (host is UIElements.Grid grid)
             {
@@ -212,7 +212,7 @@ namespace AlienUI.Editors.PropertyDrawer
             }
         }
 
-        protected override GridDefine OnDraw(UIElement host, string label, GridDefine value)
+        protected override GridDefine OnDraw(AmlNodeElement host, string label, GridDefine value)
         {
             EditorGUILayout.LabelField(label, new GUIStyle(EditorStyles.label), GUILayout.Height(25));
             var rect = GUILayoutUtility.GetLastRect();
@@ -255,7 +255,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class Vector2IntDrawer : PropertyDrawer<Vector2Int>
     {
-        protected override Vector2Int OnDraw(UIElement host, string label, Vector2Int value)
+        protected override Vector2Int OnDraw(AmlNodeElement host, string label, Vector2Int value)
         {
             return EditorGUILayout.Vector2IntField(label, value);
         }
@@ -263,7 +263,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class ColorDrawer : PropertyDrawer<Color>
     {
-        protected override Color OnDraw(UIElement host, string label, Color value)
+        protected override Color OnDraw(AmlNodeElement host, string label, Color value)
         {
             return EditorGUILayout.ColorField(label, value);
         }
@@ -271,7 +271,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class SpriteDrawer : PropertyDrawer<Sprite>
     {
-        protected override Sprite OnDraw(UIElement host, string label, Sprite value)
+        protected override Sprite OnDraw(AmlNodeElement host, string label, Sprite value)
         {
             return (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
         }
@@ -279,7 +279,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class FontDrawer : PropertyDrawer<Font>
     {
-        protected override Font OnDraw(UIElement host, string label, Font value)
+        protected override Font OnDraw(AmlNodeElement host, string label, Font value)
         {
             return (Font)EditorGUILayout.ObjectField(label, value, typeof(Font), false);
         }
@@ -287,7 +287,7 @@ namespace AlienUI.Editors.PropertyDrawer
 
     public class DependencyObjectRefDrawer : PropertyDrawer<DependencyObjectRef>
     {
-        protected override DependencyObjectRef OnDraw(UIElement host, string label, DependencyObjectRef value)
+        protected override DependencyObjectRef OnDraw(AmlNodeElement host, string label, DependencyObjectRef value)
         {
             var tag = EditorGUILayout.TextField(label, value.GetUniqueTag());
             return value.SetUniqueTag(tag);

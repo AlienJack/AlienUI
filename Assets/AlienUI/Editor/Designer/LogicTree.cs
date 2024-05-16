@@ -4,12 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace AlienUI.Editors
 {
-    public class LogicTree : TreeView
+    internal class LogicTree : TreeView
     {
         private UIElement m_root;
         private Dictionary<int, UIElement> m_uiMaps = new Dictionary<int, UIElement>();
@@ -20,6 +21,11 @@ namespace AlienUI.Editors
 
             Reload();
         }
+
+
+        protected override bool CanMultiSelect(TreeViewItem item) => false;
+        protected override bool CanRename(TreeViewItem item) => false;
+        protected override void RenameEnded(RenameEndedArgs args) { }
 
         public IEnumerable<UIElement> GetUIs()
         {
@@ -49,11 +55,6 @@ namespace AlienUI.Editors
                 }
             }
             Repaint();
-        }
-
-        protected override bool CanMultiSelect(TreeViewItem item)
-        {
-            return false;
         }
 
         protected override TreeViewItem BuildRoot()

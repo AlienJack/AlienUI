@@ -27,7 +27,7 @@ namespace AlienUI.Editors
 
             foreach (AmlNodeElement child in element.Children)
             {
-                if (child.TemplateHost == null)
+                if (child.Document == element.Document)
                     Gen(doc, child, xmlEle);
             }
         }

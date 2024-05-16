@@ -26,6 +26,16 @@ namespace AlienUI.Core.Resources
             }
         }
 
+        protected override void OnRemoveChild(AmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case Animation anim:
+                    m_animations.Remove(anim);
+                    break;
+            }
+        }
+
 
         public void Play()
         {

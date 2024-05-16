@@ -16,8 +16,6 @@ namespace AlienUI.Core
         private EnumResolver m_enumResolver = new EnumResolver();
         public object ResultValue { get; private set; }
 
-        Dictionary<Type, Action> m_typeRegister = new Dictionary<Type, Action>();
-
         internal XmlTypeCollector Collector => m_collector;
 
         public XmlAttributeParser()

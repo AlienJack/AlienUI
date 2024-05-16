@@ -1,46 +1,43 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp" Width="200" Height="80">
-	<Image Name="Root" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Color="#383838">
-		<Label Name="ButtonTxt" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch"
-			Vertical="Stretch" FontSize="24" />
-	</Image>
-
-	<DataTrigger Target="{TemplateBinding Self}">
-		<Condition PropertyName="State" CompareType="Equal" Value="Normal" />
-		<PlayStoryboard Target="Normal" />
-	</DataTrigger>
-	<DataTrigger Target="{TemplateBinding Self}">
-		<Condition PropertyName="State" CompareType="Equal" Value="Hover" />
-		<PlayStoryboard Target="Hover" />
-	</DataTrigger>
-	<DataTrigger Target="{TemplateBinding Self}">
-		<Condition PropertyName="State" CompareType="Equal" Value="Pressing" />
-		<PlayStoryboard Target="Pressing" />
-	</DataTrigger>
-	<DataTrigger Target="{TemplateBinding Self}">
-		<Condition PropertyName="State" CompareType="Equal" Value="Disabled" />
-		<PlayStoryboard Target="Disabled" />
-	</DataTrigger>
-
-	<StoryboardGroup>
-		<Storyboard Name="Hover">
-			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#424242" />
-			</Animation>
-		</Storyboard>
-		<Storyboard Name="Normal">
-			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#383838" />
-			</Animation>
-		</Storyboard>
-		<Storyboard Name="Pressing">
-			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#6a6a6a" />
-			</Animation>
-		</Storyboard>
-		<Storyboard Name="Disabled">
-			<Animation Target="Root" PropertyName="Color">
-				<AnimationKey Time="0.2" Value="#2d2d2d88" />
-			</Animation>
-		</Storyboard>
-	</StoryboardGroup>
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Width="200" Height="80" Name="Temp">
+  <Image Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="Root">
+    <Label FontSize="22" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" Name="ButtonTxt" />
+  </Image>
+  <DataTrigger Target="{TemplateBinding Self}">
+    <Condition Value="Normal" PropertyName="State" CompareType="Equal" />
+    <PlayStoryboard Target="Normal" />
+  </DataTrigger>
+  <DataTrigger Target="{TemplateBinding Self}">
+    <Condition Value="Hover" PropertyName="State" CompareType="Equal" />
+    <PlayStoryboard Target="Hover" />
+  </DataTrigger>
+  <DataTrigger Target="{TemplateBinding Self}">
+    <Condition Value="Pressing" PropertyName="State" CompareType="Equal" />
+    <PlayStoryboard Target="Pressing" />
+  </DataTrigger>
+  <DataTrigger Target="{TemplateBinding Self}">
+    <Condition Value="Disabled" PropertyName="State" CompareType="Equal" />
+    <PlayStoryboard Target="Disabled" />
+  </DataTrigger>
+  <StoryboardGroup>
+    <Storyboard Name="Hover">
+      <Animation Target="Root" PropertyName="Color">
+        <AnimationKey Time="0.2" Value="#424242" />
+      </Animation>
+    </Storyboard>
+    <Storyboard Name="Normal">
+      <Animation Target="Root" PropertyName="Color">
+        <AnimationKey Time="0.2" Value="#383838" />
+      </Animation>
+    </Storyboard>
+    <Storyboard Name="Pressing">
+      <Animation Target="Root" PropertyName="Color">
+        <AnimationKey Time="0.2" Value="#6a6a6a" />
+      </Animation>
+    </Storyboard>
+    <Storyboard Name="Disabled">
+      <Animation Target="Root" PropertyName="Color">
+        <AnimationKey Time="0.2" Value="#2d2d2d88" />
+      </Animation>
+    </Storyboard>
+  </StoryboardGroup>
 </Template>

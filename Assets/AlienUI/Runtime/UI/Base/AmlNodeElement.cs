@@ -1,5 +1,6 @@
 using AlienUI.Core;
 using AlienUI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,8 +9,11 @@ namespace AlienUI.UIElements
     public abstract class AmlNodeElement : DependencyObject, IDependencyObjectResolver
     {
         private List<AmlNodeElement> m_childrens = new List<AmlNodeElement>();
+
         public List<AmlNodeElement> Children => m_childrens;
 
+        private AmlNodeElement m_parent = null;
+        public AmlNodeElement Parent => m_parent;
 
         public Engine Engine { get; set; }
         public DependencyObject DataContext => Document.m_dataContext;
@@ -25,14 +29,28 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty NameProperty =
             DependencyProperty.Register("Name", typeof(string), typeof(AmlNodeElement), new PropertyMetadata(null));
 
-        public virtual void AddChild(AmlNodeElement childObj)
+        public event Action OnChildrenChanged;
+
+        public void AddChild(AmlNodeElement childObj)
         {
             m_childrens.Add(childObj);
 
             OnAddChild(childObj);
+
+            OnChildrenChanged?.Invoke();
+        }
+
+        public void RemoveChild(AmlNodeElement childObj)
+        {
+            m_childrens.Remove(childObj);
+
+            OnRemoveChild(childObj);
+
+            OnChildrenChanged?.Invoke();
         }
 
         protected virtual void OnAddChild(AmlNodeElement childObj) { }
+        protected virtual void OnRemoveChild(AmlNodeElement childObj) { }
 
         internal Dictionary<DependencyProperty, Binding> m_bindings = new Dictionary<DependencyProperty, Binding>();
         public Binding GetBinding(DependencyProperty dp)
@@ -41,6 +59,10 @@ namespace AlienUI.UIElements
             return binding;
         }
 
+        protected void SetParent(AmlNodeElement parentNode)
+        {
+            m_parent = parentNode;
+        }
         public void RefreshPropertyNotify()
         {
             foreach (var dp in m_dpPropValues.Keys.ToArray())

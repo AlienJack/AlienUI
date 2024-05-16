@@ -34,7 +34,7 @@ namespace AlienUI.UIElements
         /*  由于Unity的事件机制问题,PointerEnter和PointerExit总会向上传递
         *   所以AlienUI的事件传递机制,总是不传递PointerEnter和PointerExit事件,而是交由Unity自己传递
         *   在Unity2021之后的版本,这个传递机制可以在EventSystem的InputModule上被关闭,为了保持逻辑统一
-        *   应该总是打开向上传递功能(Send Pointer Hover To Parent)
+        *   应该总是打开向上传递功能(Send Pointer Hover To UIParent)
         */
 
         protected event OnEventHandle<OnPointerEnterEvent> OnPointerEnter;
@@ -59,9 +59,9 @@ namespace AlienUI.UIElements
             if (OnPointerDown != null)
             {
                 OnPointerDown.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaisePointerDownEvent(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaisePointerDownEvent(sender, e);
             }
-            else Parent?.RaisePointerDownEvent(sender, e);
+            else UIParent?.RaisePointerDownEvent(sender, e);
         }
 
         protected event OnEventHandle<OnPointerUpEvent> OnPointerUp;
@@ -72,9 +72,9 @@ namespace AlienUI.UIElements
             if (OnPointerUp != null)
             {
                 OnPointerUp.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaisePointerUpEvent(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaisePointerUpEvent(sender, e);
             }
-            else Parent?.RaisePointerUpEvent(sender, e);
+            else UIParent?.RaisePointerUpEvent(sender, e);
         }
 
         protected event OnEventHandle<OnPointerClickEvent> OnPointerClick;
@@ -85,9 +85,9 @@ namespace AlienUI.UIElements
             if (OnPointerClick != null)
             {
                 OnPointerClick.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaisePointerClickEvent(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaisePointerClickEvent(sender, e);
             }
-            else Parent?.RaisePointerClickEvent(sender, e);
+            else UIParent?.RaisePointerClickEvent(sender, e);
         }
 
         protected event OnEventHandle<OnInitializePotentialDragEvent> OnInitializePotentialDrag;
@@ -98,9 +98,9 @@ namespace AlienUI.UIElements
             if (OnInitializePotentialDrag != null)
             {
                 OnInitializePotentialDrag.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseInitializePotentialDragEvent(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseInitializePotentialDragEvent(sender, e);
             }
-            else Parent?.RaiseInitializePotentialDragEvent(sender, e);
+            else UIParent?.RaiseInitializePotentialDragEvent(sender, e);
         }
 
         protected event OnEventHandle<OnBeginDragEvent> OnBeginDrag;
@@ -111,9 +111,9 @@ namespace AlienUI.UIElements
             if (OnBeginDrag != null)
             {
                 OnBeginDrag.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseBeginDrag(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseBeginDrag(sender, e);
             }
-            else Parent?.RaiseBeginDrag(sender, e);
+            else UIParent?.RaiseBeginDrag(sender, e);
         }
 
         protected event OnEventHandle<OnDragEvent> OnDrag;
@@ -124,9 +124,9 @@ namespace AlienUI.UIElements
             if (OnDrag != null)
             {
                 OnDrag.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseDrag(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseDrag(sender, e);
             }
-            else Parent?.RaiseDrag(sender, e);
+            else UIParent?.RaiseDrag(sender, e);
         }
 
         protected event OnEventHandle<OnEndDragEvent> OnEndDrag;
@@ -137,9 +137,9 @@ namespace AlienUI.UIElements
             if (OnEndDrag != null)
             {
                 OnEndDrag.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseEndDrag(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseEndDrag(sender, e);
             }
-            else Parent?.RaiseEndDrag(sender, e);
+            else UIParent?.RaiseEndDrag(sender, e);
         }
 
         protected event OnEventHandle<OnDropEvent> OnDrop;
@@ -150,9 +150,9 @@ namespace AlienUI.UIElements
             if (OnDrop != null)
             {
                 OnDrop.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseDrop(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseDrop(sender, e);
             }
-            else Parent?.RaiseDrop(sender, e);
+            else UIParent?.RaiseDrop(sender, e);
         }
 
         protected event OnEventHandle<OnScrollEvent> OnScroll;
@@ -163,9 +163,9 @@ namespace AlienUI.UIElements
             if (OnScroll != null)
             {
                 OnScroll.Invoke(sender, e);
-                if (e.Canceled && Parent != null) Parent.RaiseScroll(sender, e);
+                if (e.Canceled && UIParent != null) UIParent.RaiseScroll(sender, e);
             }
-            else Parent?.RaiseScroll(sender, e);
+            else UIParent?.RaiseScroll(sender, e);
         }
 
         #endregion

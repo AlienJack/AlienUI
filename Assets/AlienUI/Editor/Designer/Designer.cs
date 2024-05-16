@@ -1,32 +1,44 @@
 using AlienUI.Core;
+using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 using AlienUI.Editors.PropertyDrawer;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.EditorTools;
-using UnityEditor.IMGUI.Controls;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.UIElements;
+using EGL = UnityEditor.EditorGUILayout;
+using GL = UnityEngine.GUILayout;
+using EG = UnityEditor.EditorGUI;
+using G = UnityEngine.GUI;
 
 namespace AlienUI.Editors
 {
     public class Designer : EditorWindow
     {
         private static Dictionary<Type, PropertyDrawerBase> m_defaultDrawers = new Dictionary<Type, PropertyDrawerBase>();
+        private static Dictionary<Type, ElementEditor> m_elementEditors = new Dictionary<Type, ElementEditor>();
         [InitializeOnLoadMethod]
         public static void InitDrawers()
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(PropertyDrawerBase)));
+            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes()).Where(t => !t.IsAbstract);
             foreach (var drawerType in types)
             {
-                var drawer = Activator.CreateInstance(drawerType) as PropertyDrawerBase;
-                m_defaultDrawers[drawer.ValueType] = drawer;
+                if (drawerType.IsSubclassOf(typeof(PropertyDrawerBase)))
+                {
+                    var drawer = Activator.CreateInstance(drawerType) as PropertyDrawerBase;
+                    m_defaultDrawers[drawer.ValueType] = drawer;
+                }
+                else if (drawerType.IsSubclassOf(typeof(ElementEditor)))
+                {
+                    var editor = Activator.CreateInstance(drawerType) as ElementEditor;
+                    m_elementEditors[editor.AdapterType] = editor;
+                }
             }
         }
 
@@ -38,14 +50,7 @@ namespace AlienUI.Editors
             SceneView.duringSceneGui += SceneView_duringSceneGui;
             DesignerTool.OnSelected += DesignerTool_OnSelected;
 
-            UIElement.NameProperty.OnValueChanged += NameProperty_OnValueChanged;
-
             Instance = this;
-        }
-
-        private void NameProperty_OnValueChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            Refresh();
         }
 
         private void OnUpdate()
@@ -58,9 +63,75 @@ namespace AlienUI.Editors
             EditorApplication.update -= OnUpdate;
             SceneView.duringSceneGui -= SceneView_duringSceneGui;
             DesignerTool.OnSelected -= DesignerTool_OnSelected;
-            UIElement.NameProperty.OnValueChanged -= NameProperty_OnValueChanged;
 
             Instance = null;
+        }
+
+        private UIElement m_target;
+        private AmlAsset m_amlFile;
+        private LogicTree m_logicTree;
+
+        private UIElement m_selection;
+        public UIElement Selection
+        {
+            get => m_selection;
+            set
+            {
+                m_selection = value;
+                drawContext.Clear();
+                drawContext.Add(m_selection);
+            }
+        }
+
+        public void SetTarget(UIElement ui, AmlAsset amlFile)
+        {
+            m_target = ui;
+            m_amlFile = amlFile;
+            m_logicTree = new LogicTree(m_target);
+            m_logicTree.OnSelectItem += TreeViewSelectItemChanged;
+        }
+
+        public void Refresh()
+        {
+            m_logicTree?.Reload();
+        }
+
+        private void TreeViewSelectItemChanged(UIElement obj)
+        {
+            Selection = obj;
+            SceneView.RepaintAll();
+            
+            DesignerTool.RaiseSelect(Selection);
+        }
+
+        public IEnumerable<UIElement> GetTreeItems()
+        {
+            return m_logicTree.GetUIs();
+        }
+
+        private void Target_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
+        {
+            SaveToAml(this);
+        }
+
+        private void Target_OnChildrenChanged()
+        {
+            SaveToAml(this);
+        }
+
+        private List<AmlNodeElement> drawContext = new List<AmlNodeElement>();
+        private void DrawInspector(Rect rect)
+        {
+            rect.width = position.width * 0.7f - 15;
+            rect.height = position.height - 45;
+            rect.position = new Vector2(position.width * 0.3f + 10, rect.position.y);
+            G.Box(rect, string.Empty, EditorStyles.helpBox);
+            if (Selection == null) return;
+            if (Selection.NodeProxy == null) return;
+
+            GL.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
+            DrawElement(this);
+            GL.EndArea();
         }
 
         private void DesignerTool_OnSelected(UIElement obj)
@@ -68,6 +139,7 @@ namespace AlienUI.Editors
             m_logicTree.SelectWithoutNotify(obj);
             Selection = obj;
             SceneView.RepaintAll();
+            
             Repaint();
         }
 
@@ -76,7 +148,7 @@ namespace AlienUI.Editors
             if (Selection == null) return;
             if (Selection.NodeProxy == null) return;
 
-            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups();
+            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups(Selection);
 
             foreach (var group in groups)
             {
@@ -105,9 +177,9 @@ namespace AlienUI.Editors
             {
                 ToolManager.SetActiveTool<DesignerTool>();
 
-                GUILayout.BeginArea(new Rect(rect) { height = 30, width = position.width });
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("ExitEdit"))
+                GL.BeginArea(new Rect(rect) { height = 30, width = position.width });
+                EGL.BeginHorizontal();
+                if (GL.Button("ExitEdit"))
                 {
                     StageUtility.GoToMainStage();
                     if (Settings.Get().BackLayout)
@@ -116,19 +188,19 @@ namespace AlienUI.Editors
                         EditorUtility.LoadWindowLayout(path);
                     }
                 }
-                if (m_amlFile != null && GUILayout.Button("OpenAml"))
+                if (m_amlFile != null && GL.Button("OpenAml"))
                 {
                     AmlImporter.OverrideAMLOpen = false;
                     AssetDatabase.OpenAsset(m_amlFile);
                     AmlImporter.OverrideAMLOpen = true;
                 }
-                if (m_amlFile != null && GUILayout.Button("Save"))
+                if (m_amlFile != null && GL.Button("Save"))
                 {
-                    SaveToAml();
+                    SaveToAml(this);
                 }
-                GUILayout.FlexibleSpace();
-                EditorGUILayout.EndHorizontal();
-                GUILayout.EndArea();
+                GL.FlexibleSpace();
+                EGL.EndHorizontal();
+                GL.EndArea();
             }
 
             rect.position = new Vector2(5, rect.height + 30);
@@ -137,115 +209,98 @@ namespace AlienUI.Editors
             DrawInspector(rect);
         }
 
-        private void SaveToAml()
+        private void DrawTree(Rect rect)
         {
-            var str = AmlGenerator.Gen(m_target);
-            m_amlFile.Text = str;
-            m_amlFile.SaveToDisk();
+            rect.width = position.width * 0.3f;
+            rect.height = position.height - 45;
+            G.Box(rect, string.Empty, EditorStyles.helpBox);
 
-            Refresh();
+            rect.position += new Vector2(5, 5);
+            rect.width -= 10; rect.height -= 10;
+            if (m_logicTree != null)
+            {
+                var treeRect = rect;
+                treeRect.height = Mathf.Max(rect.height, m_logicTree.totalHeight);
+
+                G.BeginScrollView(rect, default, treeRect);
+                m_logicTree.OnGUI(treeRect);
+                G.EndScrollView();
+            }
+        }
+
+
+        private static void SaveToAml(Designer designer)
+        {
+            var str = AmlGenerator.Gen(designer.m_target);
+            designer.m_amlFile.Text = str;
+            designer.m_amlFile.SaveToDisk();
+
+            designer.Refresh();
 
             Debug.Log("Save");
         }
 
-        private UIElement m_target;
-        private AmlAsset m_amlFile;
-        private LogicTree m_logicTree;
 
-        private UIElement m_selection;
-        public UIElement Selection
+        private static void DrawElement(Designer designer)
         {
-            get => m_selection;
-            set
+            if (designer.drawContext.Count == 0) return;
+            var target = designer.drawContext[^1];
+
+            target.OnDependencyPropertyChanged += designer.Target_OnDependencyPropertyChanged;
+            target.OnChildrenChanged += designer.Target_OnChildrenChanged;
+
+            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups(target);
+
+            EGL.BeginHorizontal();
+            if (designer.drawContext.Count > 1)
             {
-                if (m_selection == value) return;
-
-                if (m_selection != null)
+                for (int i = 0; i < designer.drawContext.Count - 1; i++)
                 {
-                    m_selection.OnDependencyPropertyChanged -= M_selection_OnDependencyPropertyChanged;
-                }
-
-                m_selection = value;
-                if (m_selection != null)
-                {
-                    m_selection.OnDependencyPropertyChanged += M_selection_OnDependencyPropertyChanged;
+                    var parent = designer.drawContext[i];
+                    if (GL.Button(parent.Name ?? parent.GetType().Name))
+                    {
+                        designer.drawContext = designer.drawContext.Take(i + 1).ToList();
+                        break;
+                    }
+                    GL.Label("/");
                 }
             }
-        }
-
-        private void M_selection_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
-        {
-            SaveToAml();
-        }
-
-        public void SetTarget(UIElement ui, AmlAsset amlFile)
-        {
-            m_target = ui;
-            m_amlFile = amlFile;
-            m_logicTree = new LogicTree(m_target);
-            m_logicTree.OnSelectItem += M_logicTree_OnSelectItem;
-        }
-
-        public void Refresh()
-        {
-            m_logicTree?.Reload();
-        }
-
-
-        private void M_logicTree_OnSelectItem(UIElement obj)
-        {
-            Selection = obj;
-            SceneView.RepaintAll();
-
-            DesignerTool.RaiseSelect(Selection);
-        }
-
-        private void DrawInspector(Rect rect)
-        {
-            rect.width = position.width * 0.7f - 15;
-            rect.height = position.height - 45;
-            rect.position = new Vector2(position.width * 0.3f + 10, rect.position.y);
-            GUI.Box(rect, string.Empty, EditorStyles.helpBox);
-            if (Selection == null) return;
-            if (Selection.NodeProxy == null) return;
-
-            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups();
-            GUILayout.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
-
-            EditorGUILayout.LabelField(m_selection.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 30 }, GUILayout.Height(30));
+            EGL.LabelField(target.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
+            GL.FlexibleSpace();
+            EGL.EndHorizontal();
 
             foreach (var group in groups)
             {
                 var groupName = group.Key;
 
-                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EGL.BeginVertical(EditorStyles.helpBox);
 
-                if (EditorGUILayout.Foldout(true, groupName))
+                if (EGL.Foldout(true, groupName))
                 {
                     foreach (var property in group)
                     {
-                        EditorGUILayout.BeginHorizontal();
+                        EGL.BeginHorizontal();
 
-                        DrawDirtyMark(property);
+                        DrawDirtyMark(target, property);
 
                         var drawer = FindDrawer(property.PropType);
                         if (drawer == null)
                         {
-                            var color = GUI.color;
-                            GUI.color = Color.yellow;
-                            EditorGUILayout.LabelField(property.PropName, $"[{property.PropType}]");
-                            GUI.color = color;
+                            var color = G.color;
+                            G.color = Color.yellow;
+                            EGL.LabelField(property.PropName, $"[{property.PropType}]");
+                            G.color = color;
                         }
                         else
                         {
-                            using (new EditorGUI.DisabledGroupScope(property.Meta.IsReadOnly || Selection.GetBinding(property) != null))
+                            using (new EG.DisabledGroupScope(property.Meta.IsReadOnly || target.GetBinding(property) != null))
                             {
-                                var value = drawer.Draw(Selection, property.PropName, Selection.GetValue(property));
+                                var value = drawer.Draw(target, property.PropName, target.GetValue(property));
                                 if (!property.Meta.IsReadOnly)
-                                    Selection.SetValue(property, value);
+                                    target.SetValue(property, value);
                             }
 
-                            if (Selection.GetBinding(property) != null)
+                            if (target.GetBinding(property) != null)
                             {
                                 var bindRect = GUILayoutUtility.GetLastRect();
                                 bindRect.width += 2;
@@ -255,50 +310,88 @@ namespace AlienUI.Editors
                             }
                         }
 
-                        EditorGUILayout.EndHorizontal();
+                        EGL.EndHorizontal();
 
                         {
                             var rightClickRect = GUILayoutUtility.GetLastRect();
-                            var color = GUI.color;
-                            GUI.color = new Color(0, 0, 0, 0);
-                            GUI.Box(rightClickRect, string.Empty);
-                            GUI.color = color;
+                            var color = G.color;
+                            G.color = new Color(0, 0, 0, 0);
+                            G.Box(rightClickRect, string.Empty);
+                            G.color = color;
 
-                            HandleContextMenu(Selection, property);
+                            HandleContextMenu(target, property);
                         }
                     }
                 }
 
-                EditorGUILayout.EndVertical();
+                EGL.EndVertical();
             }
 
-            GUILayout.EndArea();
-        }
-
-        private void DrawDirtyMark(DependencyProperty property)
-        {
-            var currentDPValue = Selection.GetValue(property);
-            var defaultDPValue = property.Meta.DefaultValue;
-            var color = GUI.color;
-            ColorUtility.TryParseHtmlString(currentDPValue != defaultDPValue ? "#0f80be" : "#00000000", out var dirtyColor);
-            GUI.color = dirtyColor;
-            GUILayout.Box(string.Empty, EditorStyles.selectionRect, GUILayout.Width(2));
-            GUI.color = color;
-        }
-
-        private List<IGrouping<string, DependencyProperty>> GetDependencyGroups()
-        {
-            var propties = Selection.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && !p.IsAttachedProerty);
-            if (Selection.Parent != null)
+            if (DrawChildElements(designer, target, target.Children) is AmlNodeElement select)
             {
-                var parentAttProps = Selection.Parent.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && p.IsAttachedProerty);
+                designer.drawContext.Add(select);
+            }
+
+            target.OnDependencyPropertyChanged -= designer.Target_OnDependencyPropertyChanged;
+            target.OnChildrenChanged -= designer.Target_OnChildrenChanged;
+        }
+
+
+        private static AmlNodeElement DrawChildElements(Designer designer, AmlNodeElement parent, List<AmlNodeElement> children)
+        {
+            AmlNodeElement select = null;
+            for (int i = 0; i < children.Count; i++)
+            {
+                var child = children[i];
+                if (child is UIElement) continue;
+                EGL.BeginHorizontal();
+                {
+                    if (GL.Button($"Edit {child.Name ?? child.GetType().Name}"))
+                    {
+                        select = child;
+                    }
+                    using (AlienEditorUtility.BeginGUIColorScope(Color.red))
+                    {
+                        if (GL.Button("DEL", new GUIStyle(G.skin.button) { alignment = TextAnchor.MiddleCenter }, GL.Width(40)))
+                        {
+                            parent.RemoveChild(select);
+                            i--;
+                        }
+                    }
+                }
+                EGL.EndHorizontal();
+            }
+            using (AlienEditorUtility.BeginGUIColorScope(Color.green)) GL.Button("Add");
+
+            return select;
+        }
+
+
+
+        private static void DrawDirtyMark(AmlNodeElement target, DependencyProperty property)
+        {
+            var currentDPValue = target.GetValue(property);
+            var defaultDPValue = property.Meta.DefaultValue;
+            var color = G.color;
+            ColorUtility.TryParseHtmlString(currentDPValue != defaultDPValue ? "#0f80be" : "#00000000", out var dirtyColor);
+            G.color = dirtyColor;
+            GL.Box(string.Empty, EditorStyles.selectionRect, GL.Width(2));
+            G.color = color;
+        }
+
+        private static List<IGrouping<string, DependencyProperty>> GetDependencyGroups(AmlNodeElement target)
+        {
+            var propties = target.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && !p.IsAttachedProerty);
+            if (target.Parent != null)
+            {
+                var parentAttProps = target.Parent.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && p.IsAttachedProerty);
                 propties = propties.Concat(parentAttProps);
             }
             var groups = propties.GroupBy(p => p.IsAttachedProerty ? $"AttachedProperty From {p.AttachHostType}" : p.Meta.Group).ToList();
             return groups;
         }
 
-        private void HandleContextMenu(UIElement selection, DependencyProperty property)
+        private static void HandleContextMenu(AmlNodeElement selection, DependencyProperty property)
         {
             if (Event.current.type != EventType.ContextClick) return;
             Vector2 mousePos = Event.current.mousePosition;
@@ -392,7 +485,7 @@ namespace AlienUI.Editors
             Event.current.Use();
         }
 
-        private PropertyDrawerBase FindDrawer(Type propertyType)
+        private static PropertyDrawerBase FindDrawer(Type propertyType)
         {
             if (m_defaultDrawers.TryGetValue(propertyType, out var drawer))
                 return drawer;
@@ -402,28 +495,6 @@ namespace AlienUI.Editors
                 return null;
         }
 
-        private void DrawTree(Rect rect)
-        {
-            rect.width = position.width * 0.3f;
-            rect.height = position.height - 45;
-            GUI.Box(rect, string.Empty, EditorStyles.helpBox);
 
-            rect.position += new Vector2(5, 5);
-            rect.width -= 10; rect.height -= 10;
-            if (m_logicTree != null)
-            {
-                var treeRect = rect;
-                treeRect.height = Mathf.Max(rect.height, m_logicTree.totalHeight);
-
-                GUI.BeginScrollView(rect, default, treeRect);
-                m_logicTree.OnGUI(treeRect);
-                GUI.EndScrollView();
-            }
-        }
-
-        public IEnumerable<UIElement> GetTreeItems()
-        {
-            return m_logicTree.GetUIs();
-        }
     }
 }

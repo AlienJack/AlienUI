@@ -74,5 +74,45 @@ namespace AlienUI.Editors
                 Handles.EndGUI();
             }
         }
+
+        public static GUIColorScope BeginGUIColorScope(Color color)
+        {
+            return new GUIColorScope(color);
+        }
+
+        public static HandlesColorScope BeginHandlesColorScope(Color color)
+        {
+            return new HandlesColorScope(color);
+        }
+
+        public class GUIColorScope : IDisposable
+        {
+            Color m_beforeColor;
+            public GUIColorScope(Color guiColor)
+            {
+                m_beforeColor = GUI.color;
+                GUI.color = guiColor;
+            }
+
+            public void Dispose()
+            {
+                GUI.color = m_beforeColor;
+            }
+        }
+
+        public class HandlesColorScope : IDisposable
+        {
+            Color m_beforeColor;
+            public HandlesColorScope(Color handlesColor)
+            {
+                m_beforeColor = Handles.color;
+                Handles.color = handlesColor;
+            }
+
+            public void Dispose()
+            {
+                Handles.color = m_beforeColor;
+            }
+        }
     }
 }

@@ -6,14 +6,21 @@ namespace AlienUI
 {
     public class StoryboardGroup : Resource
     {
-        private List<Storyboard> stories = new List<Storyboard>();
         private Storyboard m_currentPlay;
 
         protected override void OnAddChild(AmlNodeElement childObj)
         {
             switch (childObj)
             {
-                case Storyboard sb: stories.Add(sb); sb.OnPlay += Sb_OnPlay; break;
+                case Storyboard sb: sb.OnPlay += Sb_OnPlay; break;
+            }
+        }
+
+        protected override void OnRemoveChild(AmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case Storyboard sb: sb.OnPlay -= Sb_OnPlay; break;
             }
         }
 

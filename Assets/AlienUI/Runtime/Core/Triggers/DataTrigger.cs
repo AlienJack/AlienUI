@@ -39,7 +39,22 @@ namespace AlienUI.Core.Triggers
                     cond.ResolveCompareValue(m_targetObj);
                     break;
             }
+
             base.OnAddChild(childObj);
+        }
+
+        protected override void OnRemoveChild(AmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case Condition cond:
+                    m_conditions.Remove(cond);
+                    m_focusProperties.Remove(cond.PropertyName);
+                    cond.ResolveCompareValue(m_targetObj);
+                    break;
+            }
+
+            base.OnRemoveChild(childObj);
         }
 
         private bool Test(string propName)

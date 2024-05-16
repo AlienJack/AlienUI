@@ -151,5 +151,15 @@ namespace AlienUI.Core.Resources
                     break;
             }
         }
+
+        protected override void OnRemoveChild(AmlNodeElement childObj)
+        {
+            switch (childObj)
+            {
+                case AnimationKey keyData:
+                    m_keys.Remove(keyData);
+                    break;
+            }
+        }
     }
 }

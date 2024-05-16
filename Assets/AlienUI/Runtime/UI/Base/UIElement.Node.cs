@@ -9,7 +9,6 @@ namespace AlienUI.UIElements
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
 
-        private UIElement m_parent = null;
         private NodeProxy m_proxy = null;
         internal RectTransform m_rectTransform;
         internal RectTransform m_childRoot;
@@ -18,7 +17,7 @@ namespace AlienUI.UIElements
 
         public RectTransform Rect => m_rectTransform;
 
-        public UIElement Parent => m_parent;
+        public UIElement UIParent => Parent as UIElement;
 
         public UIElement TopParent
         {
@@ -29,7 +28,7 @@ namespace AlienUI.UIElements
 
                 while (true)
                 {
-                    if (parent.Parent == null) return parent;
+                    if (parent.Parent == null) return parent as UIElement;
                     parent = parent.Parent;
                 }
             }
@@ -37,10 +36,8 @@ namespace AlienUI.UIElements
 
         public NodeProxy NodeProxy => m_proxy;
 
-        public sealed override void AddChild(AmlNodeElement childObj)
+        protected override void OnAddChild(AmlNodeElement childObj)
         {
-            base.AddChild(childObj);
-
             switch (childObj)
             {
                 case UIElement uiEle:
@@ -49,14 +46,18 @@ namespace AlienUI.UIElements
                     break;
                 case Trigger trigger: AddTrigger(trigger); break;
             }
-
-            OnAddChild(childObj);
-
         }
 
-        void SetParent(UIElement parentNode)
+        protected override void OnRemoveChild(AmlNodeElement childObj)
         {
-            m_parent = parentNode;
+            switch (childObj)
+            {
+                case UIElement uiEle:
+                    uiEle.SetParent(null);
+                    UIChildren.Remove(uiEle);
+                    break;
+                case Trigger trigger: RemoveTrigger(trigger); break;
+            }
         }
 
         public GameObject Initialize()

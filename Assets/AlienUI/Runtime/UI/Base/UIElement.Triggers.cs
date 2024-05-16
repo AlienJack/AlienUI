@@ -12,5 +12,10 @@ namespace AlienUI.UIElements
             m_triggers.Add(trigger);
             trigger.Init(this);
         }
+
+        void RemoveTrigger(Trigger trigger)
+        {
+            m_triggers.Remove(trigger);
+        }
     }
 }
