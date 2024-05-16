@@ -20,7 +20,7 @@ namespace AlienUI.Core.Triggers
         {
             if (Test(dp.PropName))
             {
-                if((EnumButtonState)oldValue == EnumButtonState.Pressing)
+                if ((EnumButtonState)oldValue == EnumButtonState.Pressing)
                 {
                     Debug.Log("!");
                 }

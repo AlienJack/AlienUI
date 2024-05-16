@@ -179,7 +179,7 @@ namespace AlienUI.Models
             {
                 if (obj is Define other)
                 {
-                    var self = (Define)this;
+                    var self = this;
 
                     return self.DefineType == other.DefineType && self.Value == other.Value;
                 }

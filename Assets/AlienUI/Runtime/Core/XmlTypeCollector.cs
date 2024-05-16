@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using UnityEngine;
 using ConverterDict = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<System.Type, AlienUI.Core.Converters.ConverterBase>>;
 
 namespace AlienUI.Core

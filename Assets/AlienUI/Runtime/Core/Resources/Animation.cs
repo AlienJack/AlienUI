@@ -3,7 +3,6 @@ using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace AlienUI.Core.Resources
 {
@@ -34,7 +33,7 @@ namespace AlienUI.Core.Resources
 
         public float Duration => m_duration;
 
-        
+
         public static readonly DependencyProperty OffsetProperty =
             DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMetadata(0f));
 

@@ -23,7 +23,7 @@ namespace AlienUI.UIElements
             get { return (ImgType)GetValue(ImageTypeProperty); }
             set { SetValue(ImageTypeProperty, value); }
         }
-        
+
         public static readonly DependencyProperty ImageTypeProperty =
             DependencyProperty.Register("ImageType", typeof(ImgType), typeof(Image), new PropertyMetadata(ImgType.Simple), OnTypeChanged);
 
