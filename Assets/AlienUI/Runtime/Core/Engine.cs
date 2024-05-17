@@ -12,7 +12,7 @@ namespace AlienUI
     [ExecuteInEditMode]
     public class Engine : MonoBehaviour
     {
-        internal XmlAttributeParser AttParser = new XmlAttributeParser();
+        internal XmlAttributeParser AttParser = new();
 
         private void Awake()
         {

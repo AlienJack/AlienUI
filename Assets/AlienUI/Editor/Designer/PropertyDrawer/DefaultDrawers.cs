@@ -124,7 +124,10 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         protected override Vector2 OnDraw(AmlNodeElement host, string label, Vector2 value)
         {
+            EditorGUILayout.BeginVertical();
             value = EditorGUILayout.Vector2Field(label, value);
+            EditorGUILayout.Space(5);
+            EditorGUILayout.EndVertical();
             return value;
         }
     }

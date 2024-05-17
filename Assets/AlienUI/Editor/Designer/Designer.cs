@@ -311,11 +311,13 @@ namespace AlienUI.Editors
                         EGL.EndHorizontal();
 
                         {
+
                             var rightClickRect = GUILayoutUtility.GetLastRect();
-                            var color = G.color;
-                            G.color = new Color(0, 0, 0, 0);
-                            G.Box(rightClickRect, string.Empty);
-                            G.color = color;
+                            Color color = rightClickRect.Contains(Event.current.mousePosition) ? Color.white : new Color(0, 0, 0, 0);
+                            using (AlienEditorUtility.BeginGUIColorScope(color))
+                            {
+                                G.Box(rightClickRect, string.Empty);
+                            }
 
                             HandleContextMenu(target, property);
                         }
