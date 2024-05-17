@@ -335,7 +335,7 @@ namespace AlienUI.Editors
         }
 
 
-        private static AmlNodeElement DrawChildElements(Designer designer, AmlNodeElement parent, List<AmlNodeElement> children)
+        private static AmlNodeElement DrawChildElements(Designer designer, AmlNodeElement parent, IList<AmlNodeElement> children)
         {
             AmlNodeElement select = null;
             for (int i = 0; i < children.Count; i++)

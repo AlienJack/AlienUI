@@ -48,7 +48,6 @@ namespace AlienUI.UIElements
             {
                 m_templateInstance.AddChild(uichild);
             }
-            UIChildren.Clear();
             AddChild(m_templateInstance);
         }
     }

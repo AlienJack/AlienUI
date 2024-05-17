@@ -1,8 +1,9 @@
 using AlienUI.Models;
+using System;
 
 namespace AlienUI.Core.Resources
 {
-    public class AnimationKey : Resource
+    public class AnimationKey : Resource, IComparable<AnimationKey>
     {
         public float Time
         {
@@ -24,5 +25,10 @@ namespace AlienUI.Core.Resources
             DependencyProperty.Register("Value", typeof(string), typeof(AnimationKey), new PropertyMetadata(string.Empty));
 
         public object ActualValue;
+
+        public int CompareTo(AnimationKey other)
+        {
+            return Time.CompareTo(other.Time);
+        }
     }
 }

@@ -15,7 +15,13 @@ namespace AlienUI.Core.Resources
         }
 
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Animation), new PropertyMetadata(default(DependencyObjectRef)));
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Animation), new PropertyMetadata(default(DependencyObjectRef)), OnTargetChanged);
+
+        private static void OnTargetChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Animation;
+            self.m_needPrepareData = true;
+        }
 
         public string PropertyName
         {
@@ -31,33 +37,40 @@ namespace AlienUI.Core.Resources
             set { SetValue(OffsetProperty, value); }
         }
 
-        public float Duration => m_duration;
-
 
         public static readonly DependencyProperty OffsetProperty =
-            DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMetadata(0f));
+            DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMetadata(0f), OnOffsetChanged);
+
+        private static void OnOffsetChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Animation;
+            self.m_needPrepareData = true;
+        }
 
         private PropertyResolver m_resolver;
         private Type m_resolverType;
         private DependencyObject m_target;
-        private float m_duration;
-        private List<AnimationKey> m_keys = new List<AnimationKey>();
+
+        private SortedSet<AnimationKey> m_keys = new SortedSet<AnimationKey>();
         private object m_defaultValue;
 
-        protected override void OnPrepared()
+        public float Duration => Offset + m_keys.Max.Time;
+
+
+        private bool m_needPrepareData;
+        private void PrepareDatas()
         {
-            cacheTargetAndResolver();
-            cacheKeyframes();
+            if (m_needPrepareData)
+            {
+                cacheTargetAndResolver();
+                cacheKeyframes();
+
+                m_needPrepareData = false;
+            }
         }
 
         private void cacheKeyframes()
         {
-            m_duration = Offset;
-            m_keys = m_keys.OrderBy(key => key.Time).ToList();
-            m_duration = m_keys[m_keys.Count - 1].Time;
-
-            m_duration += Offset;
-
             foreach (var key in m_keys)
             {
                 key.ActualValue = m_resolver.Resolve(key.Value, m_resolverType);
@@ -75,14 +88,18 @@ namespace AlienUI.Core.Resources
             m_resolver = Engine.GetAttributeResolver(m_resolverType);
         }
 
-        public void StageDefaultValue()
+        internal void StageDefaultValue()
         {
+            PrepareDatas();
+
             if (m_target != null)
                 m_defaultValue = m_target.GetValue(PropertyName);
         }
 
         public bool Evalution(float time, out object value)
         {
+            PrepareDatas();
+
             value = null;
 
             if (m_target == null) return false;
@@ -148,8 +165,10 @@ namespace AlienUI.Core.Resources
             {
                 case AnimationKey keyData:
                     m_keys.Add(keyData);
+                    m_needPrepareData = true;
                     break;
             }
+
         }
 
         protected override void OnRemoveChild(AmlNodeElement childObj)
@@ -158,6 +177,7 @@ namespace AlienUI.Core.Resources
             {
                 case AnimationKey keyData:
                     m_keys.Remove(keyData);
+                    m_needPrepareData = true;
                     break;
             }
         }

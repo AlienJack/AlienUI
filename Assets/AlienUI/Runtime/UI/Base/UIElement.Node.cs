@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
+
     public abstract partial class UIElement : AmlNodeElement
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
@@ -13,7 +14,7 @@ namespace AlienUI.UIElements
         internal RectTransform m_rectTransform;
         internal RectTransform m_childRoot;
 
-        internal List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
+        internal IReadOnlyList<UIElement> UIChildren => GetChildren<UIElement>();
 
         internal RectTransform Rect => m_rectTransform;
 
@@ -42,7 +43,6 @@ namespace AlienUI.UIElements
             {
                 case UIElement uiEle:
                     uiEle.SetParent(this);
-                    UIChildren.Add(uiEle);
                     break;
                 case Trigger trigger: AddTrigger(trigger); break;
             }
@@ -54,7 +54,6 @@ namespace AlienUI.UIElements
             {
                 case UIElement uiEle:
                     uiEle.SetParent(null);
-                    UIChildren.Remove(uiEle);
                     break;
                 case Trigger trigger: RemoveTrigger(trigger); break;
             }

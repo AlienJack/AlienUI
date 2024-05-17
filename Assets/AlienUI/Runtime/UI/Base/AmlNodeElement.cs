@@ -3,6 +3,7 @@ using AlienUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AlienUI.UIElements
 {
@@ -11,7 +12,7 @@ namespace AlienUI.UIElements
         private List<AmlNodeElement> m_childrens = new List<AmlNodeElement>();
         private Dictionary<Type, List<AmlNodeElement>> m_typedChildrens = new Dictionary<Type, List<AmlNodeElement>>();
 
-        public List<AmlNodeElement> Children => m_childrens;
+        internal List<AmlNodeElement> Children => m_childrens;
 
         private AmlNodeElement m_parent = null;
         internal AmlNodeElement Parent => m_parent;
@@ -37,13 +38,11 @@ namespace AlienUI.UIElements
             m_childrens.Add(childObj);
             var childType = childObj.GetType();
 
-            if (!m_typedChildrens.ContainsKey(childType)) m_typedChildrens[childType] = new List<AmlNodeElement>();
-            m_typedChildrens[childType].Add(childObj);
-
             OnAddChild(childObj);
 
             OnChildrenChanged?.Invoke();
         }
+
 
         internal void RemoveChild(AmlNodeElement childObj)
         {
@@ -56,6 +55,18 @@ namespace AlienUI.UIElements
 
         protected virtual void OnAddChild(AmlNodeElement childObj) { }
         protected virtual void OnRemoveChild(AmlNodeElement childObj) { }
+
+        internal IReadOnlyList<T> GetChildren<T>() where T : AmlNodeElement
+        {
+            List<T> result = new List<T>();
+            foreach (var childObj in m_childrens)
+            {
+                if (childObj is T target) result.Add(target);
+            }
+
+            return result;
+        }
+
 
         internal Dictionary<DependencyProperty, Binding> m_bindings = new Dictionary<DependencyProperty, Binding>();
         internal Binding GetBinding(DependencyProperty dp)

@@ -8,7 +8,6 @@ namespace AlienUI.Core.Resources
 {
     public class Storyboard : Resource
     {
-        private List<Animation> m_animations = new List<Animation>();
         private float m_currentTime;
         private float m_totalDuration;
         private Coroutine m_playCoroutine;
@@ -16,32 +15,11 @@ namespace AlienUI.Core.Resources
         internal delegate void OnPlayHanlde(Storyboard sender);
         internal event OnPlayHanlde OnPlay;
 
-        protected override void OnAddChild(AmlNodeElement childObj)
-        {
-            switch (childObj)
-            {
-                case Animation anim:
-                    m_animations.Add(anim);
-                    break;
-            }
-        }
-
-        protected override void OnRemoveChild(AmlNodeElement childObj)
-        {
-            switch (childObj)
-            {
-                case Animation anim:
-                    m_animations.Remove(anim);
-                    break;
-            }
-        }
-
-
         public void Play()
         {
             Stop();
 
-            m_totalDuration = m_animations.Max(ani => ani.Offset + ani.Duration);
+            m_totalDuration = GetChildren<Animation>().Max(ani => ani.Offset + ani.Duration);
             m_playCoroutine = Document.StartCoroutine(PlayFlow());
 
             OnPlay?.Invoke(this);
@@ -50,7 +28,8 @@ namespace AlienUI.Core.Resources
         private IEnumerator PlayFlow()
         {
             m_currentTime = 0;
-            foreach (var anim in m_animations)
+            var animations = GetChildren<Animation>();
+            foreach (var anim in animations)
             {
                 anim.StageDefaultValue();
             }
@@ -60,7 +39,7 @@ namespace AlienUI.Core.Resources
                 m_currentTime += Time.deltaTime;
                 m_currentTime = Mathf.Clamp(m_currentTime, 0, m_totalDuration);
 
-                foreach (var anim in m_animations)
+                foreach (var anim in animations)
                 {
                     if (!anim.Evalution(m_currentTime, out object newValue)) continue;
                     anim.ApplyValue(newValue);

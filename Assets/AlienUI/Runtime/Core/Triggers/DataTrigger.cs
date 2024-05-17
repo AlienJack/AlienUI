@@ -9,7 +9,7 @@ namespace AlienUI.Core.Triggers
 {
     public class DataTrigger : Trigger
     {
-        private List<Condition> m_conditions = new List<Condition>();
+        private List<Condition> tempConditions = new List<Condition>();
 
         protected override void OnInit()
         {
@@ -34,7 +34,6 @@ namespace AlienUI.Core.Triggers
             switch (childObj)
             {
                 case Condition cond:
-                    m_conditions.Add(cond);
                     m_focusProperties.Add(cond.PropertyName);
                     cond.ResolveCompareValue(m_targetObj);
                     break;
@@ -48,7 +47,6 @@ namespace AlienUI.Core.Triggers
             switch (childObj)
             {
                 case Condition cond:
-                    m_conditions.Remove(cond);
                     m_focusProperties.Remove(cond.PropertyName);
                     cond.ResolveCompareValue(m_targetObj);
                     break;
@@ -61,9 +59,10 @@ namespace AlienUI.Core.Triggers
         {
             if (!m_focusProperties.Contains(propName)) return false;
 
-            if (m_conditions.Count == 0) return false;
+            var conditions = GetChildren<Condition>();
+            if (conditions.Count == 0) return false;
 
-            foreach (var con in m_conditions)
+            foreach (var con in conditions)
             {
                 if (!con.Test())
                     return false;
