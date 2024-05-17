@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -63,6 +64,22 @@ namespace AlienUI.UIElements
             DependencyProperty.Register("Offset", typeof(Vector2), typeof(UIElement), new PropertyMetadata(Vector2.zero, "Layout"), OnLayoutParamDirty);
 
 
+
+
+        public Vector2 Scale
+        {
+            get { return (Vector2)GetValue(ScaleProperty); }
+            set { SetValue(ScaleProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScaleProperty =
+            DependencyProperty.Register("Scale", typeof(Vector2), typeof(UIElement), new PropertyMetadata(Vector2.one), OnScaleChanged);
+
+        private static void OnScaleChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as UIElement;
+            self.Rect.localScale = (Vector2)newValue;
+        }
 
         public float ActualWidth
         {
