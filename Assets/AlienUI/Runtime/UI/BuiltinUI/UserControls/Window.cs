@@ -1,5 +1,6 @@
 using AlienUI.Core.Commnands;
 using AlienUI.Models;
+using UnityEngine;
 
 namespace AlienUI.UIElements
 {
@@ -34,6 +35,12 @@ namespace AlienUI.UIElements
             base.OnInitialized();
 
             CloseCmd.OnExecute += Close_OnExecute;
+            OnDrag += Window_OnDrag;
+        }
+
+        private void Window_OnDrag(object sender, Events.OnDragEvent e)
+        {
+            Offset += e.EvtData.delta / NodeProxy.Canvas.scaleFactor;
         }
 
         private void Close_OnExecute()

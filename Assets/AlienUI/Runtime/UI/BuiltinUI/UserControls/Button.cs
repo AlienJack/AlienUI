@@ -70,7 +70,10 @@ namespace AlienUI.UIElements
             OnPointerUp += Button_OnPointerUp;
 
             OnDependencyPropertyChanged += Button_OnDependencyPropertyChanged;
+            OnDrag += Button_OnDrag; //handle this to stop drag event send to parent
         }
+
+        private void Button_OnDrag(object sender, Events.OnDragEvent e) { }
 
         private void Button_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {

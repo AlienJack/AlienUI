@@ -38,6 +38,8 @@ namespace AlienUI
             SetRaycast(true);
         }
 
+        public Canvas Canvas => m_graphElement.canvas;
+
         private void Start()
         {
             if (TargetObject == null) return;
