@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace AlienUI.Core.Resources
 {
+    [AllowChild(typeof(Animation))]
     public class Storyboard : Resource
     {
         private float m_currentTime;

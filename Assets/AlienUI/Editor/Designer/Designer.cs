@@ -14,6 +14,7 @@ using EGL = UnityEditor.EditorGUILayout;
 using GL = UnityEngine.GUILayout;
 using EG = UnityEditor.EditorGUI;
 using G = UnityEngine.GUI;
+using System.Reflection;
 
 namespace AlienUI.Editors
 {
@@ -313,12 +314,10 @@ namespace AlienUI.Editors
                         {
 
                             var rightClickRect = GUILayoutUtility.GetLastRect();
-                            Color color = rightClickRect.Contains(Event.current.mousePosition) ? Color.white : new Color(0, 0, 0, 0);
-                            using (AlienEditorUtility.BeginGUIColorScope(color))
+                            using (AlienEditorUtility.BeginGUIColorScope(new Color(0, 0, 0, 0)))
                             {
                                 G.Box(rightClickRect, string.Empty);
                             }
-
                             HandleContextMenu(target, property);
                         }
                     }
@@ -379,7 +378,22 @@ namespace AlienUI.Editors
                 }
                 EGL.EndHorizontal();
             }
-            using (AlienEditorUtility.BeginGUIColorScope(Color.green)) GL.Button("Add");
+
+            using (AlienEditorUtility.BeginGUIColorScope(Color.green))
+            {
+                EGL.BeginHorizontal();
+                {
+                    var temp = EditorGUIUtility.labelWidth;
+                    EditorGUIUtility.labelWidth = 80;
+                    var collector = parent.Engine.AttParser.Collector;
+
+                    var options = parent.GetAllowChildTypes().Select(t => t.ToString()).ToArray();
+
+                    EGL.Popup("Add Child", 0, options);
+                    EditorGUIUtility.labelWidth = temp;
+                }
+                EGL.EndHorizontal();
+            }
 
             return select;
         }

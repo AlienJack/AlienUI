@@ -50,6 +50,7 @@ namespace AlienUI
             setting.DesignSize = EditorGUILayout.Vector2Field("DesignSize", setting.DesignSize);
             setting.DesignerLayout = EditorGUILayout.ObjectField("DesignerLayoutFile", setting.DesignerLayout, typeof(DefaultAsset), false) as DefaultAsset;
             setting.BackLayout = EditorGUILayout.ObjectField("QuitDesignerLayoutFile", setting.BackLayout, typeof(DefaultAsset), false) as DefaultAsset;
+            setting.OpenAmlFileWhenOpenDesigner = EditorGUILayout.Toggle("Auto Open Aml FIle", setting.OpenAmlFileWhenOpenDesigner);
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
         }
@@ -96,6 +97,7 @@ namespace AlienUI
         public Vector2 DesignSize = new Vector2(1920, 1080);
         public DefaultAsset DesignerLayout;
         public DefaultAsset BackLayout;
+        public bool OpenAmlFileWhenOpenDesigner;
     }
 }
 #endif

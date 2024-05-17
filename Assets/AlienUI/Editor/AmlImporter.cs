@@ -84,7 +84,7 @@ namespace AlienUI.Editors
 
                 Designer.GetWindow<Designer>().SetTarget(ui, aa);
 
-                return false; //return false to open file with os default open action
+                return !Settings.Get().OpenAmlFileWhenOpenDesigner; //return false to open file with os default open action
             }
 
             // 不是自定义资源，返回false让Unity处理

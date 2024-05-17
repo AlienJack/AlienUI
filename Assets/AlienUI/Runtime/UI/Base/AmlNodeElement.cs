@@ -3,6 +3,7 @@ using AlienUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -22,7 +23,6 @@ namespace AlienUI.UIElements
         public DependencyObject TemplateHost => Document.m_templateHost;
         public Document Document { get; set; }
 
-
         public string Name
         {
             get { return (string)GetValue(NameProperty); }
@@ -32,6 +32,7 @@ namespace AlienUI.UIElements
             DependencyProperty.Register("Name", typeof(string), typeof(AmlNodeElement), new PropertyMetadata(null));
 
         public event Action OnChildrenChanged;
+
 
         internal void AddChild(AmlNodeElement childObj)
         {

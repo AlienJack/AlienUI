@@ -12,6 +12,7 @@ namespace AlienUI
     {
         [SerializeField]
         private Font m_defaultLabelFont;
+        public Font DefaultLabelFont => m_defaultLabelFont;
         [SerializeField]
         private List<AmlResouces> m_amlResources = new List<AmlResouces>();
 
@@ -43,7 +44,6 @@ namespace AlienUI
             m_optimized = true;
         }
 
-        public Font DefaultLabelFont => m_defaultLabelFont;
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
@@ -73,7 +73,7 @@ namespace AlienUI
             return m_cacheInstance;
 #else
             var settingObj = SettingGetter?.Invoke();
-            if(settingObj!=null && !settingObj.m_optimized) settingObj.OptimizeData();
+            if (settingObj != null && !settingObj.m_optimized) settingObj.OptimizeData();
 
             return settingObj;
 #endif

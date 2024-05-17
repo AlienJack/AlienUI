@@ -1,6 +1,10 @@
+using AlienUI.Core;
+using AlienUI.UIElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,6 +12,27 @@ namespace AlienUI.Editors
 {
     public static class AlienEditorUtility
     {
+        public static List<Type> GetAllowChildTypes(this AmlNodeElement element)
+        {
+            List<Type> result = new List<Type>();
+
+            var type = element.GetType();
+            var collector = element.Engine.AttParser.Collector;
+
+            do
+            {
+                var att = type.GetCustomAttribute<AllowChildAttribute>();
+                if (att != null)
+                {
+                    result.AddRange(att.childTypes.SelectMany(t => collector.GetTypesOfAssignFrom(t)));
+                }
+                if (type.BaseType == typeof(AmlNodeElement)) break;
+                type = type.BaseType;
+            } while (true);
+
+            return result;
+        }
+
         public static void DrawBorder(Rect rect, Color color)
         {
             Handles.BeginGUI();

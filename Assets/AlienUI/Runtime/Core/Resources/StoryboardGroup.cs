@@ -1,9 +1,11 @@
+using AlienUI.Core;
 using AlienUI.Core.Resources;
 using AlienUI.UIElements;
 using System.Collections.Generic;
 
 namespace AlienUI
 {
+    [AllowChild(typeof(Storyboard))]
     public class StoryboardGroup : Resource
     {
         private Storyboard m_currentPlay;

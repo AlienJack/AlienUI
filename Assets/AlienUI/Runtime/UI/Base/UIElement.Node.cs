@@ -1,11 +1,14 @@
+using AlienUI.Core;
+using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-
+    [AllowChild(typeof(Trigger), typeof(Resource))]
     public abstract partial class UIElement : AmlNodeElement
     {
         static DrivenRectTransformTracker tracker = new DrivenRectTransformTracker();
@@ -108,5 +111,6 @@ namespace AlienUI.UIElements
             RaiseClose();
             Document.Dispose(this);
         }
+
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace AlienUI.Core.Resources
 {
+    [AllowChild(typeof(AnimationKey))]
     public class Animation : Resource
     {
         public DependencyObjectRef Target

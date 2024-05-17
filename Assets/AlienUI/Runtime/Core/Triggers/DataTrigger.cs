@@ -1,16 +1,14 @@
 using AlienUI.Core.Resources;
 using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using static AlienUI.UIElements.Button;
 
 namespace AlienUI.Core.Triggers
 {
+    [AllowChild(typeof(Condition))]
     public class DataTrigger : Trigger
     {
-        private List<Condition> tempConditions = new List<Condition>();
-
         protected override void OnInit()
         {
             m_targetObj.OnDependencyPropertyChanged += M_targetObj_OnDependencyPropertyChanged;

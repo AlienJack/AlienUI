@@ -1,13 +1,14 @@
 using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using System.Collections.Generic;
 
 namespace AlienUI.Core.Triggers
 {
+    [AllowChild(typeof(TriggerAction))]
     public abstract class Trigger : AmlNodeElement
     {
         private UIElement m_host;
-        private List<TriggerAction> m_actions = new List<TriggerAction>();
 
         public DependencyObjectRef Target
         {
@@ -27,27 +28,13 @@ namespace AlienUI.Core.Triggers
             OnInit();
         }
 
-        protected override void OnAddChild(AmlNodeElement childObj)
-        {
-            switch (childObj)
-            {
-                case TriggerAction action: m_actions.Add(action); break;
-            }
-        }
-
-        protected override void OnRemoveChild(AmlNodeElement childObj)
-        {
-            switch (childObj)
-            {
-                case TriggerAction action: m_actions.Remove(action); break;
-            }
-        }
 
         public void Execute()
         {
-            if (m_actions == null || m_actions.Count == 0) return;
+            var actions = GetChildren<TriggerAction>();
+            if (actions == null || actions.Count == 0) return;
 
-            foreach (var action in m_actions)
+            foreach (var action in actions)
             {
                 action.Excute();
             }

@@ -126,19 +126,34 @@ namespace AlienUI.Core
             }
         }
 
-        private Trigger createTrigger(XmlNode xnode)
-        {
-            m_triggerTypes.TryGetValue(xnode.LocalName, out Type triggerType);
-            if (triggerType == null) return null;
-
-            var trigger = Activator.CreateInstance(triggerType) as Trigger;
-            return trigger;
-        }
-
         internal PropertyResolver GetAttributeResolver(Type propType)
         {
             m_propertyResolvers.TryGetValue(propType, out var propertyResolver);
             return propertyResolver;
+        }
+
+        internal List<Type> GetTypesOfAssignFrom(Type type)
+        {
+            List<Type> result = new List<Type>();
+            if (type == typeof(Trigger) || type.IsSubclassOf(typeof(Trigger)))
+            {
+
+                foreach (var triggerType in m_triggerTypes.Values)
+                {
+                    if (type.IsAssignableFrom(triggerType))
+                        result.Add(triggerType);
+                }
+            }
+            else if (type == typeof(Resource) || type.IsSubclassOf(typeof(Resource)))
+            {
+                foreach (var resType in m_resourcesTypes.Values)
+                {
+                    if (type.IsAssignableFrom(resType))
+                        result.Add(resType);
+                }
+            }
+
+            return result;
         }
     }
 }
