@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static AlienUI.Models.GridDefine;
 
 namespace AlienUI.Models
 {
@@ -161,6 +162,10 @@ namespace AlienUI.Models
             else return false;
         }
 
+        public override readonly int GetHashCode()
+        {
+            return System.HashCode.Combine(m_columnDef, m_rowDef);
+        }
 
         public enum EnumDefineType
         {
@@ -200,7 +205,6 @@ namespace AlienUI.Models
             {
                 return !(lhs == rhs);
             }
-
         }
     }
 }

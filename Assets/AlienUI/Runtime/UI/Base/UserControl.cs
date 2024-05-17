@@ -46,6 +46,7 @@ namespace AlienUI.UIElements
         {
             foreach (var uichild in UIChildren)
             {
+                RemoveChild(uichild);
                 m_templateInstance.AddChild(uichild);
             }
             AddChild(m_templateInstance);

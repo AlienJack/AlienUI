@@ -13,22 +13,26 @@ namespace AlienUI.Editors
     {
         public static string Gen(AmlNodeElement elementRoot)
         {
-            XmlDocument document = new XmlDocument();
-            Gen(document, elementRoot, null);
+            XmlDocument document = new();
+            Gen(document, null, elementRoot, elementRoot.Document);
 
             return XDocument.Parse(document.OuterXml).ToString();
         }
 
-        private static void Gen(XmlDocument doc, AmlNodeElement element, XmlElement parent)
+        private static void Gen(XmlDocument xDoc, XmlElement xparent, AmlNodeElement element, Document doc)
         {
-            var xmlEle = GenElement(doc, element);
-            if (parent == null) doc.AppendChild(xmlEle);
-            else parent.AppendChild(xmlEle);
+            if (element.Document == doc)
+            {
+                var xmlEle = GenElement(xDoc, element);
+                if (xparent == null) xDoc.AppendChild(xmlEle);
+                else xparent.AppendChild(xmlEle);
+
+                xparent = xmlEle;
+            }
 
             foreach (AmlNodeElement child in element.Children)
             {
-                if (child.Document == element.Document)
-                    Gen(doc, child, xmlEle);
+                Gen(xDoc, xparent, child, doc);
             }
         }
 

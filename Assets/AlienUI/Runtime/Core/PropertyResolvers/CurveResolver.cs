@@ -69,7 +69,9 @@ namespace AlienUI.PropertyResolvers
                 Value = key.value;
                 InTangent = key.inTangent;
                 OutTangent = key.outTangent;
+#pragma warning disable CS0618 // 类型或成员已过时
                 TangentMode = key.tangentMode;
+#pragma warning restore CS0618 // 类型或成员已过时
                 WeightedMode = (int)key.weightedMode;
                 InWeight = key.inWeight;
                 OutWeight = key.outWeight;
@@ -77,7 +79,13 @@ namespace AlienUI.PropertyResolvers
 
             public Keyframe ToKeyframe()
             {
-                return new Keyframe(Time, Value, InTangent, OutTangent, InWeight, OutWeight) { tangentMode = TangentMode, weightedMode = (UnityEngine.WeightedMode)WeightedMode };
+#pragma warning disable CS0618 // 类型或成员已过时
+                return new Keyframe(Time, Value, InTangent, OutTangent, InWeight, OutWeight)
+                {
+                    tangentMode = TangentMode,
+                    weightedMode = (UnityEngine.WeightedMode)WeightedMode
+                };
+#pragma warning restore CS0618 // 类型或成员已过时
             }
         }
     }
