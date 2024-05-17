@@ -354,7 +354,7 @@ namespace AlienUI.Editors
                     {
                         if (GL.Button("DEL", new GUIStyle(G.skin.button) { alignment = TextAnchor.MiddleCenter }, GL.Width(40)))
                         {
-                            parent.RemoveChild(select);
+                            parent.RemoveChild(child);
                             i--;
                         }
                     }
