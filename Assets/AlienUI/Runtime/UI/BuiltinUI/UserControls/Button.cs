@@ -44,12 +44,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty StateProperty =
-            DependencyProperty.Register("State", typeof(EnumButtonState), typeof(Button), new PropertyMetadata(EnumButtonState.Normal), OnStateChanged);
-
-        private static void OnStateChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            Debug.Log(newValue, (sender as Button).Rect.gameObject);
-        }
+            DependencyProperty.Register("State", typeof(EnumButtonState), typeof(Button), new PropertyMetadata(EnumButtonState.Normal));
 
         public bool Interactable
         {
