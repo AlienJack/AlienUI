@@ -3,19 +3,19 @@
     <Label FontSize="22" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" Name="ButtonTxt" />
   </Image>
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="Normal" PropertyName="State" CompareType="Equal" />
+    <Condition Value="Normal" PropertyName="State" />
     <PlayStoryboard Target="Normal" />
   </DataTrigger>
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="Hover" PropertyName="State" CompareType="Equal" />
+    <Condition Value="Hover" PropertyName="State" />
     <PlayStoryboard Target="Hover" />
   </DataTrigger>
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="Pressing" PropertyName="State" CompareType="Equal" />
+    <Condition Value="Pressing" PropertyName="State" />
     <PlayStoryboard Target="Pressing" />
   </DataTrigger>
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="Disabled" PropertyName="State" CompareType="Equal" />
+    <Condition Value="Disabled" PropertyName="State" />
     <PlayStoryboard Target="Disabled" />
   </DataTrigger>
   <StoryboardGroup>

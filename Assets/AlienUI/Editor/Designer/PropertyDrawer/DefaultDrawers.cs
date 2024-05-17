@@ -293,4 +293,12 @@ namespace AlienUI.Editors.PropertyDrawer
             return value.SetUniqueTag(tag);
         }
     }
+
+    public class AnimationCurveDrawer : PropertyDrawer<AnimationCurve>
+    {
+        protected override AnimationCurve OnDraw(AmlNodeElement host, string label, AnimationCurve value)
+        {
+            return EditorGUILayout.CurveField(label, new AnimationCurve(value.keys));
+        }
+    }
 }

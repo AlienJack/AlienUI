@@ -325,6 +325,8 @@ namespace AlienUI.Editors
                 EGL.EndVertical();
             }
 
+            DrawCustom(designer, target);
+
             if (DrawChildElements(designer, target, target.Children) is AmlNodeElement select)
             {
                 designer.drawContext.Add(select);
@@ -334,6 +336,22 @@ namespace AlienUI.Editors
             target.OnChildrenChanged -= designer.Target_OnChildrenChanged;
         }
 
+        private static void DrawCustom(Designer designer, AmlNodeElement target)
+        {
+            var type = target.GetType();
+            while (type != typeof(AmlNodeElement))
+            {
+                if (m_elementEditors.TryGetValue(type, out var editor))
+                {
+                    editor.Draw(designer.Selection, target);
+                    break;
+                }
+                else
+                {
+                    type = type.BaseType;
+                }
+            }
+        }
 
         private static AmlNodeElement DrawChildElements(Designer designer, AmlNodeElement parent, IList<AmlNodeElement> children)
         {

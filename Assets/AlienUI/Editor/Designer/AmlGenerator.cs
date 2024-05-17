@@ -53,7 +53,11 @@ namespace AlienUI.Editors
                     xmlEle.SetAttribute(dp.PropName, binding.SourceCode);
                 else
                 {
-                    if (value == dp.Meta.DefaultValue) continue;
+                    if (value == null && dp.Meta.DefaultValue == null) continue;
+                    if (value != null)
+                    {
+                        if (value.Equals(dp.Meta.DefaultValue)) continue;
+                    }
                     var resolver = element.Engine.GetAttributeResolver(dp.PropType);
                     if (resolver == null) continue;
 

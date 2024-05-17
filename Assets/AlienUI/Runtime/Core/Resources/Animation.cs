@@ -3,6 +3,7 @@ using AlienUI.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AlienUI.Core.Resources
 {
@@ -40,6 +41,19 @@ namespace AlienUI.Core.Resources
 
         public static readonly DependencyProperty OffsetProperty =
             DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMetadata(0f), OnOffsetChanged);
+
+
+
+        public AnimationCurve Curve
+        {
+            get { return (AnimationCurve)GetValue(CurveProperty); }
+            set { SetValue(CurveProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CurveProperty =
+            DependencyProperty.Register("Curve", typeof(AnimationCurve), typeof(Animation), new PropertyMetadata(AnimationCurve.Linear(0, 0, 1, 1)));
+
 
         private static void OnOffsetChanged(DependencyObject sender, object oldValue, object newValue)
         {
@@ -113,6 +127,7 @@ namespace AlienUI.Core.Resources
             object from = left != null ? left.ActualValue : m_defaultValue;
             object to = right != null ? right.ActualValue : from;
 
+            progress = Curve.Evaluate(Curve.length * progress);
             value = m_resolver.Lerp(from, to, progress);
             return true;
         }
