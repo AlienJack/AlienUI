@@ -13,13 +13,13 @@ namespace AlienUI.UIElements
         internal RectTransform m_rectTransform;
         internal RectTransform m_childRoot;
 
-        public List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
+        internal List<UIElement> UIChildren { get; private set; } = new List<UIElement>();
 
-        public RectTransform Rect => m_rectTransform;
+        internal RectTransform Rect => m_rectTransform;
 
         public UIElement UIParent => Parent as UIElement;
 
-        public UIElement TopParent
+        internal UIElement TopParent
         {
             get
             {
@@ -34,7 +34,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        public NodeProxy NodeProxy => m_proxy;
+        internal NodeProxy NodeProxy => m_proxy;
 
         protected override void OnAddChild(AmlNodeElement childObj)
         {
@@ -60,7 +60,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        public GameObject Initialize()
+        internal GameObject Initialize()
         {
             if (m_rectTransform == null)
             {

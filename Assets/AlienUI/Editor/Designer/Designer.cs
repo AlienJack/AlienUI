@@ -1,6 +1,4 @@
 using AlienUI.Core;
-using AlienUI.Core.Resources;
-using AlienUI.Core.Triggers;
 using AlienUI.Editors.PropertyDrawer;
 using AlienUI.Models;
 using AlienUI.UIElements;
@@ -100,7 +98,7 @@ namespace AlienUI.Editors
         {
             Selection = obj;
             SceneView.RepaintAll();
-            
+
             DesignerTool.RaiseSelect(Selection);
         }
 
@@ -139,7 +137,7 @@ namespace AlienUI.Editors
             m_logicTree.SelectWithoutNotify(obj);
             Selection = obj;
             SceneView.RepaintAll();
-            
+
             Repaint();
         }
 
@@ -365,8 +363,6 @@ namespace AlienUI.Editors
 
             return select;
         }
-
-
 
         private static void DrawDirtyMark(AmlNodeElement target, DependencyProperty property)
         {

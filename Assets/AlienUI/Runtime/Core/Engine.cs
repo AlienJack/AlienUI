@@ -106,17 +106,17 @@ namespace AlienUI
             return newNodeIns;
         }
 
-        public PropertyResolver GetAttributeResolver(Type propType)
+        internal PropertyResolver GetAttributeResolver(Type propType)
         {
             return AttParser.GetAttributeResolver(propType);
         }
 
-        public ConverterBase GetConverter(Type srcType, Type dstType)
+        internal ConverterBase GetConverter(Type srcType, Type dstType)
         {
             return AttParser.Collector.GetConverter(srcType, dstType);
         }
 
-        public ConverterBase GetConverter(string converterName)
+        internal ConverterBase GetConverter(string converterName)
         {
             return AttParser.Collector.GetConverter(converterName);
         }
@@ -143,14 +143,14 @@ namespace AlienUI
         }
 
         private static Stack<Document> currentHandlingDoc = new Stack<Document>();
-        public static void Log(object message)
+        internal static void Log(object message)
         {
             if (currentHandlingDoc.Peek() is Document doc && doc.m_xmlAsset != null)
                 Debug.Log(message, doc.m_xmlAsset);
             else Debug.Log(message);
         }
 
-        public static void LogError(object message)
+        internal static void LogError(object message)
         {
             currentHandlingDoc.TryPeek(out Document doc);
             if (doc != null && doc.m_xmlAsset != null)
@@ -159,7 +159,7 @@ namespace AlienUI
         }
 
 #if UNITY_EDITOR
-        public void ForceHanldeDirty()
+        internal void ForceHanldeDirty()
         {
             LateUpdate();
         }

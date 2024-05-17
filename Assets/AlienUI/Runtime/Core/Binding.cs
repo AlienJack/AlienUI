@@ -172,7 +172,7 @@ namespace AlienUI.Core
         Binding,
         TemplateBinding
     }
-    public static class BindUtility
+    internal static class BindUtility
     {
         public static Binding.BindSourceProperty BeginBind(this DependencyObject source, string sourceCode)
         {
