@@ -1,34 +1,32 @@
+Here is the English translation of the README for your open-source repository:
+
 # AlienUI
-用WPF的方式制作UGUI界面
-我喜欢WPF，希望在Unity中可以有WPF一样的开发体验
-虽然如此，但这个项目并不致力于100%复刻WPF，目的只是为了实现mvvm同时兼顾类wpf的开发体验
+Create UGUI interfaces in a WPF manner
+I love WPF and hope to have a similar development experience in Unity
+However, this project does not aim to replicate WPF 100%; the goal is to implement MVVM while maintaining a WPF-like development experience
 
-项目还在开发阶段，基础框架基本完善
-但还有很多基础控件还待实现
-设计器还有大量功能待完成
+The project is still in the development phase, with the basic framework largely complete
+However, many basic controls are yet to be implemented
+The designer also has a lot of features to be completed
 
-# 使用xml定义界面布局
-在AlienUI中被叫做AML,具有一个AML设计器
-可以手写xml代码，或者通过设计器来生成xml代码
+# Use XML to define interface layout
+In AlienUI, it's called AML, which has an AML designer
+You can write XML code by hand, or generate XML code through the designer
 
-# 支持模板
-模板可以用于定义控件的外观，模板本身也是一个XML,可以让指定控件创建时使用不同的模板
+# Support for templates
+Templates can be used to define the appearance of controls, and the template itself is also an XML, allowing specified controls to use different templates upon creation
 
-# 支持数据绑定
-数据绑定机制是实现mvvm的重要基础
-数据绑定有多种模式，单向，双向或者一次性
-数据绑定可以指定转换器，以支持不同类型数据的绑定
-所有可在AML中定义的属性皆可以数据绑定
+# Support for data binding
+The data binding mechanism is an important foundation for implementing MVVM
+Data binding has various modes: one-way, two-way, or one-time
+Data binding can specify converters to support binding of different types of data
+All properties that can be defined in AML are capable of data binding
 
-# 支持触发器
-借助触发器可以实现丰富的界面动态变化而无需编写代码
+# Support for triggers
+With triggers, you can achieve rich dynamic interface changes without writing code
 
 # Storyboard
-基于关键帧的动画系统，这个动画系统可以控制一切依赖属性的值
+A keyframe-based animation system that can control the values of all dependency properties
 
-# 事件系统
-事件系统就是ugui的事件系统，但是做了一些上层封装，让事件可以方便的向上传递。
-
-
-
-
+# Event system
+The event system is the UGUI event system, but with some upper-level encapsulation, allowing events to be conveniently propagated upwards.
