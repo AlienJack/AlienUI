@@ -1,5 +1,3 @@
-Here is the English translation of the README for your open-source repository:
-
 # AlienUI
 Create UGUI interfaces in a WPF manner
 I love WPF and hope to have a similar development experience in Unity
