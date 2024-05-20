@@ -387,9 +387,18 @@ namespace AlienUI.Editors
                     EditorGUIUtility.labelWidth = 80;
                     var collector = parent.Engine.AttParser.Collector;
 
-                    var options = parent.GetAllowChildTypes().Select(t => t.ToString()).ToArray();
-
-                    EGL.Popup("Add Child", 0, options);
+                    var allowChildTypes = parent.GetAllowChildTypes().ToList();
+                    var options = allowChildTypes.Select(t => t.ToString()).ToList();
+                    options.Insert(0, "------");
+                    int selectChild = EGL.Popup("Add Child", 0, options.ToArray());
+                    if (selectChild > 0)
+                    {
+                        var childType = allowChildTypes[selectChild - 1];
+                        var newChild = Activator.CreateInstance(childType) as AmlNodeElement;
+                        newChild.Document = parent.Document;
+                        newChild.Engine = parent.Engine;
+                        parent.AddChild(newChild);
+                    }
                     EditorGUIUtility.labelWidth = temp;
                 }
                 EGL.EndHorizontal();

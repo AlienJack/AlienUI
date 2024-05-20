@@ -1,4 +1,6 @@
 using AlienUI.Core;
+using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using System;
 using System.Collections.Generic;
@@ -105,8 +107,48 @@ namespace AlienUI.UIElements
         protected virtual void OnPrepared() { }
 
 #if UNITY_EDITOR
-        public List<(string, string)> xmlnsList = new List<(string, string)>();
-        public string xmlNodeName;
+        public List<(string, string)> xmlnsList;
+
+        private List<(string, string)> GetXmlsnList()
+        {
+            List<(string, string)> result = xmlnsList;
+            AmlNodeElement host = this;
+            do
+            {
+                result = host.xmlnsList;
+                host = host.Parent;
+            }
+            while (result == null && host != null);
+
+            return result;
+        }
+
+        public string GetXmlNodeName()
+        {
+            if (this is Trigger || this is Resource) return GetType().Name;
+
+            var name = GetType().FullName;
+
+            var xmlnsList = GetXmlsnList();
+            if (xmlnsList == null) return name;
+
+            foreach (var item in xmlnsList)
+            {
+                var xmlNsName = item.Item1;
+                var path = item.Item2;
+
+                if (name.StartsWith(path))
+                {
+                    string replacePath = string.Empty;
+                    var temp = xmlNsName.Split(':');
+                    if (temp.Length > 1) replacePath = temp[1];
+
+                    return name.Replace(path + '.', replacePath);
+                }
+            }
+
+            return name;
+        }
 #endif
     }
 }

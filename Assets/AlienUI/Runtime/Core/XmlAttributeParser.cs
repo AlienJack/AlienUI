@@ -27,9 +27,6 @@ namespace AlienUI.Core
         public AmlNodeElement CreateNode(XmlNode xnode)
         {
             var newIns = m_collector.CreateInstance(xnode);
-#if UNITY_EDITOR
-            newIns.xmlNodeName = xnode.LocalName;
-#endif
             return newIns;
         }
 

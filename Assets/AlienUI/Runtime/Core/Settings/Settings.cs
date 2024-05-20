@@ -47,7 +47,11 @@ namespace AlienUI
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
+#if UNITY_EDITOR
+            var template = m_amlResources.FirstOrDefault(a => a.Name == templateName);
+#else
             m_templatesDict.TryGetValue(templateName, out AmlResouces template);
+#endif
             return template.Aml;
         }
 

@@ -38,10 +38,13 @@ namespace AlienUI.Editors
 
         private static XmlElement GenElement(XmlDocument doc, AmlNodeElement element)
         {
-            var xmlEle = doc.CreateElement(element.xmlNodeName);
-            foreach (var xmlns in element.xmlnsList)
+            var xmlEle = doc.CreateElement(element.GetXmlNodeName());
+            if (element.xmlnsList != null)
             {
-                xmlEle.SetAttribute(xmlns.Item1, xmlns.Item2);
+                foreach (var xmlns in element.xmlnsList)
+                {
+                    xmlEle.SetAttribute(xmlns.Item1, xmlns.Item2);
+                }
             }
 
             var allProperties = new List<DependencyProperty>();
