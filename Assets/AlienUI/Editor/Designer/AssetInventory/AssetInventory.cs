@@ -73,8 +73,9 @@ namespace AlienUI.Editors
                     var newUI = Activator.CreateInstance(selection.AssetType) as UIElement;
                     newUI.Document = selectUI.Document;
                     newUI.Engine = selectUI.Engine;
-                    newUI.Initialize();
                     selectUI.AddChild(newUI);
+                    newUI.Initialize();
+                    newUI.Rect.SetParent(selectUI.m_childRoot);
                     Designer.SaveToAml(Designer.Instance);
                 }
             }

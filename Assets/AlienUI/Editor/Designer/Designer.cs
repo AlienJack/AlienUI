@@ -292,7 +292,7 @@ namespace AlienUI.Editors
                     foreach (var property in group)
                     {
                         EGL.BeginHorizontal();
-
+                        
                         DrawDirtyMark(target, property);
 
                         var drawer = FindDrawer(property.PropType);
