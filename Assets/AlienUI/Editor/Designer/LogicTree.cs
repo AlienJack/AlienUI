@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace AlienUI.Editors
 {
@@ -21,7 +22,6 @@ namespace AlienUI.Editors
 
             Reload();
         }
-
 
         protected override bool CanMultiSelect(TreeViewItem item) => false;
         protected override bool CanRename(TreeViewItem item) => false;
@@ -66,6 +66,7 @@ namespace AlienUI.Editors
             allItems.Add(treeItem);
             m_uiMaps[treeItem.id] = m_root;
             FillTreeItemData(m_root, m_root.Document, ref allItems, 1);
+            DepthNormalizer.NormalizeDepths(allItems);
             SetupParentsAndChildrenFromDepths(rootItem, allItems);
             return rootItem;
         }
@@ -96,6 +97,22 @@ namespace AlienUI.Editors
             };
 
             return treeItem;
+        }
+
+        class DepthNormalizer
+        {
+            public static void NormalizeDepths(List<TreeViewItem> items)
+            {
+                // Get the distinct depths and sort them
+                var sortedDepths = items.Select(item => item.depth).Distinct().OrderBy(depth => depth).ToList();
+
+                // Create a dictionary to map the original depth to its new value
+                var depthMapping = sortedDepths.Select((depth, index) => new { depth, index })
+                                               .ToDictionary(d => d.depth, d => d.index);
+
+                // Update the items with the new depth values
+                items.ForEach(item => item.depth = depthMapping[item.depth]);
+            }
         }
     }
 }

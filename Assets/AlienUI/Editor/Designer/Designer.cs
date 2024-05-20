@@ -14,7 +14,6 @@ using EGL = UnityEditor.EditorGUILayout;
 using GL = UnityEngine.GUILayout;
 using EG = UnityEditor.EditorGUI;
 using G = UnityEngine.GUI;
-using System.Reflection;
 
 namespace AlienUI.Editors
 {
@@ -99,8 +98,9 @@ namespace AlienUI.Editors
         {
             Selection = obj;
             SceneView.RepaintAll();
-
+            AssetInventory.GetWindow<AssetInventory>().Repaint();
             DesignerTool.RaiseSelect(Selection);
+            Focus();
         }
 
         public IEnumerable<UIElement> GetTreeItems()
@@ -119,6 +119,7 @@ namespace AlienUI.Editors
         }
 
         private List<AmlNodeElement> drawContext = new List<AmlNodeElement>();
+        private Vector2 inspectorScoll;
         private void DrawInspector(Rect rect)
         {
             rect.width = position.width * 0.7f - 15;
@@ -129,7 +130,9 @@ namespace AlienUI.Editors
             if (Selection.NodeProxy == null) return;
 
             GL.BeginArea(rect, new GUIStyle { padding = new RectOffset(10, 10, 10, 10) });
+            inspectorScoll = EGL.BeginScrollView(inspectorScoll);
             DrawElement(this);
+            EGL.EndScrollView();
             GL.EndArea();
         }
 
@@ -208,6 +211,7 @@ namespace AlienUI.Editors
             DrawInspector(rect);
         }
 
+        private Vector2 treeScoll;
         private void DrawTree(Rect rect)
         {
             rect.width = position.width * 0.3f;
@@ -221,14 +225,23 @@ namespace AlienUI.Editors
                 var treeRect = rect;
                 treeRect.height = Mathf.Max(rect.height, m_logicTree.totalHeight);
 
-                G.BeginScrollView(rect, default, treeRect);
+                treeScoll = G.BeginScrollView(rect, treeScoll, treeRect);
                 m_logicTree.OnGUI(treeRect);
+                if (Event.current.type == EventType.KeyDown)
+                {
+                    if (Selection != null)
+                    {
+                        if (Selection.Parent != null) Selection.Parent.RemoveChild(Selection);
+
+                        SaveToAml(Designer.Instance);
+                    }
+                }
                 G.EndScrollView();
             }
         }
 
 
-        private static void SaveToAml(Designer designer)
+        internal static void SaveToAml(Designer designer)
         {
             var str = AmlGenerator.Gen(designer.m_target);
             designer.m_amlFile.Text = str;
@@ -388,7 +401,7 @@ namespace AlienUI.Editors
                     var collector = parent.Engine.AttParser.Collector;
 
                     var allowChildTypes = parent.GetAllowChildTypes().ToList();
-                    var options = allowChildTypes.Select(t => t.ToString()).ToList();
+                    var options = allowChildTypes.Select(t => t.Name).ToList();
                     options.Insert(0, "------");
                     int selectChild = EGL.Popup("Add Child", 0, options.ToArray());
                     if (selectChild > 0)

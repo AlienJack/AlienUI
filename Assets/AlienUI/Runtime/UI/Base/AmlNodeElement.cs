@@ -36,7 +36,7 @@ namespace AlienUI.UIElements
         public event Action OnChildrenChanged;
 
 
-        internal void AddChild(AmlNodeElement childObj)
+        public virtual void AddChild(AmlNodeElement childObj)
         {
             m_childrens.Add(childObj);
             var childType = childObj.GetType();
@@ -47,7 +47,7 @@ namespace AlienUI.UIElements
         }
 
 
-        internal void RemoveChild(AmlNodeElement childObj)
+        public virtual void RemoveChild(AmlNodeElement childObj)
         {
             m_childrens.Remove(childObj);
 

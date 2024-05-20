@@ -15,11 +15,13 @@ public class TextInputWindow : EditorWindow
         wnd.minSize = new Vector2(500, 45);
         wnd.maxSize = wnd.minSize;
 
+
         var pos = wnd.position;
         pos.position = popPos;
         wnd.position = pos;
 
         wnd.ShowModalUtility();
+
     }
 
     void OnGUI()

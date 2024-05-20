@@ -22,6 +22,7 @@ namespace AlienUI.UIElements
             return m_templateInstance.GetDesireSize();
         }
 
+        private UIElement m_templateRoot;
         protected override void OnInitialized()
         {
             var targetTemplate = Template.Valid ? Template : DefaultTemplate;
@@ -36,7 +37,10 @@ namespace AlienUI.UIElements
             templateRoot.SetAsFirstSibling();
 
             if (m_templateInstance.TemplateRoot.Get(m_templateInstance) is UIElement rootUI)
+            {
                 m_childRoot = rootUI.m_childRoot;
+                m_templateRoot = rootUI;
+            }
 
             m_templateInstance.Horizontal = eHorizontalAlign.Stretch;
             m_templateInstance.Vertical = eVerticalAlign.Stretch;
@@ -44,12 +48,36 @@ namespace AlienUI.UIElements
 
         protected sealed override void OnPrepared()
         {
-            foreach (var uichild in UIChildren)
+            if (m_templateRoot != null)
             {
-                RemoveChild(uichild);
-                m_templateInstance.AddChild(uichild);
+                foreach (var uichild in UIChildren)
+                {
+                    RemoveChild(uichild);
+                    m_templateRoot.AddChild(uichild);
+                }
+                AddChild(m_templateInstance);
             }
-            AddChild(m_templateInstance);
+        }
+
+        public sealed override void AddChild(AmlNodeElement childObj)
+        {
+            if (childObj is UIElement && childObj != m_templateInstance)
+            {
+                if (m_templateRoot == null)
+                    base.AddChild(childObj);
+                else
+                    m_templateRoot.AddChild(childObj);
+            }
+            else
+            {
+                base.AddChild(childObj);
+            }
+        }
+
+        public sealed override void RemoveChild(AmlNodeElement childObj)
+        {
+            base.RemoveChild(childObj);
+            m_templateInstance?.RemoveChild(childObj);
         }
     }
 }

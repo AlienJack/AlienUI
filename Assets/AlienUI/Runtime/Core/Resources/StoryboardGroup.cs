@@ -3,7 +3,7 @@ using AlienUI.Core.Resources;
 using AlienUI.UIElements;
 using System.Collections.Generic;
 
-namespace AlienUI
+namespace AlienUI.Core.Resources
 {
     [AllowChild(typeof(Storyboard))]
     public class StoryboardGroup : Resource
