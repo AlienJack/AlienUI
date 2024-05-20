@@ -227,7 +227,7 @@ namespace AlienUI.Editors
 
                 treeScoll = G.BeginScrollView(rect, treeScoll, treeRect);
                 m_logicTree.OnGUI(treeRect);
-                if (Event.current.type == EventType.KeyDown)
+                if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete)
                 {
                     if (Selection != null)
                     {
@@ -292,7 +292,7 @@ namespace AlienUI.Editors
                     foreach (var property in group)
                     {
                         EGL.BeginHorizontal();
-                        
+
                         DrawDirtyMark(target, property);
 
                         var drawer = FindDrawer(property.PropType);

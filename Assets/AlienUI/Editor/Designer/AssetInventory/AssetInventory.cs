@@ -76,6 +76,7 @@ namespace AlienUI.Editors
                     selectUI.AddChild(newUI);
                     newUI.Initialize();
                     newUI.Rect.SetParent(selectUI.m_childRoot);
+                    selectUI.Engine.SetDirty(selectUI);
                     Designer.SaveToAml(Designer.Instance);
                 }
             }
