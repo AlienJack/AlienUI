@@ -55,8 +55,8 @@ namespace AlienUI.UIElements
                     RemoveChild(uichild);
                     m_templateRoot.AddChild(uichild);
                 }
-                AddChild(m_templateInstance);
             }
+            AddChild(m_templateInstance);
         }
 
         public sealed override void AddChild(AmlNodeElement childObj)
