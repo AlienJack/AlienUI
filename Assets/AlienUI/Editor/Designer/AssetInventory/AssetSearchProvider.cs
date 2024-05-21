@@ -42,7 +42,7 @@ namespace AlienUI.Editors
                     {
                         deleteTarget.UIParent.RemoveChild(deleteTarget);
                         deleteTarget.Close();
-                        Designer.SaveToAml(Designer.Instance);
+                        Designer.SaveToAml();
                     }
                 }
             }

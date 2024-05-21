@@ -110,12 +110,12 @@ namespace AlienUI.Editors
 
         private void Target_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {
-            SaveToAml(this);
+            SaveToAml();
         }
 
         private void Target_OnChildrenChanged()
         {
-            SaveToAml(this);
+            SaveToAml();
         }
 
         private List<AmlNodeElement> drawContext = new List<AmlNodeElement>();
@@ -198,7 +198,7 @@ namespace AlienUI.Editors
                 }
                 if (m_amlFile != null && GL.Button("Save"))
                 {
-                    SaveToAml(this);
+                    SaveToAml();
                 }
                 GL.FlexibleSpace();
                 EGL.EndHorizontal();
@@ -233,7 +233,7 @@ namespace AlienUI.Editors
                     {
                         Selection.UIParent.RemoveChild(Selection);
                         Selection.Close();
-                        SaveToAml(Designer.Instance);
+                        SaveToAml();
                     }
                 }
                 G.EndScrollView();
@@ -249,12 +249,15 @@ namespace AlienUI.Editors
             newUI.Initialize();
             newUI.Rect.SetParent(target.m_childRoot);
             target.Engine.SetDirty(target);
-            Designer.SaveToAml(Designer.Instance);
+            Designer.SaveToAml();
         }
 
 
-        internal static void SaveToAml(Designer designer)
+        internal static void SaveToAml()
         {
+            var designer = Instance;
+            if (designer == null) return;
+
             var str = AmlGenerator.Gen(designer.m_target);
             designer.m_amlFile.Text = str;
             designer.m_amlFile.SaveToDisk();

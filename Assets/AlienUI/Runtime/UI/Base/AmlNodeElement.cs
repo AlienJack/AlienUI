@@ -5,6 +5,7 @@ using AlienUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AlienUI.UIElements
 {
@@ -44,6 +45,20 @@ namespace AlienUI.UIElements
             OnChildrenChanged?.Invoke();
         }
 
+        public void MoveChild(AmlNodeElement childObj, int newIndex)
+        {
+            var oldIndex = m_childrens.IndexOf(childObj);
+            if (oldIndex == -1) return;
+
+            newIndex = Mathf.Clamp(newIndex, 0, m_childrens.Count);
+            m_childrens.Insert(newIndex, childObj);
+            if (oldIndex >= newIndex) oldIndex++;
+            m_childrens.RemoveAt(oldIndex);
+
+            OnMoveChild(childObj, newIndex);
+
+            OnChildrenChanged?.Invoke();
+        }
 
         public virtual void RemoveChild(AmlNodeElement childObj)
         {
@@ -55,6 +70,7 @@ namespace AlienUI.UIElements
         }
 
         protected virtual void OnAddChild(AmlNodeElement childObj) { }
+        protected virtual void OnMoveChild(AmlNodeElement childObj, int newIndex) { }
         protected virtual void OnRemoveChild(AmlNodeElement childObj) { }
 
         internal IReadOnlyList<T> GetChildren<T>() where T : AmlNodeElement

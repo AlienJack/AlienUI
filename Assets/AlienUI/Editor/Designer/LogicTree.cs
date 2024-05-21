@@ -53,7 +53,7 @@ namespace AlienUI.Editors
                 }
             }
 
-            Designer.SaveToAml(Designer.Instance);
+            Designer.SaveToAml();
 
             Reload();
         }
@@ -142,6 +142,79 @@ namespace AlienUI.Editors
 
             return treeItem;
         }
+
+        protected override bool CanStartDrag(CanStartDragArgs args)
+        {
+            m_uiMaps.TryGetValue(args.draggedItem.id, out var dragElement);
+            if (dragElement == null) return false;
+
+            if (dragElement.UIParent == null) return false;
+
+            return true;
+        }
+        protected override void SetupDragAndDrop(SetupDragAndDropArgs args)
+        {
+            m_uiMaps.TryGetValue(args.draggedItemIDs[0], out var dragElement);
+            if (dragElement == null) return;
+
+            this.SetSelection(new List<int> { args.draggedItemIDs[0] }, TreeViewSelectionOptions.FireSelectionChanged);
+            DragAndDrop.StartDrag(dragElement.Name ?? dragElement.GetType().Name);            
+            DragAndDrop.SetGenericData("LogicTreeMove", dragElement);
+        }
+        protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
+        {
+            var dragElement = DragAndDrop.GetGenericData("LogicTreeMove") as UIElement;
+            if (dragElement == null) return DragAndDropVisualMode.Rejected;
+
+
+            if (args.performDrop)
+            {
+                if (args.dragAndDropPosition == DragAndDropPosition.BetweenItems)
+                {
+                    if (args.parentItem != null && m_uiMaps.TryGetValue(args.parentItem.id, out var newParent))
+                    {
+                        if (dragElement.UIParent == newParent)
+                        {
+                            dragElement.UIParent.MoveChild(dragElement, args.insertAtIndex);
+                        }
+                        else
+                        {
+                            dragElement.UIParent.RemoveChild(dragElement);
+                            newParent.AddChild(dragElement);
+                            dragElement.UIParent.MoveChild(dragElement, args.insertAtIndex);
+                        }
+
+                        Designer.SaveToAml();
+                    }
+                }
+                else if(args.dragAndDropPosition== DragAndDropPosition.UponItem)
+                {
+                    if (args.parentItem != null && m_uiMaps.TryGetValue(args.parentItem.id, out var newParent))
+                    {
+                        if (dragElement.UIParent == newParent)
+                        {
+                            dragElement.UIParent.MoveChild(dragElement,int.MaxValue);//move to last
+                        }
+                        else
+                        {
+                            dragElement.UIParent.RemoveChild(dragElement);
+                            newParent.AddChild(dragElement);
+                        }
+
+                        Designer.SaveToAml();
+                    }
+                }
+            }
+
+            switch (args.dragAndDropPosition)
+            {
+                case DragAndDropPosition.UponItem: return DragAndDropVisualMode.Move;
+                case DragAndDropPosition.OutsideItems: return DragAndDropVisualMode.Rejected;
+                case DragAndDropPosition.BetweenItems: return DragAndDropVisualMode.Move;
+                default: return DragAndDropVisualMode.None;
+            }
+        }
+
 
         class DepthNormalizer
         {

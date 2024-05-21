@@ -46,6 +46,11 @@ namespace AlienUI.UIElements
             {
                 case UIElement uiEle:
                     uiEle.SetParent(this);
+                    if (uiEle.Rect != null && Rect != null)
+                    {
+                        uiEle.Rect.SetParent(m_childRoot);
+                        SetLayoutDirty();
+                    }
                     break;
                 case Trigger trigger: AddTrigger(trigger); break;
             }
@@ -57,8 +62,27 @@ namespace AlienUI.UIElements
             {
                 case UIElement uiEle:
                     uiEle.SetParent(null);
+                    if (uiEle.Rect != null && uiEle.Rect.parent == m_childRoot)
+                    {
+                        uiEle.Rect.SetParent(null);
+                        SetLayoutDirty();
+                    }
                     break;
                 case Trigger trigger: RemoveTrigger(trigger); break;
+            }
+        }
+
+        protected override void OnMoveChild(AmlNodeElement childObj, int newIndex)
+        {
+            switch (childObj)
+            {
+                case UIElement uiEle:
+                    if (uiEle.Rect != null && uiEle.Rect.parent == m_childRoot)
+                    {
+                        uiEle.Rect.SetSiblingIndex(Mathf.Max(0, newIndex - 1));
+                        SetLayoutDirty();
+                    }
+                    break;
             }
         }
 
