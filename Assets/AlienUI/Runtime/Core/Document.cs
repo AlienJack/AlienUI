@@ -52,12 +52,11 @@ namespace AlienUI.Core
             if (element == m_rootElement)
             {
                 StopAllCoroutine();
-                GameObject.Destroy(m_rootElement.m_rectTransform.gameObject);
             }
-            else
-            {
+            if (Application.isPlaying)
                 GameObject.Destroy(element.m_rectTransform.gameObject);
-            }
+            else
+                GameObject.DestroyImmediate(element.m_rectTransform.gameObject);
         }
 
         internal void RecordDependencyObject(AmlNodeElement dependencyObject, XmlNode xnode)
