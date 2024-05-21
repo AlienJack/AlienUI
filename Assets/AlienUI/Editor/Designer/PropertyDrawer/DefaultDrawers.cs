@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
 
 namespace AlienUI.Editors.PropertyDrawer
@@ -302,6 +303,60 @@ namespace AlienUI.Editors.PropertyDrawer
         protected override AnimationCurve OnDraw(AmlNodeElement host, string label, AnimationCurve value)
         {
             return EditorGUILayout.CurveField(label, new AnimationCurve(value.keys));
+        }
+    }
+
+    public class HorizontalDrawer : PropertyDrawer<eHorizontalAlign>
+    {
+        // Horizontal Alignment Icons
+        private readonly GUIContent left = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Left.png"));
+        private readonly GUIContent Middle = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Center.png"));
+        private readonly GUIContent Right = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Right.png"));
+        private readonly GUIContent Stretch = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Stretch.png"));
+
+
+        protected override eHorizontalAlign OnDraw(AmlNodeElement host, string label, eHorizontalAlign value)
+        {
+            EditorGUILayout.LabelField(label);
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Toggle(value == eHorizontalAlign.Left, left, EditorStyles.toolbarButton))
+                value = eHorizontalAlign.Left;
+            if (GUILayout.Toggle(value == eHorizontalAlign.Middle, Middle, EditorStyles.toolbarButton))
+                value = eHorizontalAlign.Middle;
+            if (GUILayout.Toggle(value == eHorizontalAlign.Right, Right, EditorStyles.toolbarButton))
+                value = eHorizontalAlign.Right;
+            if (GUILayout.Toggle(value == eHorizontalAlign.Stretch, Stretch, EditorStyles.toolbarButton))
+                value = eHorizontalAlign.Stretch;
+
+            return value;
+        }
+    }
+
+    public class VerticalDrawer : PropertyDrawer<eVerticalAlign>
+    {
+        // Horizontal Alignment Icons
+        private readonly GUIContent Top = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Upper.png"));
+        private readonly GUIContent Middle = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Middle.png"));
+        private readonly GUIContent Bottom = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Lower.png"));
+        private readonly GUIContent Stretch = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Stretch.png"));
+
+
+        protected override eVerticalAlign OnDraw(AmlNodeElement host, string label, eVerticalAlign value)
+        {
+            EditorGUILayout.LabelField(label);
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Toggle(value == eVerticalAlign.Top, Top, EditorStyles.toolbarButton))
+                value = eVerticalAlign.Top;
+            if (GUILayout.Toggle(value == eVerticalAlign.Middle, Middle, EditorStyles.toolbarButton))
+                value = eVerticalAlign.Middle;
+            if (GUILayout.Toggle(value == eVerticalAlign.Bottom, Bottom, EditorStyles.toolbarButton))
+                value = eVerticalAlign.Bottom;
+            if (GUILayout.Toggle(value == eVerticalAlign.Stretch, Stretch, EditorStyles.toolbarButton))
+                value = eVerticalAlign.Stretch;
+
+            return value;
         }
     }
 }
