@@ -83,22 +83,12 @@ namespace AlienUI.Editors
                 var selectName = selectUI.Name ?? selectUI.GetType().Name;
                 if (GUILayout.Button($"Add To {selectName}"))
                 {
-                    AddChild(selection, selectUI);
+                    Designer.AddChild(selection.AssetType, selectUI);
                 }
             }
         }
 
-        public static void AddChild(Asset newChild, UIElement target)
-        {
-            var newUI = Activator.CreateInstance(newChild.AssetType) as UIElement;
-            newUI.Document = target.Document;
-            newUI.Engine = target.Engine;
-            target.AddChild(newUI);
-            newUI.Initialize();
-            newUI.Rect.SetParent(target.m_childRoot);
-            target.Engine.SetDirty(target);
-            Designer.SaveToAml(Designer.Instance);
-        }
+
 
         private static Asset Selection;
         private static void DrawAsset()

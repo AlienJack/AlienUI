@@ -240,6 +240,18 @@ namespace AlienUI.Editors
             }
         }
 
+        public static void AddChild(Type uiElementType, UIElement target)
+        {
+            var newUI = Activator.CreateInstance(uiElementType) as UIElement;
+            newUI.Document = target.Document;
+            newUI.Engine = target.Engine;
+            target.AddChild(newUI);
+            newUI.Initialize();
+            newUI.Rect.SetParent(target.m_childRoot);
+            target.Engine.SetDirty(target);
+            Designer.SaveToAml(Designer.Instance);
+        }
+
 
         internal static void SaveToAml(Designer designer)
         {

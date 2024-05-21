@@ -35,7 +35,7 @@ namespace AlienUI.Editors
             if (Target != null)
             {
                 if (SearchTreeEntry.userData is AssetInventory.Asset asset)
-                    AssetInventory.AddChild(asset, Target);
+                    Designer.AddChild(asset.AssetType, Target);
                 else if (SearchTreeEntry.content.text == "Delete" && SearchTreeEntry.userData is UIElement deleteTarget)
                 {
                     if (deleteTarget.UIParent != null)
