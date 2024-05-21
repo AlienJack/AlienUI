@@ -3,8 +3,10 @@ using AlienUI.UIElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using static UnityEditor.Progress;
@@ -24,8 +26,49 @@ namespace AlienUI.Editors
         }
 
         protected override bool CanMultiSelect(TreeViewItem item) => false;
-        protected override bool CanRename(TreeViewItem item) => false;
-        protected override void RenameEnded(RenameEndedArgs args) { }
+        protected override bool CanRename(TreeViewItem item) => true;
+        protected override void RenameEnded(RenameEndedArgs args)
+        {
+            var selectionID = this.GetSelection().FirstOrDefault();
+            m_uiMaps.TryGetValue(selectionID, out UIElement selection);
+            if (selection == null) return;
+
+            if (!args.acceptedRename) return;
+
+            if ($"[{selection.GetType().Name}]" == args.newName)
+            {
+                selection.Name = null;
+            }
+            else
+            {
+                args.newName = args.newName.TrimStart('#');
+
+                if (string.IsNullOrWhiteSpace(args.newName))
+                {
+                    selection.Name = null;
+                }
+                else
+                {
+                    selection.Name = args.newName;
+                }
+            }
+
+            Designer.SaveToAml(Designer.Instance);
+
+            Reload();
+        }
+
+        protected override void ContextClickedItem(int id)
+        {
+            m_uiMaps.TryGetValue(id, out UIElement selection);
+            if (selection == null) return;
+
+            var pos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
+            pos.x += 130;
+            SearchWindow.Open(new SearchWindowContext(pos, 200, 400), AssetInventory.GetSearchProvider(selection));
+
+            Event.current.Use();
+        }
 
         public IEnumerable<UIElement> GetUIs()
         {

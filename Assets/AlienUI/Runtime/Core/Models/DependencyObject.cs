@@ -126,8 +126,7 @@ namespace AlienUI.Models
 
         public object GetValue(DependencyProperty dp)
         {
-            m_dpPropValues.TryGetValue(dp, out var value);
-            if (value != null) return value;
+            if (m_dpPropValues.TryGetValue(dp, out var value)) return value;
 
             return dp.Meta.DefaultValue;
         }

@@ -231,7 +231,7 @@ namespace AlienUI.Editors
                 {
                     if (Selection != null)
                     {
-                        if (Selection.Parent != null) Selection.Parent.RemoveChild(Selection);
+                        Selection.Parent?.RemoveChild(Selection);
 
                         SaveToAml(Designer.Instance);
                     }
@@ -260,7 +260,6 @@ namespace AlienUI.Editors
 
             target.OnDependencyPropertyChanged += designer.Target_OnDependencyPropertyChanged;
             target.OnChildrenChanged += designer.Target_OnChildrenChanged;
-
 
             EGL.BeginHorizontal();
             DrawTitle(designer, target);
@@ -304,10 +303,11 @@ namespace AlienUI.Editors
                         }
                         else
                         {
-                            using (new EG.DisabledGroupScope(property.Meta.IsReadOnly || target.GetBinding(property) != null))
+                            var canEdit = !property.Meta.IsReadOnly && target.GetBinding(property) == null;
+                            using (new EG.DisabledGroupScope(!canEdit))
                             {
                                 var value = drawer.Draw(target, property.PropName, target.GetValue(property));
-                                if (!property.Meta.IsReadOnly)
+                                if (canEdit)
                                     target.SetValue(property, value);
                             }
 

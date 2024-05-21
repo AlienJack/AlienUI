@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace AlienUI.Editors
@@ -25,6 +26,18 @@ namespace AlienUI.Editors
                 if (!s_assetsList.ContainsKey(asset.Group)) s_assetsList[asset.Group] = new List<Asset>();
                 s_assetsList[asset.Group].Add(asset);
             }
+        }
+
+        internal static Dictionary<string, List<Asset>> GetAssets()
+        {
+            return s_assetsList;
+        }
+
+        internal static AssetSearchProvider GetSearchProvider(UIElement target)
+        {
+            var provider = AssetSearchProvider.CreateInstance<AssetSearchProvider>();
+            provider.Target = target;
+            return provider;
         }
 
         private void OnGUI()
@@ -70,16 +83,21 @@ namespace AlienUI.Editors
                 var selectName = selectUI.Name ?? selectUI.GetType().Name;
                 if (GUILayout.Button($"Add To {selectName}"))
                 {
-                    var newUI = Activator.CreateInstance(selection.AssetType) as UIElement;
-                    newUI.Document = selectUI.Document;
-                    newUI.Engine = selectUI.Engine;
-                    selectUI.AddChild(newUI);
-                    newUI.Initialize();
-                    newUI.Rect.SetParent(selectUI.m_childRoot);
-                    selectUI.Engine.SetDirty(selectUI);
-                    Designer.SaveToAml(Designer.Instance);
+                    AddChild(selection, selectUI);
                 }
             }
+        }
+
+        public static void AddChild(Asset newChild, UIElement target)
+        {
+            var newUI = Activator.CreateInstance(newChild.AssetType) as UIElement;
+            newUI.Document = target.Document;
+            newUI.Engine = target.Engine;
+            target.AddChild(newUI);
+            newUI.Initialize();
+            newUI.Rect.SetParent(target.m_childRoot);
+            target.Engine.SetDirty(target);
+            Designer.SaveToAml(Designer.Instance);
         }
 
         private static Asset Selection;
@@ -92,7 +110,7 @@ namespace AlienUI.Editors
                 foreach (var asset in item.Value)
                 {
                     var style = new GUIStyle(EditorStyles.miniButton);
-                    GUIContent text = new GUIContent(asset.AssetType.Name,asset.AssetType.GetIcon());
+                    GUIContent text = new GUIContent(asset.AssetType.Name, asset.AssetType.GetIcon());
                     var textRect = GUILayoutUtility.GetRect(text, style);
                     bool select = EditorGUI.Toggle(textRect, Selection == asset, EditorStyles.miniButtonMid);
                     GUI.Label(textRect, text);
