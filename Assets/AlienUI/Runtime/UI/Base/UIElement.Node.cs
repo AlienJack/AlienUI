@@ -111,6 +111,5 @@ namespace AlienUI.UIElements
             RaiseClose();
             Document.Dispose(this);
         }
-
     }
 }

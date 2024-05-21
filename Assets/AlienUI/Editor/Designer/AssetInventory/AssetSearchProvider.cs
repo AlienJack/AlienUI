@@ -14,7 +14,7 @@ namespace AlienUI.Editors
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
             List<SearchTreeEntry> result = new();
-            var groupEntry = new SearchTreeGroupEntry(new GUIContent("Add UI"), 0);
+            var groupEntry = new SearchTreeGroupEntry(new GUIContent($"Edit {Target.Name ?? Target.GetType().Name}"), 0);
             result.Add(groupEntry);
             foreach (var item in AssetInventory.GetAssets())
             {
@@ -41,6 +41,7 @@ namespace AlienUI.Editors
                     if (deleteTarget.UIParent != null)
                     {
                         deleteTarget.UIParent.RemoveChild(deleteTarget);
+                        deleteTarget.Close();
                         Designer.SaveToAml(Designer.Instance);
                     }
                 }

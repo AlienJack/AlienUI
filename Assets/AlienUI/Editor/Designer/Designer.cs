@@ -229,10 +229,10 @@ namespace AlienUI.Editors
                 m_logicTree.OnGUI(treeRect);
                 if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete)
                 {
-                    if (Selection != null)
+                    if (Selection != null && Selection.UIParent != null)
                     {
-                        Selection.Parent?.RemoveChild(Selection);
-
+                        Selection.UIParent.RemoveChild(Selection);
+                        Selection.Close();
                         SaveToAml(Designer.Instance);
                     }
                 }
