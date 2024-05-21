@@ -70,7 +70,7 @@ namespace AlienUI
 #if UNITY_EDITOR
             if (m_cacheInstance == null)
             {
-                m_cacheInstance = UnityEditor.AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+                m_cacheInstance = UnityEditor.AssetDatabase.LoadAssetAtPath<Settings>(SettingPath);
             }
 
             if (m_cacheInstance != null && !m_cacheInstance.m_optimized) m_cacheInstance.OptimizeData();

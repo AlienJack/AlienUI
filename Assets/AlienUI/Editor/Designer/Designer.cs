@@ -269,7 +269,8 @@ namespace AlienUI.Editors
                 for (int i = 0; i < designer.drawContext.Count - 1; i++)
                 {
                     var parent = designer.drawContext[i];
-                    if (GL.Button(parent.Name ?? parent.GetType().Name))
+                    var name = parent.Name ?? parent.GetType().Name;
+                    if (GL.Button(new GUIContent(name, parent.GetIcon()), GUILayout.Height(18)))
                     {
                         designer.drawContext = designer.drawContext.Take(i + 1).ToList();
                         break;
@@ -277,7 +278,7 @@ namespace AlienUI.Editors
                     GL.Label("/");
                 }
             }
-            EGL.LabelField(target.GetType().Name, new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
+            EGL.LabelField(new GUIContent(target.GetType().Name, target.GetIcon()), new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
             GL.FlexibleSpace();
             EGL.EndHorizontal();
 

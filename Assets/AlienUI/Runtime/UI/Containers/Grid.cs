@@ -1,9 +1,11 @@
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using AlienUI.UIElements.Containers;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "grid")]
     public class Grid : Container
     {
         public static Vector2Int GetGridPos(DependencyObject obj)

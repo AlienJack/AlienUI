@@ -1,8 +1,10 @@
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "template")]
     public class Template : UIElement
     {
         public string Type

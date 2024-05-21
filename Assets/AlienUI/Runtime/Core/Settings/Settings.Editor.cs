@@ -1,5 +1,7 @@
 #if UNITY_EDITOR
 using AlienUI.Models;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -8,7 +10,8 @@ namespace AlienUI
 {
     public partial class Settings : ScriptableObject
     {
-        public const string PATH = "Assets/AlienUI/Runtime/UI/SettingAsset/Settings.asset";
+        public static string RootPATH => "Assets/AlienUI";
+        public static string SettingPath => Path.Combine(RootPATH, "Runtime/Settings.asset");
 
         [SettingsProvider]
         public static SettingsProvider CreateToProjectSetting()
@@ -80,11 +83,11 @@ namespace AlienUI
 
         private static Settings prepareSettingObject()
         {
-            var set = AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+            var set = AssetDatabase.LoadAssetAtPath<Settings>(SettingPath);
             if (set == null)
             {
-                AssetDatabase.CreateAsset(CreateInstance<Settings>(), PATH);
-                set = AssetDatabase.LoadAssetAtPath<Settings>(PATH);
+                AssetDatabase.CreateAsset(CreateInstance<Settings>(), SettingPath);
+                set = AssetDatabase.LoadAssetAtPath<Settings>(SettingPath);
             }
 
             return set;
@@ -98,6 +101,23 @@ namespace AlienUI
         public DefaultAsset DesignerLayout;
         public DefaultAsset BackLayout;
         public bool OpenAmlFileWhenOpenDesigner;
+
+
+        internal Texture2D GetIcon(string iconName)
+        {
+            if (iconName == null) return null;
+
+            var guids = AssetDatabase.FindAssets("t:texture2d", new string[] { Path.Combine(RootPATH, "Editor/Icons") });
+            foreach (var id in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(id);
+                if (Path.GetFileNameWithoutExtension(path).ToLower() == iconName.ToLower())
+                {
+                    return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                }
+            }
+            return null;
+        }
     }
 }
 #endif

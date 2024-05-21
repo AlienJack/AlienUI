@@ -1,9 +1,11 @@
 using AlienUI.Core.Commnands;
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "window")]
     public class Window : UserControl
     {
         protected override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Window");

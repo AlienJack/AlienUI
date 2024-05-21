@@ -309,10 +309,10 @@ namespace AlienUI.Editors.PropertyDrawer
     public class HorizontalDrawer : PropertyDrawer<eHorizontalAlign>
     {
         // Horizontal Alignment Icons
-        private readonly GUIContent left = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Left.png"));
-        private readonly GUIContent Middle = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Center.png"));
-        private readonly GUIContent Right = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Right.png"));
-        private readonly GUIContent Stretch = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Stretch.png"));
+        private readonly GUIContent left = new GUIContent(Settings.Get().GetIcon("Left"));
+        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Center"));
+        private readonly GUIContent Right = new GUIContent(Settings.Get().GetIcon("Right"));
+        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch"));
 
 
         protected override eHorizontalAlign OnDraw(AmlNodeElement host, string label, eHorizontalAlign value)
@@ -336,10 +336,10 @@ namespace AlienUI.Editors.PropertyDrawer
     public class VerticalDrawer : PropertyDrawer<eVerticalAlign>
     {
         // Horizontal Alignment Icons
-        private readonly GUIContent Top = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Upper.png"));
-        private readonly GUIContent Middle = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Middle.png"));
-        private readonly GUIContent Bottom = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Lower.png"));
-        private readonly GUIContent Stretch = new GUIContent(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AlienUI/Editor/Icons/Stretch.png"));
+        private readonly GUIContent Top = new GUIContent(Settings.Get().GetIcon("Upper.png"));
+        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Middle.png"));
+        private readonly GUIContent Bottom = new GUIContent(Settings.Get().GetIcon("Lower.png"));
+        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch.png"));
 
 
         protected override eVerticalAlign OnDraw(AmlNodeElement host, string label, eVerticalAlign value)

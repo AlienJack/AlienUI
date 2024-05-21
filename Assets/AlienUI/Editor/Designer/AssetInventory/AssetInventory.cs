@@ -91,9 +91,8 @@ namespace AlienUI.Editors
                 EditorGUILayout.BeginFoldoutHeaderGroup(true, item.Key);
                 foreach (var asset in item.Value)
                 {
-
                     var style = new GUIStyle(EditorStyles.miniButton);
-                    GUIContent text = new GUIContent(asset.AssetType.Name);
+                    GUIContent text = new GUIContent(asset.AssetType.Name,asset.AssetType.GetIcon());
                     var textRect = GUILayoutUtility.GetRect(text, style);
                     bool select = EditorGUI.Toggle(textRect, Selection == asset, EditorStyles.miniButtonMid);
                     GUI.Label(textRect, text);

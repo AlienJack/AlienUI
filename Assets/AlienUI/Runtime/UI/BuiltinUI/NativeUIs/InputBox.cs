@@ -1,9 +1,11 @@
 
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "inputbox")]
     public class InputBox : UserControl
     {
         public string Text

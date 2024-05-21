@@ -2,10 +2,12 @@ using AlienUI.UIElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
-namespace AlienUI.Core
+namespace AlienUI.Models.Attributes
 {
+    [Conditional("UNITY_EDITOR")]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class AllowChildAttribute : Attribute
     {

@@ -1,4 +1,5 @@
 using AlienUI.Core;
+using AlienUI.Models.Attributes;
 using AlienUI.UIElements;
 using System;
 using System.Collections;
@@ -12,6 +13,24 @@ namespace AlienUI.Editors
 {
     public static class AlienEditorUtility
     {
+        public static Texture2D GetIcon(this AmlNodeElement element)
+        {
+            var type = element.GetType();
+            return type.GetIcon();
+        }
+
+        public static Texture2D GetIcon(this Type type)
+        {
+            var des = type.GetCustomAttribute<DescriptionAttribute>(true);
+            if (des == null) return Settings.Get().GetIcon("DefaultUI");
+
+            var icon = Settings.Get().GetIcon(des.Icon);
+            if (icon == null) return Settings.Get().GetIcon("DefaultUI");
+
+            return icon;
+        }
+
+
         public static List<Type> GetAllowChildTypes(this AmlNodeElement element)
         {
             List<Type> result = new List<Type>();

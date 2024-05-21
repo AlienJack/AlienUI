@@ -1,8 +1,10 @@
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "controller")]
     public abstract class UserControl : UIElement
     {
         protected abstract ControlTemplate DefaultTemplate { get; }

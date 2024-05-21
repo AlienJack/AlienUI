@@ -1,10 +1,12 @@
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using UnityEngine;
 using ImgType = UnityEngine.UI.Image.Type;
 using UGUIImg = UnityEngine.UI.Image;
 
 namespace AlienUI.UIElements
 {
+    [Description( Icon = "image")]
     public class Image : ContentPresent<Sprite>
     {
         public Color Color

@@ -94,6 +94,7 @@ namespace AlienUI.Editors
                 id = ui.GetHashCode(),
                 depth = depth,
                 displayName = ui.Name != null ? $"#{ui.Name}" : $"[{ui.GetType().Name}]",
+                icon = ui.GetIcon()
             };
 
             return treeItem;

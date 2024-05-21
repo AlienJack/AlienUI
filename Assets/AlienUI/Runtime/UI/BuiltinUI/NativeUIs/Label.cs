@@ -1,10 +1,12 @@
 using AlienUI.Models;
+using AlienUI.Models.Attributes;
 using AlienUI.UIElements.ToolsScript;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements
 {
+    [Description(Icon = "label")]
     public class Label : ContentPresent<string>
     {
         public Font Font
