@@ -125,10 +125,7 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         protected override Vector2 OnDraw(AmlNodeElement host, string label, Vector2 value)
         {
-            EditorGUILayout.BeginVertical();
             value = EditorGUILayout.Vector2Field(label, value);
-            EditorGUILayout.Space(5);
-            EditorGUILayout.EndVertical();
             return value;
         }
     }
@@ -336,10 +333,10 @@ namespace AlienUI.Editors.PropertyDrawer
     public class VerticalDrawer : PropertyDrawer<eVerticalAlign>
     {
         // Horizontal Alignment Icons
-        private readonly GUIContent Top = new GUIContent(Settings.Get().GetIcon("Upper.png"));
-        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Middle.png"));
-        private readonly GUIContent Bottom = new GUIContent(Settings.Get().GetIcon("Lower.png"));
-        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch.png"));
+        private readonly GUIContent Top = new GUIContent(Settings.Get().GetIcon("Upper"));
+        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Middle"));
+        private readonly GUIContent Bottom = new GUIContent(Settings.Get().GetIcon("Lower"));
+        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch"));
 
 
         protected override eVerticalAlign OnDraw(AmlNodeElement host, string label, eVerticalAlign value)

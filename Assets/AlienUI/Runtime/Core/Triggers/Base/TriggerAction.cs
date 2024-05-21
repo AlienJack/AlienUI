@@ -1,5 +1,4 @@
 using AlienUI.Core.Resources;
-using AlienUI.UIElements;
 
 namespace AlienUI.Core.Triggers
 {

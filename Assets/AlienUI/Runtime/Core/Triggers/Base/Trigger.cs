@@ -1,8 +1,6 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
 using AlienUI.UIElements;
-using System;
-using System.Collections.Generic;
 
 namespace AlienUI.Core.Triggers
 {

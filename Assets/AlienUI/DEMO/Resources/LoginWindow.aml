@@ -1,4 +1,4 @@
-<Window xmlns="AlienUI.UIElements" Title="LoginWindow" Width="800" Height="600">
+<Window xmlns="AlienUI.UIElements" Title="LoginWindow" Width="904.4" Height="600">
   <Grid GridDefine="1*,1.5*|1*" Horizontal="Stretch" Vertical="Stretch">
     <Image Color="#204363FF" Name="Left" />
     <Image Color="#C2C2C2FF" Name="Right" GridPos="1,0">

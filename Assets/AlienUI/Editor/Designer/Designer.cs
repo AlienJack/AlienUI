@@ -261,27 +261,25 @@ namespace AlienUI.Editors
             target.OnDependencyPropertyChanged += designer.Target_OnDependencyPropertyChanged;
             target.OnChildrenChanged += designer.Target_OnChildrenChanged;
 
-            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups(target);
 
             EGL.BeginHorizontal();
-            if (designer.drawContext.Count > 1)
-            {
-                for (int i = 0; i < designer.drawContext.Count - 1; i++)
-                {
-                    var parent = designer.drawContext[i];
-                    var name = parent.Name ?? parent.GetType().Name;
-                    if (GL.Button(new GUIContent(name, parent.GetIcon()), GUILayout.Height(18)))
-                    {
-                        designer.drawContext = designer.drawContext.Take(i + 1).ToList();
-                        break;
-                    }
-                    GL.Label("/");
-                }
-            }
-            EGL.LabelField(new GUIContent(target.GetType().Name, target.GetIcon()), new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
-            GL.FlexibleSpace();
-            EGL.EndHorizontal();
+            DrawTitle(designer, target);
+            DrawProperties(target);
 
+            DrawCustom(designer, target);
+
+            if (DrawChildElements(designer, target, target.Children) is AmlNodeElement select)
+            {
+                designer.drawContext.Add(select);
+            }
+
+            target.OnDependencyPropertyChanged -= designer.Target_OnDependencyPropertyChanged;
+            target.OnChildrenChanged -= designer.Target_OnChildrenChanged;
+        }
+
+        private static void DrawProperties(AmlNodeElement target)
+        {
+            List<IGrouping<string, DependencyProperty>> groups = GetDependencyGroups(target);
             foreach (var group in groups)
             {
                 var groupName = group.Key;
@@ -326,7 +324,6 @@ namespace AlienUI.Editors
                         EGL.EndHorizontal();
 
                         {
-
                             var rightClickRect = GUILayoutUtility.GetLastRect();
                             using (AlienEditorUtility.BeginGUIColorScope(new Color(0, 0, 0, 0)))
                             {
@@ -334,21 +331,35 @@ namespace AlienUI.Editors
                             }
                             HandleContextMenu(target, property);
                         }
+
+                        GL.Space(2);
+
                     }
                 }
 
                 EGL.EndVertical();
             }
+        }
 
-            DrawCustom(designer, target);
-
-            if (DrawChildElements(designer, target, target.Children) is AmlNodeElement select)
+        private static void DrawTitle(Designer designer, AmlNodeElement target)
+        {
+            if (designer.drawContext.Count > 1)
             {
-                designer.drawContext.Add(select);
+                for (int i = 0; i < designer.drawContext.Count - 1; i++)
+                {
+                    var parent = designer.drawContext[i];
+                    var name = parent.Name ?? parent.GetType().Name;
+                    if (GL.Button(new GUIContent(name, parent.GetIcon()), GUILayout.Height(18)))
+                    {
+                        designer.drawContext = designer.drawContext.Take(i + 1).ToList();
+                        break;
+                    }
+                    GL.Label("/");
+                }
             }
-
-            target.OnDependencyPropertyChanged -= designer.Target_OnDependencyPropertyChanged;
-            target.OnChildrenChanged -= designer.Target_OnChildrenChanged;
+            EGL.LabelField(new GUIContent(target.GetType().Name, target.GetIcon()), new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
+            GL.FlexibleSpace();
+            EGL.EndHorizontal();
         }
 
         private static void DrawCustom(Designer designer, AmlNodeElement target)

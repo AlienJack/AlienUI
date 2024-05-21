@@ -6,7 +6,7 @@ using UGUIImg = UnityEngine.UI.Image;
 
 namespace AlienUI.UIElements
 {
-    [Description( Icon = "image")]
+    [Description(Icon = "image")]
     public class Image : ContentPresent<Sprite>
     {
         public Color Color
