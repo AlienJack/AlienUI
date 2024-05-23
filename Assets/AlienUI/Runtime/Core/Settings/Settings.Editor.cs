@@ -49,6 +49,7 @@ namespace AlienUI
             EditorGUILayout.LabelField("Design Mode Settings", new GUIStyle(EditorStyles.label) { fontSize = 16 });
             EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(5, 5, 5, 5) });
             setting.EditPrefab = EditorGUILayout.ObjectField("EditPrefab", setting.EditPrefab, typeof(GameObject), false) as GameObject;
+            setting.PreviewPrefab = EditorGUILayout.ObjectField("PreviewPrefab", setting.PreviewPrefab, typeof(GameObject), false) as GameObject;
             setting.DesignSize = EditorGUILayout.Vector2Field("DesignSize", setting.DesignSize);
             setting.DesignerLayout = EditorGUILayout.ObjectField("DesignerLayoutFile", setting.DesignerLayout, typeof(DefaultAsset), false) as DefaultAsset;
             setting.BackLayout = EditorGUILayout.ObjectField("QuitDesignerLayoutFile", setting.BackLayout, typeof(DefaultAsset), false) as DefaultAsset;
@@ -96,6 +97,7 @@ namespace AlienUI
     public partial class Settings : ScriptableObject
     {
         public GameObject EditPrefab;
+        public GameObject PreviewPrefab;
         public Vector2 DesignSize = new Vector2(1920, 1080);
         public DefaultAsset DesignerLayout;
         public DefaultAsset BackLayout;
