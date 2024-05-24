@@ -104,7 +104,7 @@ namespace AlienUI.Editors
                         DragAndDrop.PrepareStartDrag();
                         DragAndDrop.StartDrag("AssetDrag");
                         DragAndDrop.SetGenericData("AssetDrag", asset.AssetType);
-
+                        
                         Event.current.Use();
                     }
                     var style = new GUIStyle(GUI.skin.button);
