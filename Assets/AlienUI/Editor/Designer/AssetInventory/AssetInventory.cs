@@ -58,7 +58,7 @@ namespace AlienUI.Editors
             GUI.Box(leftRect, string.Empty, EditorStyles.helpBox);
             GUILayout.BeginArea(leftRect);
             leftScroll = GUILayout.BeginScrollView(leftScroll);
-            DrawAsset();
+            DrawAssetItems(leftRect);
             GUILayout.EndScrollView();
             GUILayout.EndArea();
 
@@ -80,15 +80,19 @@ namespace AlienUI.Editors
             EditorGUILayout.LabelField(selection.AssetType.GetDescrib(), EditorStyles.wordWrappedLabel);
         }
 
-
-
         private static Asset Selection;
-        private static void DrawAsset()
+        private static void DrawAssetItems(Rect rect)
         {
-            EditorGUILayout.BeginVertical();
+            float totalWidth = rect.width - 4;
+            Vector2 position = default;
+            position.x += 2;
+            position.y += 2;
+
+
             foreach (var item in s_assetsList)
             {
-                EditorGUILayout.BeginFoldoutHeaderGroup(true, item.Key);
+                EditorGUI.BeginFoldoutHeaderGroup(new Rect(position, new Vector2(totalWidth, 20)), true, item.Key);
+                position.y += 20;
                 foreach (var asset in item.Value)
                 {
                     if (Event.current.type == EventType.MouseDrag)
@@ -96,21 +100,14 @@ namespace AlienUI.Editors
                         DragAndDrop.PrepareStartDrag();
                         DragAndDrop.StartDrag("AssetDrag");
                         DragAndDrop.SetGenericData("AssetDrag", asset.AssetType);
-                        
+
                         Event.current.Use();
                     }
-                    var style = new GUIStyle(GUI.skin.button);
-                    GUIContent text = new GUIContent(asset.AssetType.Name, asset.AssetType.GetIcon());
-                    bool select = EditorGUILayout.Toggle(Selection == asset, style);
-                    GUI.Label(GUILayoutUtility.GetLastRect(), text);
-                    if (select)
-                    {
-                        Selection = asset;
-                    }
+
+                    
                 }
-                EditorGUILayout.EndFoldoutHeaderGroup();
+                EditorGUI.EndFoldoutHeaderGroup();
             }
-            EditorGUILayout.EndVertical();
         }
 
         public class Asset
