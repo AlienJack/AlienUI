@@ -30,6 +30,12 @@ namespace AlienUI.Editors
             return icon;
         }
 
+        public static string GetDescrib(this Type type)
+        {
+            var des = type.GetCustomAttribute<DescriptionAttribute>(true);
+            if (des == null) return string.Empty;
+            return des.Des;
+        }
 
         public static List<Type> GetAllowChildTypes(this AmlNodeElement element)
         {

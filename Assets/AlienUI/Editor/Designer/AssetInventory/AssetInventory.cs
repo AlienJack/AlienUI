@@ -77,15 +77,7 @@ namespace AlienUI.Editors
         private static void DrawAssetDetail(Asset selection)
         {
             if (selection == null) return;
-
-            if (Designer.Instance && Designer.Instance.Selection is UIElement selectUI)
-            {
-                var selectName = selectUI.Name ?? selectUI.GetType().Name;
-                if (GUILayout.Button($"Add To {selectName}"))
-                {
-                    Designer.AddChild(selection.AssetType, selectUI);
-                }
-            }
+            EditorGUILayout.LabelField(selection.AssetType.GetDescrib(), EditorStyles.wordWrappedLabel);
         }
 
 
