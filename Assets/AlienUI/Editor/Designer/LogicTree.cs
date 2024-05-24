@@ -158,15 +158,57 @@ namespace AlienUI.Editors
             if (dragElement == null) return;
 
             this.SetSelection(new List<int> { args.draggedItemIDs[0] }, TreeViewSelectionOptions.FireSelectionChanged);
-            DragAndDrop.StartDrag(dragElement.Name ?? dragElement.GetType().Name);            
-            DragAndDrop.SetGenericData("LogicTreeMove", dragElement);
+            DragAndDrop.StartDrag(dragElement.Name ?? dragElement.GetType().Name);
+            DragAndDrop.SetGenericData("InternalLogicTreeMove", dragElement);
         }
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
-            var dragElement = DragAndDrop.GetGenericData("LogicTreeMove") as UIElement;
-            if (dragElement == null) return DragAndDropVisualMode.Rejected;
+            if (DragAndDrop.GetGenericData("InternalLogicTreeMove") is UIElement dragElement)
+            {
+                return HandleLogicTreeMove(args, dragElement);
+            }
+            else if (DragAndDrop.GetGenericData("AssetDrag") is Type genType)
+            {
+                return HandleAssetGenDrag(args, genType);
+            }
 
+            return DragAndDropVisualMode.Rejected;
+        }
 
+        private DragAndDropVisualMode HandleAssetGenDrag(DragAndDropArgs args, Type genType)
+        {
+            if (args.performDrop)
+            {
+                if (args.dragAndDropPosition == DragAndDropPosition.BetweenItems)
+                {
+                    if (args.parentItem != null && m_uiMaps.TryGetValue(args.parentItem.id, out var newParent))
+                    {
+                        var newUI = Designer.AddChild(genType, newParent);
+                        newUI.UIParent.MoveChild(newUI, args.insertAtIndex);
+                        Designer.SaveToAml();
+                    }
+                }
+                else if (args.dragAndDropPosition == DragAndDropPosition.UponItem)
+                {
+                    if (args.parentItem != null && m_uiMaps.TryGetValue(args.parentItem.id, out var newParent))
+                    {
+                        var newUI = Designer.AddChild(genType, newParent);
+                        Designer.SaveToAml();
+                    }
+                }
+            }
+
+            return args.dragAndDropPosition switch
+            {
+                DragAndDropPosition.UponItem => DragAndDropVisualMode.Generic,
+                DragAndDropPosition.OutsideItems => DragAndDropVisualMode.Rejected,
+                DragAndDropPosition.BetweenItems => DragAndDropVisualMode.Generic,
+                _ => DragAndDropVisualMode.None,
+            };
+        }
+
+        private DragAndDropVisualMode HandleLogicTreeMove(DragAndDropArgs args, UIElement dragElement)
+        {
             if (args.performDrop)
             {
                 if (args.dragAndDropPosition == DragAndDropPosition.BetweenItems)
@@ -187,13 +229,13 @@ namespace AlienUI.Editors
                         Designer.SaveToAml();
                     }
                 }
-                else if(args.dragAndDropPosition== DragAndDropPosition.UponItem)
+                else if (args.dragAndDropPosition == DragAndDropPosition.UponItem)
                 {
                     if (args.parentItem != null && m_uiMaps.TryGetValue(args.parentItem.id, out var newParent))
                     {
                         if (dragElement.UIParent == newParent)
                         {
-                            dragElement.UIParent.MoveChild(dragElement,int.MaxValue);//move to last
+                            dragElement.UIParent.MoveChild(dragElement, int.MaxValue);//move to last
                         }
                         else
                         {
@@ -206,15 +248,14 @@ namespace AlienUI.Editors
                 }
             }
 
-            switch (args.dragAndDropPosition)
+            return args.dragAndDropPosition switch
             {
-                case DragAndDropPosition.UponItem: return DragAndDropVisualMode.Move;
-                case DragAndDropPosition.OutsideItems: return DragAndDropVisualMode.Rejected;
-                case DragAndDropPosition.BetweenItems: return DragAndDropVisualMode.Move;
-                default: return DragAndDropVisualMode.None;
-            }
+                DragAndDropPosition.UponItem => DragAndDropVisualMode.Move,
+                DragAndDropPosition.OutsideItems => DragAndDropVisualMode.Rejected,
+                DragAndDropPosition.BetweenItems => DragAndDropVisualMode.Move,
+                _ => DragAndDropVisualMode.None,
+            };
         }
-
 
         class DepthNormalizer
         {

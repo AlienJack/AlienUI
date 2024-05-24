@@ -240,7 +240,7 @@ namespace AlienUI.Editors
             }
         }
 
-        public static void AddChild(Type uiElementType, UIElement target)
+        public static UIElement AddChild(Type uiElementType, UIElement target)
         {
             var newUI = Activator.CreateInstance(uiElementType) as UIElement;
             newUI.Document = target.Document;
@@ -250,6 +250,8 @@ namespace AlienUI.Editors
             newUI.Rect.SetParent(target.m_childRoot);
             target.Engine.SetDirty(target);
             Designer.SaveToAml();
+
+            return newUI;
         }
 
 
