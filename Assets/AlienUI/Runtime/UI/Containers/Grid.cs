@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    [Description(Icon = "grid")]
+    [Description(Icon = "grid", Des = "You can divide an area into a grid of x rows and y columns, and you can independently set the height of any row and the width of any column. These dimensions can be specified either by <b>weight</b> or by <b>absolute values</b>. UI Children can determine their own grid position using the <b>AttachedProperty</b> <b>GridPos</b> provided by <b>Grid</b>.")]
     public class Grid : Container
     {
         public static Vector2Int GetGridPos(DependencyObject obj)

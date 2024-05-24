@@ -47,67 +47,99 @@ namespace AlienUI.Editors
         }
 
         private static Vector2 leftScroll;
-        private static Vector2 rightScroll;
+        private static Rect leftView;
         public static void DrawAsset(Rect rect)
         {
             var leftRect = new Rect(rect);
             leftRect.position = new Vector2(5, 5);
-            leftRect.width = rect.width * 0.4f - 5;
+            leftRect.width = rect.width - 10;
             leftRect.height = rect.height - 10;
 
             GUI.Box(leftRect, string.Empty, EditorStyles.helpBox);
             GUILayout.BeginArea(leftRect);
-            leftScroll = GUILayout.BeginScrollView(leftScroll);
-            DrawAssetItems(leftRect);
-            GUILayout.EndScrollView();
-            GUILayout.EndArea();
-
-            var rightRect = new Rect(leftRect);
-            rightRect.position += new Vector2(leftRect.width + 5, 0);
-            rightRect.width = rect.width * 0.6f - 10;
-
-            GUI.Box(rightRect, string.Empty, EditorStyles.helpBox);
-            GUILayout.BeginArea(rightRect);
-            rightScroll = GUILayout.BeginScrollView(rightScroll);
-            DrawAssetDetail(Selection);
-            GUILayout.EndScrollView();
+            leftScroll = GUI.BeginScrollView(new Rect(leftRect) { width = leftRect.width - 10, height = leftRect.height - 10 }, leftScroll, new Rect(leftView) { width = leftRect.width - 30 }, false, true);
+            leftView = DrawAssetItems(new Rect(leftRect) { width = leftRect.width - 20, position = new Vector2(leftRect.position.x - 5, leftRect.position.y) });
+            GUI.EndScrollView();
             GUILayout.EndArea();
         }
 
-        private static void DrawAssetDetail(Asset selection)
-        {
-            if (selection == null) return;
-            EditorGUILayout.LabelField(selection.AssetType.GetDescrib(), EditorStyles.wordWrappedLabel);
-        }
 
         private static Asset Selection;
-        private static void DrawAssetItems(Rect rect)
+        private static Rect DrawAssetItems(Rect rect)
         {
             float totalWidth = rect.width - 4;
             Vector2 position = default;
             position.x += 2;
             position.y += 2;
 
+            float totalHeight = 2;
 
             foreach (var item in s_assetsList)
             {
                 EditorGUI.BeginFoldoutHeaderGroup(new Rect(position, new Vector2(totalWidth, 20)), true, item.Key);
                 position.y += 20;
+                totalHeight += 20;
+
+                var itemPosition = position;
+                var itemSize = new Vector2(70, 70);
+                var lineWidth = totalWidth;
                 foreach (var asset in item.Value)
                 {
-                    if (Event.current.type == EventType.MouseDrag)
-                    {
-                        DragAndDrop.PrepareStartDrag();
-                        DragAndDrop.StartDrag("AssetDrag");
-                        DragAndDrop.SetGenericData("AssetDrag", asset.AssetType);
+                    var itemRect = new Rect(itemPosition, itemSize);
 
-                        Event.current.Use();
+                    var evt = Event.current;
+                    switch (evt.type)
+                    {
+                        case EventType.MouseDrag:
+                            if (itemRect.Contains(evt.mousePosition))
+                            {
+                                DragAndDrop.PrepareStartDrag();
+                                DragAndDrop.StartDrag("AssetDrag");
+                                DragAndDrop.SetGenericData("AssetDrag", asset.AssetType);
+                                Event.current.Use();
+                            }
+                            break;
                     }
 
-                    
+                    if (GUI.Toggle(itemRect, Selection == asset, string.Empty, GUI.skin.button))
+                        Selection = asset;
+
+                    GUI.BeginGroup(itemRect);
+                    var textRect = new Rect(0, 0, itemRect.width * 0.5f, itemRect.height * 0.5f);
+                    textRect.x += textRect.width * 0.5f;
+                    textRect.y += textRect.height * 0.5f - 8;
+                    GUI.DrawTexture(textRect, asset.AssetType.GetIcon());
+                    var labelRect = new Rect(4, textRect.height * 0.5f + 2, itemRect.width - 8, itemRect.height);
+                    var tip = $"<b><size=12>{asset.AssetType.FullName}</size></b>";
+                    if (asset.AssetType.GetDescrib() is string des && !string.IsNullOrEmpty(des))
+                        tip += $"\n{des}";
+                    GUI.Label(labelRect, new GUIContent(asset.AssetType.Name, tip), new GUIStyle(EditorStyles.label) { fontSize = 10, alignment = TextAnchor.MiddleCenter, clipping = TextClipping.Clip });
+                    GUI.EndGroup();
+
+                    itemPosition.x += itemSize.x;
+                    lineWidth -= itemSize.x;
+                    if (item.Value[^1] != asset)
+                    {
+                        if (lineWidth < itemSize.x)
+                        {
+                            lineWidth = totalWidth;
+                            itemPosition.y += itemSize.y;
+                            itemPosition.x = position.x;
+                            position.y += itemSize.y;
+                            totalHeight += itemSize.y;
+                        }
+                    }
+
+
                 }
+                position.y += itemSize.y;
+                totalHeight += itemSize.y;
                 EditorGUI.EndFoldoutHeaderGroup();
             }
+
+            rect.height = Mathf.Max(rect.height, totalHeight);
+
+            return rect;
         }
 
         public class Asset
