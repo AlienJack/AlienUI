@@ -7,7 +7,7 @@ namespace AlienUI.UIElements
     [Description(Icon = "window")]
     public class Window : UserControl
     {
-        protected override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Window");
+        public override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Window");
 
         public Command CloseCmd
         {
@@ -16,7 +16,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty CloseProperty =
-            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().SetNotAllowEdit());
+            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().AmlDisable());
 
 
         public string Title

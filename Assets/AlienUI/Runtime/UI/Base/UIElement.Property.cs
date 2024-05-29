@@ -10,7 +10,7 @@ namespace AlienUI.UIElements
             set { SetValue(IsPointerHoverProperty, value); }
         }
         public static readonly DependencyProperty IsPointerHoverProperty =
-            DependencyProperty.Register("IsPointerOver", typeof(bool), typeof(UIElement), new PropertyMetadata(false).SetNotAllowEdit());
+            DependencyProperty.Register("IsPointerOver", typeof(bool), typeof(UIElement), new PropertyMetadata(false).AmlDisable());
 
 
         public float Alpha

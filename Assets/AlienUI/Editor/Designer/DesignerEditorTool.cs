@@ -1,15 +1,9 @@
 using AlienUI.UIElements;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.EditorTools;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace AlienUI.Editors
 {
@@ -33,6 +27,7 @@ namespace AlienUI.Editors
         private void DesignerTool_OnRequestSelect(UIElement obj)
         {
             targetUI = obj;
+            Selection.activeGameObject = obj.Rect.gameObject;
 
             SceneView.RepaintAll();
         }

@@ -1,7 +1,9 @@
 using AlienUI.UIElements;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -25,6 +27,13 @@ namespace AlienUI.Editors
                     result.Add(new SearchTreeEntry(new GUIContent(asset.AssetType.Name, asset.AssetType.GetIcon())) { level = 2, userData = asset });
                 }
             }
+            if (Target is UserControl uc)
+            {
+                if (uc.Template.Valid)
+                    result.Add(new SearchTreeEntry(new GUIContent("Edit Template", Settings.Get().GetIcon("amlicon"))) { level = 1, userData = Target });
+                else if (uc.DefaultTemplate.Valid)
+                    result.Add(new SearchTreeEntry(new GUIContent("Create&Edit Default Template Copy", Settings.Get().GetIcon("amlicon"))) { level = 1, userData = Target });
+            }
             result.Add(new SearchTreeEntry(new GUIContent("Delete", Settings.Get().GetIcon("danger"))) { level = 1, userData = Target });
 
             return result;
@@ -36,6 +45,18 @@ namespace AlienUI.Editors
             {
                 if (SearchTreeEntry.userData is AssetInventory.Asset asset)
                     Designer.AddChild(asset.AssetType, Target);
+                else if (SearchTreeEntry.content.text == "Edit Template" && SearchTreeEntry.userData is UserControl EditTemplateTarget)
+                {
+                    var tempAsset = Settings.Get().GetTemplateAsset(EditTemplateTarget.Template.Name);
+                    if (tempAsset != null)
+                    {
+                        Designer.Instance.Restart(tempAsset);
+                    }
+                }
+                else if (SearchTreeEntry.content.text == "Create&Edit Default Template Copy" && SearchTreeEntry.userData is UserControl createCopyTarget)
+                {
+                    PerformCreateAndEditTemplateAction(createCopyTarget);
+                }
                 else if (SearchTreeEntry.content.text == "Delete" && SearchTreeEntry.userData is UIElement deleteTarget)
                 {
                     if (deleteTarget.UIParent != null)
@@ -48,6 +69,20 @@ namespace AlienUI.Editors
             }
 
             return true;
+        }
+
+        private static void PerformCreateAndEditTemplateAction(UserControl createCopyTarget)
+        {
+            var path = EditorUtility.SaveFilePanel(
+                                    $"Create The Copy From \"{createCopyTarget.DefaultTemplate.Name}\"",
+                                    "Assets",
+                                    $"{createCopyTarget.DefaultTemplate.Name}_Clone", "aml");
+
+            if (string.IsNullOrWhiteSpace(path)) return;
+            var src = Settings.Get().GetTemplateAsset(createCopyTarget.DefaultTemplate.Name);
+            if (src == null) return;
+
+            //AssetDatabase.CopyAsset()
         }
     }
 }

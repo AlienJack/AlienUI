@@ -5,7 +5,8 @@ namespace AlienUI.Models
         public object DefaultValue { get; private set; }
         public string Group { get; internal set; }
         public bool IsReadOnly { get; private set; }
-        public bool NotAllowEdit { get; private set; }
+        public bool IsAmlDisable { get; private set; }
+        public bool IsAmlOnly { get; private set; }
         public PropertyMetadata(object defaultValue)
         {
             DefaultValue = defaultValue;
@@ -22,9 +23,15 @@ namespace AlienUI.Models
             return this;
         }
 
-        public PropertyMetadata SetNotAllowEdit()
+        public PropertyMetadata AmlDisable()
         {
-            NotAllowEdit = true;
+            IsAmlDisable = true;
+            return this;
+        }
+
+        public PropertyMetadata AmlOnly()
+        {
+            IsAmlOnly = true;
             return this;
         }
     }

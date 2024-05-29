@@ -49,7 +49,7 @@ namespace AlienUI.UIElements
         }
 
         private InputField m_inputField;
-        protected override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.InputBox");
+        public override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.InputBox");
 
         protected override void OnInitialized()
         {

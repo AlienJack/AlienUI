@@ -165,7 +165,7 @@ namespace AlienUI.Core
                     continue;
                 }
 
-                if (dp.Meta.NotAllowEdit)
+                if (dp.Meta.IsAmlDisable)
                 {
                     Engine.LogError($"Not allow to set {dp.PropName} in AML file");
                     continue;

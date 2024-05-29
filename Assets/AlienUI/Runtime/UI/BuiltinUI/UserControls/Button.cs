@@ -7,7 +7,7 @@ namespace AlienUI.UIElements
     [Description(Icon = "button")]
     public class Button : UserControl
     {
-        protected override ControlTemplate DefaultTemplate => new("Builtin.Button");
+        public override ControlTemplate DefaultTemplate => new("Builtin.Button");
 
         public string Text
         {
@@ -25,7 +25,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty PressedProperty =
-            DependencyProperty.Register("Pressed", typeof(bool), typeof(Button), new PropertyMetadata(false).SetNotAllowEdit());
+            DependencyProperty.Register("Pressed", typeof(bool), typeof(Button), new PropertyMetadata(false).AmlDisable());
 
         public CommandBase Command
         {

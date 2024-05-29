@@ -7,7 +7,7 @@ namespace AlienUI.UIElements
     [Description(Icon = "controller")]
     public abstract class UserControl : UIElement
     {
-        protected abstract ControlTemplate DefaultTemplate { get; }
+        public abstract ControlTemplate DefaultTemplate { get; }
 
         public ControlTemplate Template
         {
@@ -15,7 +15,7 @@ namespace AlienUI.UIElements
             set { SetValue(TemplateProperty, value); }
         }
         public static readonly DependencyProperty TemplateProperty =
-            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate), "Data"));
+            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate)).AmlOnly());
 
         internal Template m_templateInstance;
 

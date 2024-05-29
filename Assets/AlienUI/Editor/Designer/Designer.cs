@@ -14,6 +14,8 @@ using EGL = UnityEditor.EditorGUILayout;
 using GL = UnityEngine.GUILayout;
 using EG = UnityEditor.EditorGUI;
 using G = UnityEngine.GUI;
+using static UnityEngine.GraphicsBuffer;
+using System.ComponentModel.Design;
 
 namespace AlienUI.Editors
 {
@@ -78,6 +80,27 @@ namespace AlienUI.Editors
                 m_selection = value;
                 drawContext.Clear();
                 drawContext.Add(m_selection);
+
+                UpdateCurrentDraw();
+            }
+        }
+
+        private AmlNodeElement m_currentDrawTarget;
+        private void UpdateCurrentDraw()
+        {
+            if (m_currentDrawTarget != null)
+            {
+                m_currentDrawTarget.OnDependencyPropertyChanged -= Target_OnDependencyPropertyChanged;
+                m_currentDrawTarget.OnChildrenChanged -= Target_OnChildrenChanged;
+            }
+
+            if (drawContext.Count > 0)
+                m_currentDrawTarget = drawContext[^1];
+
+            if (m_currentDrawTarget != null)
+            {
+                m_currentDrawTarget.OnDependencyPropertyChanged += Target_OnDependencyPropertyChanged;
+                m_currentDrawTarget.OnChildrenChanged += Target_OnChildrenChanged;
             }
         }
 
@@ -87,6 +110,7 @@ namespace AlienUI.Editors
             m_amlFile = amlFile;
             m_logicTree = new LogicTree(m_target);
             m_logicTree.OnSelectItem += TreeViewSelectItemChanged;
+            Selection = null;
         }
 
         public void Refresh()
@@ -111,6 +135,27 @@ namespace AlienUI.Editors
         private void Target_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {
             SaveToAml();
+            if (dp.Meta.IsAmlOnly)
+            {
+                Reboot();
+            }
+        }
+
+        internal void Reboot()
+        {
+            Restart(m_amlFile);
+        }
+
+        internal void Restart(AmlAsset aa)
+        {
+            if (m_target != null) m_target.Close();
+            var stage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (stage == null) return;
+
+            var engine = stage.prefabContentsRoot.GetComponentInChildren<Engine>();
+
+            var ui = engine.CreateUI(aa, engine.transform, null);
+            SetTarget(ui, m_amlFile);
         }
 
         private void Target_OnChildrenChanged()
@@ -181,7 +226,7 @@ namespace AlienUI.Editors
 
                 GL.BeginArea(new Rect(rect) { height = 30, width = position.width });
                 EGL.BeginHorizontal();
-                if (GL.Button("ExitEdit"))
+                if (GL.Button("ExitEdit")) 
                 {
                     StageUtility.GoToMainStage();
                     if (Settings.Get().BackLayout)
@@ -275,9 +320,6 @@ namespace AlienUI.Editors
             if (designer.drawContext.Count == 0) return;
             var target = designer.drawContext[^1];
 
-            target.OnDependencyPropertyChanged += designer.Target_OnDependencyPropertyChanged;
-            target.OnChildrenChanged += designer.Target_OnChildrenChanged;
-
             EGL.BeginHorizontal();
             DrawTitle(designer, target);
             DrawProperties(target);
@@ -287,10 +329,8 @@ namespace AlienUI.Editors
             if (DrawChildElements(designer, target, target.Children) is AmlNodeElement select)
             {
                 designer.drawContext.Add(select);
+                designer.UpdateCurrentDraw();
             }
-
-            target.OnDependencyPropertyChanged -= designer.Target_OnDependencyPropertyChanged;
-            target.OnChildrenChanged -= designer.Target_OnChildrenChanged;
         }
 
         private static void DrawProperties(AmlNodeElement target)
@@ -369,6 +409,7 @@ namespace AlienUI.Editors
                     if (GL.Button(new GUIContent(name, parent.GetIcon()), GUILayout.Height(18)))
                     {
                         designer.drawContext = designer.drawContext.Take(i + 1).ToList();
+                        designer.UpdateCurrentDraw();
                         break;
                     }
                     GL.Label("/");
@@ -462,10 +503,10 @@ namespace AlienUI.Editors
 
         private static List<IGrouping<string, DependencyProperty>> GetDependencyGroups(AmlNodeElement target)
         {
-            var propties = target.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && !p.IsAttachedProerty);
+            var propties = target.GetAllDependencyProperties().Where(p => !p.Meta.IsAmlDisable && !p.IsAttachedProerty);
             if (target.Parent != null)
             {
-                var parentAttProps = target.Parent.GetAllDependencyProperties().Where(p => !p.Meta.NotAllowEdit && p.IsAttachedProerty);
+                var parentAttProps = target.Parent.GetAllDependencyProperties().Where(p => !p.Meta.IsAmlDisable && p.IsAttachedProerty);
                 propties = propties.Concat(parentAttProps);
             }
             var groups = propties.GroupBy(p => p.IsAttachedProerty ? $"AttachedProperty From {p.AttachHostType}" : p.Meta.Group).ToList();

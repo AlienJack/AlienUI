@@ -22,7 +22,7 @@ namespace AlienUI.Models
         }
 
         public static readonly DependencyProperty SelfProperty =
-            DependencyProperty.Register("Self", typeof(DependencyObject), typeof(DependencyObject), new PropertyMetadata(null).SetNotAllowEdit());
+            DependencyProperty.Register("Self", typeof(DependencyObject), typeof(DependencyObject), new PropertyMetadata(null).AmlDisable());
 
         public DependencyObject()
         {

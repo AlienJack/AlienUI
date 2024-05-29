@@ -52,7 +52,7 @@ namespace AlienUI.Editors
             allProperties.AddRange(element.GetAttachedProperties());
             foreach (var dp in allProperties)
             {
-                if (dp.Meta.NotAllowEdit) continue;
+                if (dp.Meta.IsAmlDisable) continue;
 
                 var value = element.GetValue(dp);
 
