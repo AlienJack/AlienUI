@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using AlienUI.Models;
+using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -23,7 +25,8 @@ namespace AlienUI
         }
 
 
-        private static ReorderableList m_templateList;
+        private static ReorderableList m_templateListDrawer;
+        private static ReorderableList m_uiListDrawer;
 
         private static void OnDrawSettingGUI(string searchContext)
         {
@@ -32,7 +35,13 @@ namespace AlienUI
             EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(20, 20, 20, 20) });
             EditorGUI.BeginChangeCheck();
 
+            if (GUILayout.Button("Recollect"))
+            {
+                setting.CollectAsset();
+            }
+
             DrawDefaultFont(setting);
+            DrawUI(setting);
             DrawTemplate(setting);
 
             EditorGUILayout.Space(20);
@@ -42,6 +51,8 @@ namespace AlienUI
             if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
             EditorGUILayout.EndVertical();
         }
+
+
 
         private static void DrawDesignerSettings(Settings setting)
         {
@@ -58,22 +69,40 @@ namespace AlienUI
             EditorGUILayout.EndVertical();
         }
 
-        private static void DrawTemplate(Settings setting)
+        private static void DrawUI(Settings setting)
         {
-            if (m_templateList == null)
+            if (m_uiListDrawer == null)
             {
-                m_templateList = new ReorderableList(setting.m_amlResources, typeof(AmlResouces));
-                m_templateList.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "TemplateResouce");
-                m_templateList.drawElementCallback = (rect, index, isActive, isFocused) =>
+                m_uiListDrawer = new ReorderableList(setting.m_uiDict.Values.ToList(), typeof(AmlResouces));
+                m_uiListDrawer.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "UIResources");
+                m_uiListDrawer.drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     EditorGUI.BeginChangeCheck();
-                    var tempItem = m_templateList.list[index] as AmlResouces;
+                    var tempItem = m_uiListDrawer.list[index] as AmlResouces;
                     tempItem.Aml = EditorGUI.ObjectField(rect, tempItem.Aml, typeof(AmlAsset), false) as AmlAsset;
                     if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
                 };
             }
 
-            m_templateList.DoLayoutList();
+            m_uiListDrawer.DoLayoutList();
+        }
+
+        private static void DrawTemplate(Settings setting)
+        {
+            if (m_templateListDrawer == null)
+            {
+                m_templateListDrawer = new ReorderableList(setting.m_templatesDict.Values.ToList(), typeof(AmlResouces));
+                m_templateListDrawer.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "TemplateResource");
+                m_templateListDrawer.drawElementCallback = (rect, index, isActive, isFocused) =>
+                {
+                    EditorGUI.BeginChangeCheck();
+                    var tempItem = m_templateListDrawer.list[index] as AmlResouces;
+                    tempItem.Aml = EditorGUI.ObjectField(rect, tempItem.Aml, typeof(AmlAsset), false) as AmlAsset;
+                    if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
+                };
+            }
+
+            m_templateListDrawer.DoLayoutList();
         }
 
         private static void DrawDefaultFont(Settings setting)
@@ -91,6 +120,53 @@ namespace AlienUI
             }
 
             return set;
+        }
+
+        public AmlAsset CreateTemplateAml(AmlAsset from = null, string defaultName = null)
+        {
+            var title = from != null ? $"Create The Copy From \"{from.name}\"" : "CreateTemplateAml";
+            var defaultFileName = defaultName ?? $"{from.name}_Clone";
+            var path = EditorUtility.SaveFilePanel(
+                                    title,
+                                    "Assets",
+                                    defaultFileName, "aml");
+
+            if (string.IsNullOrWhiteSpace(path)) return null;
+
+            bool isInProject = Path.GetFullPath(path).StartsWith(Path.GetFullPath("Assets"));
+            if (!isInProject)
+            {
+                EditorUtility.DisplayDialog("Error", "The Aml file must be created within the Unity project directory", "ok");
+                return null;
+            }
+            var sourcePath = AssetDatabase.GetAssetPath(from);
+            AssetDatabase.CopyAsset(sourcePath, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            CollectAsset();
+
+            string newAssetPath = Path.GetRelativePath("Assets/..", path);
+            return AssetDatabase.LoadAssetAtPath<AmlAsset>(newAssetPath);
+        }
+
+        public void CollectAsset()
+        {
+            m_amlResources.Clear();
+            foreach (var guid in AssetDatabase.FindAssets("t:amlasset", new string[] { "Assets" }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var amlAsset = AssetDatabase.LoadAssetAtPath<AmlAsset>(path);
+                m_amlResources.Add(new AmlResouces { Aml = amlAsset });
+            }
+
+            OptimizeData();
+
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssetIfDirty(this);
+
+            m_uiListDrawer = null;
+            m_templateListDrawer = null;
         }
     }
 

@@ -135,6 +135,7 @@ namespace AlienUI
             {
                 foreach (UIElement element in layoutTask)
                 {
+                    if (element.Rect == null) continue;
                     if (element.TopParent == null) element.BeginLayout();
                 }
                 layoutTask.Clear();

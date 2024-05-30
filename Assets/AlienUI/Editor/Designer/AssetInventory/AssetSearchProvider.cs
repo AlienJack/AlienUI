@@ -73,23 +73,17 @@ namespace AlienUI.Editors
 
         private static void PerformCreateAndEditTemplateAction(UserControl createCopyTarget)
         {
-            var path = EditorUtility.SaveFilePanel(
-                                    $"Create The Copy From \"{createCopyTarget.DefaultTemplate.Name}\"",
-                                    "Assets",
-                                    $"{createCopyTarget.DefaultTemplate.Name}_Clone", "aml");
-
-            if (string.IsNullOrWhiteSpace(path)) return;
-
-            bool isInProject = Path.GetFullPath(path).StartsWith(Path.GetFullPath("Assets"));
-            if (!isInProject)
-            {
-                EditorUtility.DisplayDialog("Error", "The Aml file must be created within the Unity project directory", "ok");
-                return;
-            }
             var src = Settings.Get().GetTemplateAsset(createCopyTarget.DefaultTemplate.Name);
             if (src == null) return;
 
-            //AssetDatabase.CopyAsset()
+            var newAsset = Settings.Get().CreateTemplateAml(src);
+
+            if (newAsset != null)
+            {
+                createCopyTarget.Template = new ControlTemplate(newAsset.name);
+                Designer.Instance.Restart(newAsset);
+            }
+
         }
     }
 }

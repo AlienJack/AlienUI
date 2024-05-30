@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_defaultLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_amlResources:
+  - Aml: {fileID: 5022602860645237092, guid: 3e80a026fe951034cbe74fe9ac8ddedc, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 07d9b3baa8f96824b8e45f6ac61c6679, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 48440c2ca59705e4ab7e1b2a98673b41, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 0632dfc972312aa439d529eedcf4a54f, type: 3}
+  - Aml: {fileID: 5022602860645237092, guid: 686fcc72cd08c7d4db9a1f789bb8999f, type: 3}
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}
   DesignSize: {x: 1920, y: 1080}

@@ -20,7 +20,8 @@ namespace AlienUI
         private Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
         private Dictionary<Type, HashSet<AmlResouces>> m_userControl2TemplatesDict = new Dictionary<Type, HashSet<AmlResouces>>();
-
+        [NonSerialized]
+        private Dictionary<string, AmlResouces> m_uiDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
         bool m_optimized;
 
@@ -29,6 +30,9 @@ namespace AlienUI
 
         void OptimizeData()
         {
+            m_templatesDict.Clear();
+            m_userControl2TemplatesDict.Clear();
+            m_uiDict.Clear();
             foreach (var item in m_amlResources)
             {
                 item.CalcResourcesType();
@@ -38,6 +42,10 @@ namespace AlienUI
                     var type = Type.GetType(item.TemplateTarget);
                     if (!m_userControl2TemplatesDict.ContainsKey(type)) m_userControl2TemplatesDict[type] = new HashSet<AmlResouces>();
                     m_userControl2TemplatesDict[type].Add(item);
+                }
+                else
+                {
+                    m_uiDict[item.Name] = item;
                 }
             }
 

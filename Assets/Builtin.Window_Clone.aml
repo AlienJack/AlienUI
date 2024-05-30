@@ -1,0 +1,26 @@
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
+  <Image Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
+    <Grid GridDefine="1*|30px,1*" Horizontal="Stretch" Vertical="Stretch">
+      <Image Color="#000000FF" Name="Title">
+        <Label Color="#FFFFFFFF" FontSize="18" Content="{TemplateBinding Title}" Horizontal="Left" Offset="2,0" />
+        <Button Text="X" Command="{TemplateBinding CloseCmd}" Width="25" Height="25" Horizontal="Right" Offset="-5,0" />
+      </Image>
+      <Image Horizontal="Stretch" Vertical="Stretch" Name="Content" GridPos="0,1" />
+    </Grid>
+    <EventTrigger Event="OnShow">
+      <PlayStoryboard Target="Show" />
+    </EventTrigger>
+    <StoryboardGroup>
+      <Storyboard Name="Show">
+        <Animation Target="WndBottom" PropertyName="Alpha">
+          <AnimationKey Value="0" />
+          <AnimationKey Time="0.5" Value="1" />
+        </Animation>
+        <Animation Target="WndBottom" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:0.12833034992218018,&quot;Value&quot;:0.5676257014274597,&quot;InTangent&quot;:1.3469977378845215,&quot;OutTangent&quot;:1.3469977378845215,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.3333333432674408,&quot;OutWeight&quot;:0.3333333432674408},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+          <AnimationKey Value="0,0" />
+          <AnimationKey Time="0.5" Value="1,1" />
+        </Animation>
+      </Storyboard>
+    </StoryboardGroup>
+  </Image>
+</Template>
