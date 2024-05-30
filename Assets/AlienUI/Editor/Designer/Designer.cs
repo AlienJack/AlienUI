@@ -10,12 +10,10 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using EGL = UnityEditor.EditorGUILayout;
-using GL = UnityEngine.GUILayout;
 using EG = UnityEditor.EditorGUI;
+using EGL = UnityEditor.EditorGUILayout;
 using G = UnityEngine.GUI;
-using static UnityEngine.GraphicsBuffer;
-using System.ComponentModel.Design;
+using GL = UnityEngine.GUILayout;
 
 namespace AlienUI.Editors
 {
@@ -226,7 +224,7 @@ namespace AlienUI.Editors
 
                 GL.BeginArea(new Rect(rect) { height = 30, width = position.width });
                 EGL.BeginHorizontal();
-                if (GL.Button("ExitEdit")) 
+                if (GL.Button("ExitEdit"))
                 {
                     StageUtility.GoToMainStage();
                     if (Settings.Get().BackLayout)
@@ -546,25 +544,7 @@ namespace AlienUI.Editors
                 {
                     TextInputWindow.ShowWindow("Set Binding", string.Empty, mousePos, (inputSorce) =>
                     {
-                        if (BindUtility.IsBindingString(inputSorce, out Match match))
-                        {
-                            var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                            DependencyObject source = null;
-                            switch (bindType)
-                            {
-                                case EnumBindingType.Binding: source = selection.DataContext; break;
-                                case EnumBindingType.TemplateBinding: source = selection.TemplateHost; break;
-                                default:
-                                    Engine.LogError("BindType Invalid");
-                                    break;
-                            }
-
-                            source?.BeginBind(inputSorce)
-                                .SetSourceProperty(propName)
-                                .SetTarget(selection)
-                                .SetTargetProperty(property.PropName)
-                                .Apply(converterName, modeName);
-                        }
+                        SetBinding(selection, property, inputSorce);
                     });
                 });
             }
@@ -575,25 +555,7 @@ namespace AlienUI.Editors
                     TextInputWindow.ShowWindow("Edit Binding", selection.GetBinding(property).SourceCode, mousePos, (inputSorce) =>
                     {
                         selection.GetBinding(property).Disconnect();
-                        if (BindUtility.IsBindingString(inputSorce, out Match match))
-                        {
-                            var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                            DependencyObject source = null;
-                            switch (bindType)
-                            {
-                                case EnumBindingType.Binding: source = selection.DataContext; break;
-                                case EnumBindingType.TemplateBinding: source = selection.TemplateHost; break;
-                                default:
-                                    Engine.LogError("BindType Invalid");
-                                    break;
-                            }
-
-                            source?.BeginBind(inputSorce)
-                                .SetSourceProperty(propName)
-                                .SetTarget(selection)
-                                .SetTargetProperty(property.PropName)
-                                .Apply(converterName, modeName);
-                        }
+                        SetBinding(selection, property, inputSorce);
                     });
                 });
                 menu.AddItem(new GUIContent("Remove Binding"), false, () =>
@@ -605,6 +567,29 @@ namespace AlienUI.Editors
             menu.ShowAsContext();
 
             Event.current.Use();
+        }
+
+        private static void SetBinding(AmlNodeElement selection, DependencyProperty property, string inputSorce)
+        {
+            if (BindUtility.IsBindingString(inputSorce, out Match match))
+            {
+                var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
+                DependencyObject source = null;
+                switch (bindType)
+                {
+                    case EnumBindingType.Binding: source = selection.DataContext; break;
+                    case EnumBindingType.TemplateBinding: source = selection.TemplateHost; break;
+                    default:
+                        Engine.LogError("BindType Invalid");
+                        break;
+                }
+
+                source.BeginBind(inputSorce)
+                    .SetSourceProperty(propName)
+                    .SetTarget(selection)
+                    .SetTargetProperty(property.PropName)
+                    .Apply(converterName, modeName);
+            }
         }
 
         private static PropertyDrawerBase FindDrawer(Type propertyType)

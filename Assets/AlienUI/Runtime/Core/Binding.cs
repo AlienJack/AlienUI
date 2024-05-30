@@ -57,10 +57,10 @@ namespace AlienUI.Core
                 switch (bindMode)
                 {
                     case EnumBindMode.OneWay:
-                        DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
+                        if (Source != null) DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
                         break;
                     case EnumBindMode.TwoWay:
-                        DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
+                        if (Source != null) DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
                         DependencyProperty.Subscribe(Target, TargetPropertyName, OnTargetDataChanged);
                         break;
                 }
@@ -80,7 +80,7 @@ namespace AlienUI.Core
 
         public void Disconnect()
         {
-            DependencyProperty.Unsubscribe(Source, SourcePropertyName, OnSourceDataChanged);
+            if (Source != null) DependencyProperty.Unsubscribe(Source, SourcePropertyName, OnSourceDataChanged);
             DependencyProperty.Unsubscribe(Target, TargetPropertyName, OnTargetDataChanged);
 
             var p = Target.GetDependencyProperty(TargetPropertyName);
@@ -90,6 +90,7 @@ namespace AlienUI.Core
         private void OnTargetDataChanged(DependencyObject sender, object oldValue, object newValue)
         {
             if (m_dataSync) return;
+            if (Source == null) return;
 
             m_dataSync = true;
 
