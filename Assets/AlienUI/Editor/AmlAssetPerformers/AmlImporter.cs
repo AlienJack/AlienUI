@@ -24,7 +24,6 @@ namespace AlienUI.Editors
             // 创建MyCustomXml实例并填充数据
             var amlAsset = ScriptableObject.CreateInstance<AmlAsset>();
             amlAsset.Text = xmlContent;
-            amlAsset.Path = ctx.assetPath;
             // 添加到导入上下文
             ctx.AddObjectToAsset("main obj", amlAsset);
             ctx.SetMainObject(amlAsset);            

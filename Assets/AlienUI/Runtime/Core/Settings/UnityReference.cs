@@ -18,6 +18,7 @@ namespace AlienUI.UIElements.ToolsScript
         internal void OptimizeData()
         {
             m_refMap = new RefMap();
+            refList = refList.Where(r => r.IsValid).Distinct().ToList();
             foreach (ReferenceManifest manifest in refList)
             {
                 if (manifest.RefObject == null) return;
@@ -36,7 +37,7 @@ namespace AlienUI.UIElements.ToolsScript
             if (assets == null) return null;
 
             assets.TryGetValue(name, out var asset);
-            return asset as T;
+            return asset.RefObject as T;
         }
 
 #if UNITY_EDITOR
@@ -52,9 +53,9 @@ namespace AlienUI.UIElements.ToolsScript
             refList.Add(manifest);
         }
 
-        internal void AddAsset(string group, string name, UnityEngine.Object asset)
+        internal void AddAsset(string group, string name, Type assetType, UnityEngine.Object asset)
         {
-            refList.Add(new ReferenceManifest { Group = group, Name = name, RefObject = asset });
+            refList.Add(new ReferenceManifest { Group = group, Name = name, RefObject = asset, TypeName = assetType.FullName });
         }
 
         internal void GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
@@ -82,6 +83,21 @@ namespace AlienUI.UIElements.ToolsScript
         public string Group;
         [SerializeField]
         public string Name;
+        [SerializeField]
+        public string TypeName;
+
+        public bool IsValid
+        {
+            get
+            {
+                if (RefObject == null) return false;
+                if (string.IsNullOrWhiteSpace(Group)) return false;
+                if (string.IsNullOrWhiteSpace(Name)) return false;
+                if (string.IsNullOrWhiteSpace(TypeName)) return false;
+
+                return true;
+            }
+        }
 
         public override bool Equals(object obj)
         {

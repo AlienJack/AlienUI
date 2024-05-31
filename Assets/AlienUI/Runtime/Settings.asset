@@ -20,15 +20,14 @@ MonoBehaviour:
   - Aml: {fileID: 5022602860645237092, guid: 0632dfc972312aa439d529eedcf4a54f, type: 3}
   m_reference:
     refList:
-    - RefObject: {fileID: 2800000, guid: 2cf9e3f6116abb34eaf62699fd94cb5c, type: 3}
+    - RefObject: {fileID: 21300000, guid: 2cf9e3f6116abb34eaf62699fd94cb5c, type: 3}
       Group: DEMO
       Name: BG
-    - RefObject: {fileID: 2800000, guid: 595b897d654b382409928248b27346eb, type: 3}
+      TypeName: UnityEngine.Sprite
+    - RefObject: {fileID: 21300000, guid: 595b897d654b382409928248b27346eb, type: 3}
       Group: DEMO
       Name: git
-    - RefObject: {fileID: 2800000, guid: 2cf9e3f6116abb34eaf62699fd94cb5c, type: 3}
-      Group: DEMO
-      Name: BG
+      TypeName: UnityEngine.Sprite
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}
   DesignSize: {x: 1920, y: 1080}

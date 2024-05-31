@@ -128,8 +128,13 @@ namespace AlienUI.Core
 
         internal PropertyResolver GetAttributeResolver(Type propType)
         {
-            m_propertyResolvers.TryGetValue(propType, out var propertyResolver);
-            return propertyResolver;
+            while (propType != null)
+            {
+                if (m_propertyResolvers.TryGetValue(propType, out var propertyResolver)) return propertyResolver;
+                propType = propType.BaseType;
+            }
+
+            return null;
         }
 
         internal List<Type> GetTypesOfAssignFrom(Type type)

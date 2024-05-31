@@ -5,9 +5,10 @@ namespace AlienUI.Models
     public class AmlAsset : ScriptableObject
     {
         public string Text;
-        public string Path;
 
 #if UNITY_EDITOR
+        public string Path => UnityEditor.AssetDatabase.GetAssetPath(this);
+
         public void SaveToDisk()
         {
             System.IO.File.WriteAllText(Path, Text);

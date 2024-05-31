@@ -1,10 +1,13 @@
 #if UNITY_EDITOR
+using AlienUI.Editors;
 using AlienUI.Models;
+using AlienUI.UIElements.ToolsScript;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -69,7 +72,28 @@ namespace AlienUI
         private static Dictionary<string, bool> refMapGroupOpen = new Dictionary<string, bool>();
         private static string newGroup;
         private static string newName;
+        private static Type newType;
         private static UnityEngine.Object newRef;
+
+        private static List<Type> unityAssetsTypes;
+
+        private static List<Type> GetUnityAssetsTypes()
+        {
+            if (unityAssetsTypes != null) return unityAssetsTypes;
+
+            unityAssetsTypes = new List<Type>();
+            foreach (var type in AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(a => !a.FullName.Contains("Editor"))
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.IsSubclassOf(typeof(UnityEngine.Object))))
+            {
+                unityAssetsTypes.Add(type);
+            }
+
+            return unityAssetsTypes;
+        }
+
         private static void DrawRefMap(Settings setting)
         {
             refMapScrollPos = EditorGUILayout.BeginScrollView(refMapScrollPos);
@@ -83,6 +107,14 @@ namespace AlienUI
                     {
                         var manifestItem = groupItem.Value;
                         EditorGUILayout.BeginHorizontal();
+                        var tempColor = GUI.color;
+                        GUI.color = Color.red;
+                        if (GUILayout.Button("DEL", GUILayout.Width(35)))
+                        {
+                            manifestItem.RefObject = null;
+                            continue;
+                        }
+                        GUI.color = tempColor;
                         manifestItem.Name = EditorGUILayout.TextField(manifestItem.Name);
                         manifestItem.RefObject = EditorGUILayout.ObjectField(string.Empty, manifestItem.RefObject, typeof(UnityEngine.Object), false);
                         EditorGUILayout.EndHorizontal();
@@ -94,19 +126,39 @@ namespace AlienUI
 
             EditorGUILayout.BeginHorizontal();
 
-            var temp = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 40;
-            newGroup = EditorGUILayout.TextField("Group", newGroup);
-            EditorGUIUtility.labelWidth = 40;
-            newName = EditorGUILayout.TextField("Name", newName);
-            EditorGUIUtility.labelWidth = 60;
-            newRef = EditorGUILayout.ObjectField("Reference", newRef, typeof(UnityEngine.Object), false);
-            if (GUILayout.Button("Create"))
+            if (GUILayout.Button("Add New UnityAsset Reference"))
             {
-                setting.m_reference.AddAsset(newGroup, newName, newRef);
-                newGroup = string.Empty;
-                newName = string.Empty;
-                newRef = null;
+                var searchWindow = UnityAssetTypeSearchWindow.CreateInstance<UnityAssetTypeSearchWindow>();
+                searchWindow.Options = GetUnityAssetsTypes();
+                var pos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
+                pos.x += 130;
+                searchWindow.OnSelectType = OnSelect;
+                SearchWindow.Open(new SearchWindowContext(pos), searchWindow);
+            }
+            var temp = EditorGUIUtility.labelWidth;
+            if (newType != null)
+            {
+                EditorGUIUtility.labelWidth = 40;
+                newGroup = EditorGUILayout.TextField("Group", newGroup);
+                EditorGUIUtility.labelWidth = 40;
+                newName = EditorGUILayout.TextField("Name", newName);
+                EditorGUIUtility.labelWidth = 60;
+                newRef = EditorGUILayout.ObjectField("Reference", newRef, newType, false);
+            }
+
+
+            var AddParamInvalid = string.IsNullOrWhiteSpace(newGroup) || string.IsNullOrWhiteSpace(newName) || newType == null || newRef == null;
+
+            if (!AddParamInvalid)
+            {
+                if (GUILayout.Button("Create"))
+                {
+                    setting.m_reference.AddAsset(newGroup, newName, newType, newRef);
+                    newGroup = string.Empty;
+                    newName = string.Empty;
+                    newType = null;
+                    newRef = null;
+                }
             }
             EditorGUILayout.EndHorizontal();
             EditorGUIUtility.labelWidth = temp;
@@ -117,6 +169,12 @@ namespace AlienUI
                 EditorUtility.SetDirty(setting);
             }
         }
+
+        private static void OnSelect(Type type)
+        {
+            newType = type;
+        }
+
 
         private static void DrawDesignerSettings(Settings setting)
         {
