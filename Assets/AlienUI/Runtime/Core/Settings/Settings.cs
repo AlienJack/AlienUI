@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.UIElements;
+using AlienUI.UIElements.ToolsScript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace AlienUI
         public Font DefaultLabelFont => m_defaultLabelFont;
         [SerializeField]
         private List<AmlResouces> m_amlResources = new List<AmlResouces>();
-
         [NonSerialized]
         private Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
@@ -25,8 +25,10 @@ namespace AlienUI
         [NonSerialized]
         bool m_optimized;
 
-        public static Func<Settings> SettingGetter;
+        [SerializeField]
+        private UnityReference m_reference;
 
+        public static Func<Settings> SettingGetter;
 
         void OptimizeData()
         {
@@ -49,6 +51,8 @@ namespace AlienUI
                 }
             }
 
+            m_reference.OptimizeData();
+
             m_optimized = true;
         }
 
@@ -60,6 +64,8 @@ namespace AlienUI
 #else
             m_templatesDict.TryGetValue(templateName, out AmlResouces template);
 #endif
+            if (template == null) return null;
+
             return template.Aml;
         }
 

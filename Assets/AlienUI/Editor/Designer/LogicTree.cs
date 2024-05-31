@@ -1,4 +1,5 @@
 using AlienUI.Core;
+using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
 using System.Collections;
@@ -15,18 +16,40 @@ namespace AlienUI.Editors
 {
     internal class LogicTree : TreeView
     {
+        private AmlAsset m_indentParent;
         private UIElement m_root;
         private Dictionary<int, UIElement> m_uiMaps = new Dictionary<int, UIElement>();
-        public LogicTree(UIElement uiRoot)
+        public LogicTree(UIElement uiRoot, AmlAsset indentParent)
             : base(new TreeViewState())
         {
             m_root = uiRoot;
-
+            m_indentParent = indentParent;
             Reload();
         }
 
+        protected override void RowGUI(RowGUIArgs args)
+        {
+            if (m_indentParent != null && args.item.id == m_indentParent.GetHashCode())
+            {
+                var rect = new Rect(args.rowRect);
+                rect.position += new Vector2(15, 0);
+                rect.width -= 15;
+                if (GUI.Button(rect, new GUIContent(args.item.displayName, Settings.Get().GetIcon("uparrow"))))
+                {
+                    Designer.Instance.BackIndent();
+                }
+            }
+            else
+            {
+                base.RowGUI(args);
+            }
+        }
+
         protected override bool CanMultiSelect(TreeViewItem item) => false;
-        protected override bool CanRename(TreeViewItem item) => true;
+        protected override bool CanRename(TreeViewItem item)
+        {
+            return m_indentParent == null || item.id != m_indentParent.GetHashCode();
+        }
         protected override void RenameEnded(RenameEndedArgs args)
         {
             var selectionID = this.GetSelection().FirstOrDefault();
@@ -84,7 +107,8 @@ namespace AlienUI.Editors
             {
                 m_uiMaps.TryGetValue(selectedIds[0], out selection);
             }
-            OnSelectItem?.Invoke(selection);
+            if (selection != null)
+                OnSelectItem?.Invoke(selection);
         }
 
         public void SelectWithoutNotify(UIElement ui)
@@ -103,12 +127,22 @@ namespace AlienUI.Editors
         protected override TreeViewItem BuildRoot()
         {
             var rootItem = new TreeViewItem { id = 0, depth = -1 };
-
             var allItems = new List<TreeViewItem>();
-            var treeItem = ToTreeViewItem(m_root, 0);
+
+            int startDepth = 0;
+            if (m_indentParent != null)
+            {
+                var indepenItem = new TreeViewItem(m_indentParent.GetHashCode(), startDepth, m_indentParent.name);
+                allItems.Add(indepenItem);
+
+                startDepth = 1;
+            }
+
+            var treeItem = ToTreeViewItem(m_root, startDepth);
             allItems.Add(treeItem);
             m_uiMaps[treeItem.id] = m_root;
-            FillTreeItemData(m_root, m_root.Document, ref allItems, 1);
+
+            FillTreeItemData(m_root, m_root.Document, ref allItems, startDepth + 1);
             DepthNormalizer.NormalizeDepths(allItems);
             SetupParentsAndChildrenFromDepths(rootItem, allItems);
             return rootItem;

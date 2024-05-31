@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using AlienUI.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -14,12 +15,15 @@ namespace AlienUI
         public static string RootPATH => "Assets/AlienUI";
         public static string SettingPath => Path.Combine(RootPATH, "Runtime/Settings.asset");
 
+        private static Settings s_settingObj;
         [SettingsProvider]
         public static SettingsProvider CreateToProjectSetting()
         {
             var provider = new SettingsProvider("Project/AlienUI", SettingsScope.Project);
             provider.label = "AlienUI";
             provider.guiHandler = OnDrawSettingGUI;
+            s_settingObj = Settings.Get();
+            s_settingObj.OptimizeData();
 
             return provider;
         }
@@ -27,37 +31,95 @@ namespace AlienUI
 
         private static ReorderableList m_templateListDrawer;
         private static ReorderableList m_uiListDrawer;
-
+        private static int tableSelect;
+        private static string[] tabTitles = new string[] { "Designer", "AmlResources", "Unity Ref" };
         private static void OnDrawSettingGUI(string searchContext)
         {
-            var setting = prepareSettingObject();
-
             EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(20, 20, 20, 20) });
             EditorGUI.BeginChangeCheck();
 
-            if (GUILayout.Button("Recollect"))
+            tableSelect = GUILayout.Toolbar(tableSelect, tabTitles);
+            GUILayout.Space(10);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            switch (tableSelect)
             {
-                setting.CollectAsset();
+                case 0:
+                    DrawDesignerSettings(s_settingObj);
+                    break;
+                case 1:
+                    if (GUILayout.Button("Recollect"))
+                    {
+                        s_settingObj.CollectAsset();
+                    }
+                    DrawDefaultFont(s_settingObj);
+                    DrawUI(s_settingObj);
+                    DrawTemplate(s_settingObj);
+                    break;
+                case 2:
+                    DrawRefMap(s_settingObj);
+                    break;
             }
+            EditorGUILayout.EndVertical();
 
-            DrawDefaultFont(setting);
-            DrawUI(setting);
-            DrawTemplate(setting);
-
-            EditorGUILayout.Space(20);
-
-            DrawDesignerSettings(setting);
-
-            if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
+            if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(s_settingObj);
             EditorGUILayout.EndVertical();
         }
 
+        private static Vector2 refMapScrollPos;
+        private static Dictionary<string, bool> refMapGroupOpen = new Dictionary<string, bool>();
+        private static string newGroup;
+        private static string newName;
+        private static UnityEngine.Object newRef;
+        private static void DrawRefMap(Settings setting)
+        {
+            refMapScrollPos = EditorGUILayout.BeginScrollView(refMapScrollPos);
+            foreach (var item in setting.m_reference.m_refMap)
+            {
+                refMapGroupOpen.TryGetValue(item.Key, out var opened);
+                refMapGroupOpen[item.Key] = EditorGUILayout.BeginFoldoutHeaderGroup(opened, item.Key);
+                if (refMapGroupOpen[item.Key])
+                {
+                    foreach (var groupItem in item.Value)
+                    {
+                        var manifestItem = groupItem.Value;
+                        EditorGUILayout.BeginHorizontal();
+                        manifestItem.Name = EditorGUILayout.TextField(manifestItem.Name);
+                        manifestItem.RefObject = EditorGUILayout.ObjectField(string.Empty, manifestItem.RefObject, typeof(UnityEngine.Object), false);
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
+                EditorGUILayout.EndFoldoutHeaderGroup();
+            }
+            EditorGUILayout.EndScrollView();
 
+            EditorGUILayout.BeginHorizontal();
+
+            var temp = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 40;
+            newGroup = EditorGUILayout.TextField("Group", newGroup);
+            EditorGUIUtility.labelWidth = 40;
+            newName = EditorGUILayout.TextField("Name", newName);
+            EditorGUIUtility.labelWidth = 60;
+            newRef = EditorGUILayout.ObjectField("Reference", newRef, typeof(UnityEngine.Object), false);
+            if (GUILayout.Button("Create"))
+            {
+                setting.m_reference.AddAsset(newGroup, newName, newRef);
+                newGroup = string.Empty;
+                newName = string.Empty;
+                newRef = null;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUIUtility.labelWidth = temp;
+
+            if (GUI.changed)
+            {
+                setting.m_reference.OptimizeData();
+                EditorUtility.SetDirty(setting);
+            }
+        }
 
         private static void DrawDesignerSettings(Settings setting)
         {
-            EditorGUILayout.BeginVertical(new GUIStyle(EditorStyles.helpBox) { padding = new RectOffset(5, 5, 5, 5) });
-            EditorGUILayout.LabelField("Design Mode Settings", new GUIStyle(EditorStyles.label) { fontSize = 16 });
             EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(5, 5, 5, 5) });
             setting.EditPrefab = EditorGUILayout.ObjectField("EditPrefab", setting.EditPrefab, typeof(GameObject), false) as GameObject;
             setting.PreviewPrefab = EditorGUILayout.ObjectField("PreviewPrefab", setting.PreviewPrefab, typeof(GameObject), false) as GameObject;
@@ -65,7 +127,6 @@ namespace AlienUI
             setting.DesignerLayout = EditorGUILayout.ObjectField("DesignerLayoutFile", setting.DesignerLayout, typeof(DefaultAsset), false) as DefaultAsset;
             setting.BackLayout = EditorGUILayout.ObjectField("QuitDesignerLayoutFile", setting.BackLayout, typeof(DefaultAsset), false) as DefaultAsset;
             setting.OpenAmlFileWhenOpenDesigner = EditorGUILayout.Toggle("Auto Open Aml FIle", setting.OpenAmlFileWhenOpenDesigner);
-            EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
         }
 
@@ -110,18 +171,6 @@ namespace AlienUI
             setting.m_defaultLabelFont = (Font)EditorGUILayout.ObjectField("DefaultFont", setting.m_defaultLabelFont, typeof(Font), false);
         }
 
-        private static Settings prepareSettingObject()
-        {
-            var set = AssetDatabase.LoadAssetAtPath<Settings>(SettingPath);
-            if (set == null)
-            {
-                AssetDatabase.CreateAsset(CreateInstance<Settings>(), SettingPath);
-                set = AssetDatabase.LoadAssetAtPath<Settings>(SettingPath);
-            }
-
-            return set;
-        }
-
         public AmlAsset CreateTemplateAml(AmlAsset from = null, string defaultName = null)
         {
             var title = from != null ? $"Create The Copy From \"{from.name}\"" : "CreateTemplateAml";
@@ -150,12 +199,13 @@ namespace AlienUI
             return AssetDatabase.LoadAssetAtPath<AmlAsset>(newAssetPath);
         }
 
-        public void CollectAsset()
+        public void CollectAsset(string ignorePath = null)
         {
             m_amlResources.Clear();
             foreach (var guid in AssetDatabase.FindAssets("t:amlasset", new string[] { "Assets" }))
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path == ignorePath) continue;
                 var amlAsset = AssetDatabase.LoadAssetAtPath<AmlAsset>(path);
                 m_amlResources.Add(new AmlResouces { Aml = amlAsset });
             }

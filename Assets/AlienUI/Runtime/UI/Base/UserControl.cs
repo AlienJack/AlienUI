@@ -29,7 +29,14 @@ namespace AlienUI.UIElements
         {
             var targetTemplate = Template.Valid ? Template : DefaultTemplate;
 
+        reinstance:
             m_templateInstance = targetTemplate.Instantiate(Engine, m_rectTransform, DataContext, this) as Template;
+            if (m_templateInstance == null)
+            {
+                Engine.LogError($"Template Resource [{Template.Name}] not found");
+                targetTemplate = DefaultTemplate;
+                goto reinstance;
+            }
             var templateRoot = m_templateInstance.m_rectTransform;
             templateRoot.anchorMin = new Vector2(0, 0);
             templateRoot.anchorMax = new Vector2(1, 1);

@@ -10,10 +10,9 @@ namespace AlienUI.Models
 #if UNITY_EDITOR
         public void SaveToDisk()
         {
+            System.IO.File.WriteAllText(Path, Text);
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
-
-            System.IO.File.WriteAllText(Path, Text);
         }
 #endif
     }

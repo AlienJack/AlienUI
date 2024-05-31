@@ -102,11 +102,18 @@ namespace AlienUI.Editors
             }
         }
 
-        public void SetTarget(UIElement ui, AmlAsset amlFile)
+        public void StartDesginer(UIElement ui, AmlAsset amlFile)
+        {
+            indentQueue.Clear();
+            indentQueue.Add(amlFile);
+            SetTarget(ui, amlFile);
+        }
+
+        void SetTarget(UIElement ui, AmlAsset amlFile)
         {
             m_target = ui;
             m_amlFile = amlFile;
-            m_logicTree = new LogicTree(m_target);
+            m_logicTree = new LogicTree(m_target, HasIndent());
             m_logicTree.OnSelectItem += TreeViewSelectItemChanged;
             Selection = null;
         }
@@ -141,10 +148,22 @@ namespace AlienUI.Editors
 
         internal void Reboot()
         {
-            Restart(m_amlFile);
+            initAml(m_amlFile);
         }
 
+        private List<AmlAsset> indentQueue = new List<AmlAsset>();
         internal void Restart(AmlAsset aa)
+        {
+            if (aa == m_amlFile) Reboot();
+            else
+            {
+                indentQueue.Add(aa);
+
+                initAml(aa);
+            }
+        }
+
+        private void initAml(AmlAsset aa)
         {
             if (m_target != null) m_target.Close();
             var stage = PrefabStageUtility.GetCurrentPrefabStage();
@@ -153,8 +172,28 @@ namespace AlienUI.Editors
             var engine = stage.prefabContentsRoot.GetComponentInChildren<Engine>();
 
             var ui = engine.CreateUI(aa, engine.transform, null);
-            SetTarget(ui, m_amlFile);
+            SetTarget(ui, aa);
         }
+
+        internal AmlAsset HasIndent()
+        {
+            return indentQueue.Count >= 2 ? indentQueue[^2] : null;
+        }
+
+        internal void BackIndent()
+        {
+            var frontAml = HasIndent();
+
+            if (frontAml != null)
+            {
+                indentQueue.RemoveAt(indentQueue.Count - 1);
+                if (frontAml != null)
+                {
+                    initAml(frontAml);
+                }
+            }
+        }
+
 
         private void Target_OnChildrenChanged()
         {
@@ -247,6 +286,23 @@ namespace AlienUI.Editors
                 EGL.EndHorizontal();
                 GL.EndArea();
             }
+            else
+            {
+                GL.BeginArea(new Rect(rect) { height = 30, width = position.width });
+                EGL.BeginHorizontal();
+                if (GL.Button("ExitEdit"))
+                {
+                    if (Settings.Get().BackLayout)
+                    {
+                        var path = AssetDatabase.GetAssetPath(Settings.Get().BackLayout);
+                        EditorUtility.LoadWindowLayout(path);
+                    }
+                }
+
+                GL.FlexibleSpace();
+                EGL.EndHorizontal();
+                GL.EndArea();
+            }
 
             rect.position = new Vector2(5, rect.height + 30);
 
@@ -308,8 +364,6 @@ namespace AlienUI.Editors
             designer.m_amlFile.SaveToDisk();
 
             designer.Refresh();
-
-            Debug.Log("Save");
         }
 
 
