@@ -30,6 +30,20 @@ namespace AlienUI
 
         public static Func<Settings> SettingGetter;
 
+        public T GetUnityAsset<T>(string group, string assetName) where T : UnityEngine.Object
+        {
+            return m_reference.GetAsset<T>(group, assetName);
+        }
+
+        public void GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
+        {
+            group = string.Empty;
+            assetName = string.Empty;
+#if UNITY_EDITOR
+            m_reference.GetUnityAssetPath(obj, out group, out assetName);
+#endif
+        }
+
         void OptimizeData()
         {
             m_templatesDict.Clear();

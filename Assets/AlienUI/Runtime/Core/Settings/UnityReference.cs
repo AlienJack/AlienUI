@@ -56,6 +56,21 @@ namespace AlienUI.UIElements.ToolsScript
         {
             refList.Add(new ReferenceManifest { Group = group, Name = name, RefObject = asset });
         }
+
+        internal void GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
+        {
+            group = string.Empty;
+            assetName = string.Empty;
+
+            foreach (var item in refList)
+            {
+                if (item.RefObject != obj) continue;
+
+                group = item.Group;
+                assetName = item.Name;
+                break;
+            }
+        }
 #endif
     }
     [Serializable]
