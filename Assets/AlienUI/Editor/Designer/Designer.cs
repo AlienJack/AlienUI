@@ -140,10 +140,6 @@ namespace AlienUI.Editors
         private void Target_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {
             SaveToAml();
-            if (dp.Meta.IsAmlOnly)
-            {
-                Reboot();
-            }
         }
 
         internal void Reboot()

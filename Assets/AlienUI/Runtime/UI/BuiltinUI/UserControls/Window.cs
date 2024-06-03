@@ -31,8 +31,6 @@ namespace AlienUI.UIElements
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-
             CloseCmd.OnExecute += Close_OnExecute;
             OnDrag += Window_OnDrag;
         }

@@ -21,6 +21,12 @@ namespace AlienUI.Core.Triggers
                 uiTarget.OnEventInvoke += Host_OnEventInvoke;
         }
 
+        protected override void OnDispose()
+        {
+            if (m_targetObj is UIElement uiTarget)
+                uiTarget.OnEventInvoke -= Host_OnEventInvoke;
+        }
+
         private void Host_OnEventInvoke(object sender, Events.Event e)
         {
             if (e.EventName == Event)

@@ -1,5 +1,7 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -15,17 +17,64 @@ namespace AlienUI.UIElements
             set { SetValue(TemplateProperty, value); }
         }
         public static readonly DependencyProperty TemplateProperty =
-            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate)).AmlOnly());
+            DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate)), OnTemplatePropertyChanged);
 
         internal Template m_templateInstance;
+        private UIElement m_templateRoot;
+
+        private static void OnTemplatePropertyChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as UserControl;
+            List<UIElement> childrenNeedReParent = new List<UIElement>();
+            foreach (var child in self.UIChildren)
+            {
+                if (child.Document == self.Document)
+                {
+                    childrenNeedReParent.Add(child);
+                }
+            }
+
+            if (self.m_templateInstance != null)
+            {
+                if (self.m_templateRoot != null)
+                {
+                    foreach (var child in self.m_templateRoot.UIChildren)
+                    {
+                        if (child.Document == self.Document)
+                        {
+                            self.m_templateRoot.RemoveChild(child);
+                            childrenNeedReParent.Add(child);
+                        }
+                    }
+                }
+                self.RemoveChild(self.m_templateInstance);
+
+                self.m_templateInstance.Close();
+                self.m_templateInstance = null;
+            }
+
+            foreach (var child in childrenNeedReParent)
+                self.RemoveChild(child);
+
+            self.InstantiateTemplate();
+
+            self.AddChild(self.m_templateInstance);
+            foreach (var child in childrenNeedReParent)
+                self.AddChild(child);
+
+            self.OnTemplateLoaded();
+
+            self.SetLayoutDirty();
+        }
+
+        protected virtual void OnTemplateLoaded() { }
 
         protected override Vector2 CalcDesireSize()
         {
             return m_templateInstance.GetDesireSize();
         }
 
-        private UIElement m_templateRoot;
-        protected override void OnInitialized()
+        private void InstantiateTemplate()
         {
             var targetTemplate = Template.Valid ? Template : DefaultTemplate;
 
@@ -47,25 +96,24 @@ namespace AlienUI.UIElements
 
             if (m_templateInstance.TemplateRoot.Get(m_templateInstance) is UIElement rootUI)
             {
+                if (m_childRoot != null)
+                {
+                    List<Transform> unityChildren = new List<Transform>();
+
+                    for (int i = 0; i < m_childRoot.childCount; i++)
+                    {
+                        unityChildren.Add(m_childRoot.GetChild(i));
+                    }
+
+                    foreach (var child in unityChildren)
+                        child.SetParent(rootUI.m_childRoot, false);
+                }
                 m_childRoot = rootUI.m_childRoot;
                 m_templateRoot = rootUI;
             }
 
             m_templateInstance.Horizontal = eHorizontalAlign.Stretch;
             m_templateInstance.Vertical = eVerticalAlign.Stretch;
-        }
-
-        protected sealed override void OnPrepared()
-        {
-            if (m_templateRoot != null)
-            {
-                foreach (var uichild in UIChildren)
-                {
-                    RemoveChild(uichild);
-                    m_templateRoot.AddChild(uichild);
-                }
-            }
-            AddChild(m_templateInstance);
         }
 
         public sealed override void AddChild(AmlNodeElement childObj)

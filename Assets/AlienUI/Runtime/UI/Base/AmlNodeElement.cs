@@ -41,7 +41,7 @@ namespace AlienUI.UIElements
             var childType = childObj.GetType();
 
             OnAddChild(childObj);
-
+            childObj.SetParent(this);
             OnChildrenChanged?.Invoke();
         }
 
@@ -65,7 +65,7 @@ namespace AlienUI.UIElements
             m_childrens.Remove(childObj);
 
             OnRemoveChild(childObj);
-
+            childObj.SetParent(null);
             OnChildrenChanged?.Invoke();
         }
 
@@ -95,14 +95,30 @@ namespace AlienUI.UIElements
         protected void SetParent(AmlNodeElement parentNode)
         {
             m_parent = parentNode;
+            if (m_parent != null)
+                OnParentSet(m_parent);
+            else
+                OnParentRemoved();
         }
+
+        protected virtual void OnParentSet(AmlNodeElement parent) { }
+
+        protected virtual void OnParentRemoved() { }
+
+        private bool refreshed;
         internal void RefreshPropertyNotify()
         {
-            foreach (var dp in m_dpPropValues.Keys.ToArray())
+            if (!refreshed)
             {
-                var value = m_dpPropValues[dp];
-                dp.RaiseChangeEvent(this, dp.Meta.DefaultValue, value);
+                foreach (var dp in m_dpPropValues.Keys.ToArray())
+                {
+                    var value = m_dpPropValues[dp];
+                    dp.RaiseChangeEvent(this, dp.Meta.DefaultValue, value);
+                }
+
+                refreshed = true;
             }
+
             foreach (var child in m_childrens)
                 child.RefreshPropertyNotify();
         }
@@ -112,13 +128,6 @@ namespace AlienUI.UIElements
         {
             return this.Document.Resolve(resolveKey);
         }
-
-        internal void Prepare()
-        {
-            OnPrepared();
-        }
-
-        protected virtual void OnPrepared() { }
 
 #if UNITY_EDITOR
         public List<(string, string)> xmlnsList;

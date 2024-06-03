@@ -45,14 +45,12 @@ namespace AlienUI.UIElements
             switch (childObj)
             {
                 case UIElement uiEle:
-                    uiEle.SetParent(this);
                     if (uiEle.Rect != null && Rect != null)
                     {
                         uiEle.Rect.SetParent(m_childRoot);
                         SetLayoutDirty();
                     }
                     break;
-                case Trigger trigger: AddTrigger(trigger); break;
             }
         }
 
@@ -61,14 +59,12 @@ namespace AlienUI.UIElements
             switch (childObj)
             {
                 case UIElement uiEle:
-                    uiEle.SetParent(null);
                     if (uiEle.Rect != null && uiEle.Rect.parent == m_childRoot)
                     {
                         uiEle.Rect.SetParent(null);
                         SetLayoutDirty();
                     }
                     break;
-                case Trigger trigger: RemoveTrigger(trigger); break;
             }
         }
 

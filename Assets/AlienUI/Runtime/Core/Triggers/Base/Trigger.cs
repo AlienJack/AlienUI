@@ -21,11 +21,18 @@ namespace AlienUI.Core.Triggers
 
         protected DependencyObject m_targetObj { get; private set; }
 
-        public void Init(UIElement host)
+        protected override void OnParentSet(AmlNodeElement parent)
         {
-            m_host = host;
-            m_targetObj = Target.Get(Document) ?? m_host;
-            OnInit();
+            if (parent is UIElement host)
+            {
+                m_host = host;
+                m_targetObj = Target.Get(Document) ?? m_host;
+                OnInit();
+            }
+        }
+        protected override void OnParentRemoved()
+        {
+            OnDispose();
         }
 
 
@@ -41,6 +48,7 @@ namespace AlienUI.Core.Triggers
         }
 
         protected abstract void OnInit();
+        protected abstract void OnDispose();
 
     }
 }

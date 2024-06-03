@@ -14,6 +14,11 @@ namespace AlienUI.Core.Triggers
             m_targetObj.OnDependencyPropertyChanged += M_targetObj_OnDependencyPropertyChanged;
         }
 
+        protected override void OnDispose()
+        {
+            m_targetObj.OnDependencyPropertyChanged -= M_targetObj_OnDependencyPropertyChanged;
+        }
+
         private void M_targetObj_OnDependencyPropertyChanged(DependencyProperty dp, object oldValue, object newValue)
         {
             if (Test(dp.PropName))

@@ -59,8 +59,6 @@ namespace AlienUI.UIElements
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-
             OnPointerClick += Button_OnPointerClick;
             OnPointerDown += Button_OnPointerDown;
             OnPointerUp += Button_OnPointerUp;

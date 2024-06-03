@@ -183,7 +183,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        protected void SetLayoutDirty()
+        public void SetLayoutDirty()
         {
             Engine?.SetDirty(this);
         }

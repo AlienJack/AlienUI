@@ -31,8 +31,6 @@ namespace AlienUI.UIElements
             self.m_inputField.SetTextWithoutNotify((string)newValue);
         }
 
-
-
         public InputField.InputType InputType
         {
             get { return (InputField.InputType)GetValue(InputTypeProperty); }
@@ -53,9 +51,14 @@ namespace AlienUI.UIElements
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
             m_inputField = m_rectTransform.gameObject.AddComponent<InputField>();
             m_inputField.onValueChanged.AddListener(OnInputFieldTextChanged);
+
+            HandleUGUIInputFieldEvent();
+        }
+
+        protected override void OnTemplateLoaded()
+        {
             if (m_templateInstance != null)
             {
                 var phLabel = m_templateInstance.Document.Query<Label>("PlaceHolder");
@@ -69,9 +72,11 @@ namespace AlienUI.UIElements
                     textComLabel.UGUIText.supportRichText = false;
                 }
             }
+        }
 
-            HandleUGUIInputFieldEvent();
-
+        private void TemplateProperty_OnValueChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            throw new System.NotImplementedException();
         }
 
         private void OnInputFieldTextChanged(string arg0)

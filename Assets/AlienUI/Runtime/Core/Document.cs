@@ -129,11 +129,6 @@ namespace AlienUI.Core
 
         internal void PrepareNotify(UIElement uiRoot)
         {
-            foreach (var dpObj in m_dpObjects)
-            {
-                dpObj.Prepare();
-            }
-
             uiRoot.RefreshPropertyNotify();
         }
 
