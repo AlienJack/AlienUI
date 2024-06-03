@@ -287,7 +287,6 @@ namespace AlienUI
         public DefaultAsset BackLayout;
         public bool OpenAmlFileWhenOpenDesigner;
 
-
         internal Texture2D GetIcon(string iconName)
         {
             if (iconName == null) return null;

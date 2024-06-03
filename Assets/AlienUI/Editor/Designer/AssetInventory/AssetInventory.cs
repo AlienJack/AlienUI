@@ -39,10 +39,23 @@ namespace AlienUI.Editors
             return provider;
         }
 
+        private static float m_itemFactor
+        {
+            get => EditorPrefs.GetFloat(nameof(m_itemFactor), 1);
+            set => EditorPrefs.SetFloat(nameof(m_itemFactor), value);
+        }
         private void OnGUI()
         {
             var rect = position;
+            rect.height -= 20;
             DrawAsset(rect);
+
+            var sliderRect = new Rect(rect);
+            sliderRect.y = rect.y + rect.height - 75;
+            sliderRect.height = 20;
+            sliderRect.width -= 20;
+            sliderRect.x += 10;
+            m_itemFactor = EditorGUI.Slider(sliderRect, m_itemFactor, 0.7f, 2);
         }
 
         private static Vector2 leftScroll;
@@ -80,7 +93,7 @@ namespace AlienUI.Editors
                 totalHeight += 20;
 
                 var itemPosition = position;
-                var itemSize = new Vector2(70, 70);
+                var itemSize = new Vector2(70, 70) * m_itemFactor;
                 var lineWidth = totalWidth;
                 foreach (var asset in item.Value)
                 {
@@ -112,7 +125,7 @@ namespace AlienUI.Editors
                     var tip = $"<b><size=12>{asset.AssetType.FullName}</size></b>";
                     if (asset.AssetType.GetDescrib() is string des && !string.IsNullOrEmpty(des))
                         tip += $"\n{des}";
-                    GUI.Label(labelRect, new GUIContent(asset.AssetType.Name, tip), new GUIStyle(EditorStyles.label) { fontSize = 10, alignment = TextAnchor.MiddleCenter, clipping = TextClipping.Clip });
+                    GUI.Label(labelRect, new GUIContent(asset.AssetType.Name, tip), new GUIStyle(EditorStyles.label) { fontSize = Mathf.Min((int)(10 * m_itemFactor), 10), alignment = TextAnchor.MiddleCenter, clipping = TextClipping.Clip });
                     GUI.EndGroup();
 
                     itemPosition.x += itemSize.x;
