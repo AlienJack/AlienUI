@@ -1,6 +1,6 @@
 <Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Width="200" Height="80" Name="Temp">
-  <Image Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="Root">
-    <Label FontSize="22" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" Name="ButtonTxt" />
+  <Image Color="#383838FF" ImageType="Sliced" Content="DEMO/Border" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="Root">
+    <Label Color="#FFFFFFFF" FontSize="22" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" Name="ButtonTxt" />
   </Image>
   <DataTrigger Target="{TemplateBinding Self}">
     <Condition Value="Normal" PropertyName="State" />

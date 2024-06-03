@@ -1,11 +1,13 @@
 <Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
-  <Image Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
-    <Grid GridDefine="1*|30px,1*" Horizontal="Stretch" Vertical="Stretch">
-      <Image Color="#000000FF" Name="Title">
-        <Label Color="#FFFFFFFF" FontSize="18" Content="{TemplateBinding Title}" Horizontal="Left" Offset="2,0" />
-        <Button Text="X" Command="{TemplateBinding CloseCmd}" Width="25" Height="25" Horizontal="Right" Offset="-5,0" />
-      </Image>
-      <Image Horizontal="Stretch" Vertical="Stretch" Name="Content" GridPos="0,1" />
+  <Image Color="#000000FF" ImageType="Sliced" Content="DEMO/Border" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
+    <Grid GridDefine="1*|40px,1*" Horizontal="Stretch" Vertical="Stretch">
+      <VisualElement Padding="4,4,4,4">
+        <Label Color="#FFFFFFFF" FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
+        <Button Text="X" Command="{TemplateBinding CloseCmd}" Width="40" Height="30" Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
+      </VisualElement>
+      <VisualElement Padding="4,4,4,4" GridPos="0,1">
+        <Image Mask="True" ImageType="Sliced" Content="DEMO/Border" Horizontal="Stretch" Vertical="Stretch" Name="Content" />
+      </VisualElement>
     </Grid>
     <EventTrigger Event="OnShow">
       <PlayStoryboard Target="Show" />

@@ -51,7 +51,9 @@ namespace AlienUI.UIElements
 
         private static void OnFontSizeChanged(DependencyObject sender, object oldValue, object newValue)
         {
-            (sender as Label).m_text.fontSize = (int)newValue;
+            var self = sender as Label;
+            self.m_text.fontSize = (int)newValue;
+            self.SetLayoutDirty();
         }
 
         private static void OnColorChange(DependencyObject sender, object oldValue, object newValue)

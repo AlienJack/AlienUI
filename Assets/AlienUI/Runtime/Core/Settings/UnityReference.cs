@@ -37,6 +37,7 @@ namespace AlienUI.UIElements.ToolsScript
             if (assets == null) return null;
 
             assets.TryGetValue(name, out var asset);
+            if (asset == null) return null;
             return asset.RefObject as T;
         }
 

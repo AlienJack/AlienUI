@@ -20,13 +20,13 @@ MonoBehaviour:
   - Aml: {fileID: 5022602860645237092, guid: 0632dfc972312aa439d529eedcf4a54f, type: 3}
   m_reference:
     refList:
-    - RefObject: {fileID: 21300000, guid: 2cf9e3f6116abb34eaf62699fd94cb5c, type: 3}
+    - RefObject: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
       Group: DEMO
-      Name: BG
+      Name: Border
       TypeName: UnityEngine.Sprite
-    - RefObject: {fileID: 21300000, guid: 595b897d654b382409928248b27346eb, type: 3}
+    - RefObject: {fileID: 21300000, guid: bf36ffed84bd0074e82169a5fa094241, type: 3}
       Group: DEMO
-      Name: git
+      Name: Blank
       TypeName: UnityEngine.Sprite
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}

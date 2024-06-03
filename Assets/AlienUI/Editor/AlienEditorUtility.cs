@@ -125,6 +125,40 @@ namespace AlienUI.Editors
             }
         }
 
+        private static List<Type> unityAssetsTypes;
+
+        internal static List<Type> GetUnityAssetsTypes()
+        {
+            if (unityAssetsTypes != null) return unityAssetsTypes;
+
+            unityAssetsTypes = new List<Type>();
+            foreach (var type in AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(a => !a.FullName.Contains("Editor"))
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.IsSubclassOf(typeof(UnityEngine.Object))))
+            {
+                unityAssetsTypes.Add(type);
+            }
+
+            return unityAssetsTypes;
+        }
+
+        private static Dictionary<string, Type> unityAssetsTypesMap;
+        internal static Dictionary<string, Type> GetUnityAssetsTypesNameMap()
+        {
+            if (unityAssetsTypesMap != null) return unityAssetsTypesMap;
+
+            unityAssetsTypesMap = new Dictionary<string, Type>();
+            var typeList = GetUnityAssetsTypes();
+            foreach (var type in typeList)
+            {
+                unityAssetsTypesMap[type.FullName] = type;
+            }
+
+            return unityAssetsTypesMap;
+        }
+
         public static GUIColorScope BeginGUIColorScope(Color color)
         {
             return new GUIColorScope(color);

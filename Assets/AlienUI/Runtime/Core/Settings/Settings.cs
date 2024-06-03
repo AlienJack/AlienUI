@@ -12,21 +12,21 @@ namespace AlienUI
     public partial class Settings : ScriptableObject
     {
         [SerializeField]
-        private Font m_defaultLabelFont;
+        internal Font m_defaultLabelFont;
         public Font DefaultLabelFont => m_defaultLabelFont;
         [SerializeField]
-        private List<AmlResouces> m_amlResources = new List<AmlResouces>();
+        internal List<AmlResouces> m_amlResources = new List<AmlResouces>();
         [NonSerialized]
-        private Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
+        internal Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
-        private Dictionary<Type, HashSet<AmlResouces>> m_userControl2TemplatesDict = new Dictionary<Type, HashSet<AmlResouces>>();
+        internal Dictionary<Type, HashSet<AmlResouces>> m_userControl2TemplatesDict = new Dictionary<Type, HashSet<AmlResouces>>();
         [NonSerialized]
-        private Dictionary<string, AmlResouces> m_uiDict = new Dictionary<string, AmlResouces>();
+        internal Dictionary<string, AmlResouces> m_uiDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
         bool m_optimized;
 
         [SerializeField]
-        private UnityReference m_reference;
+        internal UnityReference m_reference;
 
         public static Func<Settings> SettingGetter;
 
@@ -44,7 +44,7 @@ namespace AlienUI
 #endif
         }
 
-        void OptimizeData()
+        internal void OptimizeData()
         {
             m_templatesDict.Clear();
             m_userControl2TemplatesDict.Clear();
