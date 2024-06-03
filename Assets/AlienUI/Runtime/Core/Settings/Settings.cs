@@ -35,12 +35,12 @@ namespace AlienUI
             return m_reference.GetAsset<T>(group, assetName);
         }
 
-        public void GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
+        public bool GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
         {
             group = string.Empty;
             assetName = string.Empty;
 #if UNITY_EDITOR
-            m_reference.GetUnityAssetPath(obj, out group, out assetName);
+            return m_reference.GetUnityAssetPath(obj, out group, out assetName);
 #endif
         }
 

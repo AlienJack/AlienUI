@@ -58,7 +58,7 @@ namespace AlienUI.UIElements.ToolsScript
             refList.Add(new ReferenceManifest { Group = group, Name = name, RefObject = asset, TypeName = assetType.FullName });
         }
 
-        internal void GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
+        internal bool GetUnityAssetPath(UnityEngine.Object obj, out string group, out string assetName)
         {
             group = string.Empty;
             assetName = string.Empty;
@@ -69,8 +69,10 @@ namespace AlienUI.UIElements.ToolsScript
 
                 group = item.Group;
                 assetName = item.Name;
-                break;
+                return true;
             }
+
+            return false;
         }
 #endif
     }

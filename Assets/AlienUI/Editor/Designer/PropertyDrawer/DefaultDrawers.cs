@@ -274,7 +274,21 @@ namespace AlienUI.Editors.PropertyDrawer
     {
         protected override Sprite OnDraw(AmlNodeElement host, string label, Sprite value)
         {
-            return (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
+            EditorGUILayout.BeginVertical();
+            value = (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
+            if (value != null)
+            {
+                if (Settings.Get().GetUnityAssetPath(value, out string group, out string assetName))
+                {
+                    EditorGUILayout.HelpBox($"Sprite From {group}.{assetName}", MessageType.Info);
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox($"Not Found In UnityAssetRef", MessageType.Error);
+                }
+            }
+            EditorGUILayout.EndVertical();
+            return value;
         }
     }
 
