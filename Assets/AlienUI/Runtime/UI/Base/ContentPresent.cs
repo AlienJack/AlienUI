@@ -26,7 +26,7 @@ namespace AlienUI.UIElements
         protected virtual void OnContentChanged(T oldValue, T newValue) { }
     }
 
-    public abstract class ContentPresent : UIElement
+    public abstract class ContentPresent : VisualElement
     {
         public abstract void RaiseContentChanged(object oldValue, object newValue);
     }

@@ -17,14 +17,6 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty FontProperty =
             DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(Settings.Get().DefaultLabelFont), OnFontChanged);
 
-        public Color Color
-        {
-            get { return (Color)GetValue(ColorProperty); }
-            set { SetValue(ColorProperty, value); }
-        }
-        public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(Label), new PropertyMetadata(Color.black), OnColorChange);
-
         public TextAlignHorizontal AlignHorizontal
         {
             get { return (TextAlignHorizontal)GetValue(AlignHorizontalProperty); }
@@ -55,12 +47,6 @@ namespace AlienUI.UIElements
             self.m_text.fontSize = (int)newValue;
             self.SetLayoutDirty();
         }
-
-        private static void OnColorChange(DependencyObject sender, object oldValue, object newValue)
-        {
-            (sender as Label).m_text.color = (Color)newValue;
-        }
-
 
         public bool AutoWarp
         {

@@ -11,17 +11,6 @@ namespace AlienUI.UIElements
     [Description(Icon = "image")]
     public class Image : ContentPresent<Sprite>
     {
-        public Color Color
-        {
-            get { return (Color)GetValue(ColorProperty); }
-            set { SetValue(ColorProperty, value); }
-        }
-
-        public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(Image), new PropertyMetadata(Color.white), OnColorChanged);
-
-
-
         public bool Mask
         {
             get { return (bool)GetValue(MaskProperty); }
@@ -77,11 +66,6 @@ namespace AlienUI.UIElements
         protected override void OnContentChanged(Sprite oldValue, Sprite newValue)
         {
             img.sprite = newValue;
-        }
-
-        private static void OnColorChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            (sender as Image).img.color = (Color)newValue;
         }
 
         protected override Vector2 CalcDesireSize()

@@ -27,6 +27,12 @@ namespace AlienUI
             set => m_canvasRenderer.alpha = value;
         }
 
+        internal Color Color
+        {
+            get => m_graphElement.color;
+            set => m_graphElement.color = value;
+        }
+
         private Graphic m_graphElement;
         private CanvasGroup m_canvasRenderer;
 
