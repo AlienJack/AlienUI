@@ -71,6 +71,20 @@ namespace AlienUI.Editors.PropertyDrawer
         }
     }
 
+    public class ItemTemplateDrawer : PropertyDrawer<ItemTemplate>
+    {
+        protected override ItemTemplate OnDraw(AmlNodeElement host, string label, ItemTemplate value)
+        {
+            var templates = Settings.Get().GetUIAssets();
+            var templateNames = templates.Select(t => t.name).ToList();
+            var currentSelect = templateNames.IndexOf(value.Name);
+            currentSelect = EditorGUILayout.Popup(label, currentSelect, templateNames.ToArray());
+
+            var selectTemplate = currentSelect == -1 ? value : new ItemTemplate(templateNames[currentSelect]);
+            return selectTemplate;
+        }
+    }
+
     public class NumberDrawer : PropertyDrawer<Number>
     {
         protected override Number OnDraw(AmlNodeElement host, string label, Number value)

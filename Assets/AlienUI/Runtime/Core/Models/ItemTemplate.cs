@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace AlienUI
 {
-    public readonly struct ControlTemplate : IEquatable<ControlTemplate>
+    public readonly struct ItemTemplate : IEquatable<ItemTemplate>
     {
         private readonly string m_name;
         public readonly bool Valid => m_name != null;
         public string Name => m_name;
 
-        public ControlTemplate(string name)
+        public ItemTemplate(string name)
         {
             m_name = name;
         }
@@ -26,14 +26,14 @@ namespace AlienUI
             return uiInstance;
         }
 
-        public bool Equals(ControlTemplate other)
+        public bool Equals(ItemTemplate other)
         {
             return m_name == other.m_name;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is ControlTemplate contrl) return Equals(contrl);
+            if (obj is ItemTemplate contrl) return Equals(contrl);
             else return false;
         }
 
@@ -42,12 +42,12 @@ namespace AlienUI
             return m_name.GetHashCode();
         }
 
-        public static bool operator ==(ControlTemplate a, object b)
+        public static bool operator ==(ItemTemplate a, object b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(ControlTemplate a, object b)
+        public static bool operator !=(ItemTemplate a, object b)
         {
             return !a.Equals(b);
         }

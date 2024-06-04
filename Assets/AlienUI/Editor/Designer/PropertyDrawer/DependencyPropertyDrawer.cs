@@ -21,12 +21,12 @@ namespace AlienUI.Editors.PropertyDrawer
 
         public sealed override object Draw(AmlNodeElement host, string label, object value)
         {
-            return OnDraw(host, label, (T)value);
+            return OnDraw(host, label, value == null ? default(T) : (T)value);
         }
 
         public override sealed object OnSceneGUI(AmlNodeElement host, string label, object value)
         {
-            return OnDrawSceneGUI(host, label, (T)value);
+            return OnDrawSceneGUI(host, label, value == null ? default(T) : (T)value);
         }
 
         protected abstract T OnDraw(AmlNodeElement host, string label, T value);

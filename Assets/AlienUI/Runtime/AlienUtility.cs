@@ -1,13 +1,55 @@
 using AlienUI.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using UnityEngine;
+using static AlienUI.Models.DependencyProperty;
 
 namespace AlienUI.UIElements.ToolsScript
 {
     internal static class AlienUtility
     {
+        private static PropertyInfo GetProperty(this object obj, string propName)
+        {
+            var propInfo = obj.GetType().GetProperty(propName, BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance);
+            return propInfo;
+        }
 
+        internal static Type GetPropertyType(this object obj, string propName)
+        {
+            if (propName == "Self") return obj.GetType();
 
-        internal static T AddMissingComponemt<T>(this GameObject go) where T : Component
+            if (obj is DependencyObject dpObj) return dpObj.GetDependencyPropertyType(propName);
+            return obj.GetProperty(propName)?.PropertyType;
+        }
+
+        internal static object GetPropertyValue(this object obj, string propName)
+        {
+            if (propName == "Self") return obj;
+
+            if (obj is DependencyObject dpObj) return dpObj.GetValue(propName);
+            var propInfo = obj.GetProperty(propName);
+            if (propInfo == null) return null;
+
+            return propInfo.GetValue(obj, null);
+        }
+
+        internal static void SetPropertyValue(this object obj, string propName, object value)
+        {
+            if (obj is DependencyObject dpObj) dpObj.SetValue(propName, value);
+
+            var propInfo = obj.GetProperty(propName);
+            if (propInfo == null) return;
+            propInfo.SetValue(obj, value, null);
+        }
+
+        private static void ListenObj_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static T AddMissingComponemt<T>(this GameObject go) where T : UnityEngine.Component
         {
             var t = go.GetComponent<T>();
             if (t != null) return t;

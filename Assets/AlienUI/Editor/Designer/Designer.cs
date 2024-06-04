@@ -360,6 +360,8 @@ namespace AlienUI.Editors
             designer.m_amlFile.SaveToDisk();
 
             designer.Refresh();
+
+            Debug.Log($"{designer.m_amlFile.name} saved");
         }
 
 
@@ -415,15 +417,15 @@ namespace AlienUI.Editors
                                 if (canEdit)
                                     target.SetValue(property, value);
                             }
+                        }
 
-                            if (target.GetBinding(property) != null)
-                            {
-                                var bindRect = GUILayoutUtility.GetLastRect();
-                                bindRect.width += 2;
-                                bindRect.height += 2;
-                                bindRect.position -= new Vector2(1, 1);
-                                AlienEditorUtility.DrawBorder(bindRect, Color.yellow);
-                            }
+                        if (target.GetBinding(property) != null)
+                        {
+                            var bindRect = GUILayoutUtility.GetLastRect();
+                            bindRect.width += 2;
+                            bindRect.height += 2;
+                            bindRect.position -= new Vector2(1, 1);
+                            AlienEditorUtility.DrawBorder(bindRect, Color.yellow);
                         }
 
                         EGL.EndHorizontal();
@@ -624,7 +626,7 @@ namespace AlienUI.Editors
             if (BindUtility.IsBindingString(inputSorce, out Match match))
             {
                 var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                DependencyObject source = null;
+                object source = null;
                 switch (bindType)
                 {
                     case EnumBindingType.Binding: source = selection.DataContext; break;
@@ -639,6 +641,8 @@ namespace AlienUI.Editors
                     .SetTarget(selection)
                     .SetTargetProperty(property.PropName)
                     .Apply(converterName, modeName);
+
+                SaveToAml();
             }
         }
 

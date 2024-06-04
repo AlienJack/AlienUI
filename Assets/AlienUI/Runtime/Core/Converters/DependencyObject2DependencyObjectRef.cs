@@ -2,7 +2,7 @@ using AlienUI.Models;
 
 namespace AlienUI.Core.Converters
 {
-    public class DependencyObjectConverter : ConverterBase<DependencyObject, DependencyObjectRef>
+    public class DependencyObject2DependencyObjectRef : ConverterBase<DependencyObject, DependencyObjectRef>
     {
         protected override DependencyObjectRef OnConvert(DependencyObject src)
         {

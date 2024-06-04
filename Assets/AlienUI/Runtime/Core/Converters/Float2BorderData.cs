@@ -2,7 +2,7 @@ using AlienUI.Models;
 
 namespace AlienUI.Core.Converters
 {
-    public class FloatToBorder : ConverterBase<float, BorderData>
+    public class Float2BorderData : ConverterBase<float, BorderData>
     {
         protected override BorderData OnConvert(float src)
         {

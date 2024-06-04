@@ -19,7 +19,7 @@ namespace AlienUI
             if (Application.isPlaying) DontDestroyOnLoad(gameObject);
         }
 
-        private UIElement CreateUIInternal(string xmlTxt, Transform parent, DependencyObject dataContext, AmlNodeElement templateHost, UnityEngine.Object xmlAsset)
+        private UIElement CreateUIInternal(string xmlTxt, Transform parent, object dataContext, AmlNodeElement templateHost, UnityEngine.Object xmlAsset)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace AlienUI
         }
 
 
-        public UIElement CreateUI(string xmlTxt, Transform parent, DependencyObject dataContext)
+        public UIElement CreateUI(string xmlTxt, Transform parent, object dataContext)
         {
             return CreateUIInternal(xmlTxt, parent, dataContext, null, null);
         }
@@ -63,7 +63,7 @@ namespace AlienUI
             return CreateUIInternal(amlAsset.Text, parent, dataContext, null, amlAsset);
         }
 
-        public UIElement CreateTemplate(AmlAsset amlAsset, Transform parent, DependencyObject dataContext, AmlNodeElement templateHost)
+        public UIElement CreateTemplate(AmlAsset amlAsset, Transform parent, object dataContext, AmlNodeElement templateHost)
         {
             return CreateUIInternal(amlAsset.Text, parent, dataContext, templateHost, amlAsset);
         }

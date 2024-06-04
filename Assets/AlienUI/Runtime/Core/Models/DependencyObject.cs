@@ -13,17 +13,6 @@ namespace AlienUI.Models
         public delegate void OnDependencyPropertyChangedHandle(DependencyProperty dp, object oldValue, object newValue);
         public event OnDependencyPropertyChangedHandle OnDependencyPropertyChanged;
 
-
-
-        public DependencyObject Self
-        {
-            get { return (DependencyObject)GetValue(SelfProperty); }
-            set { SetValue(SelfProperty, value); }
-        }
-
-        public static readonly DependencyProperty SelfProperty =
-            DependencyProperty.Register("Self", typeof(DependencyObject), typeof(DependencyObject), new PropertyMetadata(null).AmlDisable());
-
         public DependencyObject()
         {
             m_selfType = GetType();
@@ -32,8 +21,6 @@ namespace AlienUI.Models
             //Ìî³äÒÀÀµÊôÐÔÄ¬ÈÏÖµ
             DependencyProperty.GetAllDP(m_selfType, ref allDp);
             allDp.ForEach(dp => FillDependencyValue(dp, dp.Meta.DefaultValue));
-
-            Self = this;
         }
 
         internal void FillDependencyValue(DependencyProperty dp, object value)
@@ -118,6 +105,8 @@ namespace AlienUI.Models
 
         public object GetValue(string properyName)
         {
+            if (properyName == "Self") return this;
+
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, properyName);
             if (dp == null) return null;
 
@@ -138,6 +127,8 @@ namespace AlienUI.Models
 
         public Type GetDependencyPropertyType(string propName)
         {
+            if (propName == "Self") return m_selfType;
+
             var dp = DependencyProperty.GetDependencyPropertyByName(m_selfType, propName);
             if (dp == null) return null;
 

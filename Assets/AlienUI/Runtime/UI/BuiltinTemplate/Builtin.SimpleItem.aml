@@ -1,0 +1,3 @@
+<VisualElement xmlns="AlienUI.UIElements" Width="200" Height="80" Name="SimpleItem">
+  <Label Content="{Binding Self}" Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" />
+</VisualElement>

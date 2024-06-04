@@ -75,9 +75,16 @@ namespace AlienUI.Core
 
         internal ConverterBase GetConverter(Type srcType, Type dstType)
         {
-            if (m_converterMaps.TryGetValue(srcType, out var temp))
-                if (temp.TryGetValue(dstType, out var converter))
-                    return converter;
+            Dictionary<Type, ConverterBase> temp = null;
+            while (temp == null && srcType != null)
+            {
+                m_converterMaps.TryGetValue(srcType, out temp);
+                srcType = srcType.BaseType;
+            }
+            if (temp == null) return null;
+
+            if (temp.TryGetValue(dstType, out var converter))
+                return converter;
 
             return null;
         }
@@ -101,8 +108,8 @@ namespace AlienUI.Core
         internal AmlNodeElement CreateInstance(string nodeName)
         {
             m_uiTypes.TryGetValue(nodeName, out var instanceType);
+            if (instanceType == null) return null;
             return Activator.CreateInstance(instanceType) as AmlNodeElement;
-
         }
 
         private Type GetDependencyObjectType(XmlNode xnode)

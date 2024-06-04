@@ -20,7 +20,7 @@ namespace AlienUI.UIElements
         internal AmlNodeElement Parent => m_parent;
 
         public Engine Engine { get; set; }
-        public DependencyObject DataContext => Document.m_dataContext;
+        public object DataContext => Document.m_dataContext;
         public DependencyObject TemplateHost => Document.m_templateHost;
         public Document Document { get; set; }
 

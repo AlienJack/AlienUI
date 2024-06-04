@@ -1,14 +1,16 @@
 using AlienUI.Core.Converters;
 using AlienUI.Models;
 using AlienUI.UIElements;
+using AlienUI.UIElements.ToolsScript;
 using System;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace AlienUI.Core
 {
     public class Binding
     {
-        public DependencyObject Source { get; private set; }
+        public object Source { get; private set; }
         public string SourcePropertyName { get; private set; }
         public AmlNodeElement Target { get; private set; }
         public string TargetPropertyName { get; private set; }
@@ -29,15 +31,14 @@ namespace AlienUI.Core
 
             if (Source != null)
             {
-
                 m_converter = Target.Engine.GetConverter(convertName);
                 if (m_converter == null)
                 {
                     var dstPropType = Target.GetDependencyPropertyType(TargetPropertyName);
-                    var srcPropType = Source.GetDependencyPropertyType(SourcePropertyName);
+                    var srcPropType = Source.GetPropertyType(SourcePropertyName);
                     if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetPropertyName}");
                     if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourcePropertyName}");
-                    if (dstPropType != srcPropType && !srcPropType.IsSubclassOf(dstPropType))
+                    if (dstPropType != srcPropType && !dstPropType.IsAssignableFrom(srcPropType))
                     {
                         m_converter = Target.Engine.GetConverter(srcPropType, dstPropType);
                         if (m_converter == null)
@@ -48,7 +49,7 @@ namespace AlienUI.Core
                     }
                 }
 
-                var srcValue = Source.GetValue(SourcePropertyName);
+                var srcValue = Source.GetPropertyValue(SourcePropertyName);
                 if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
 
                 //首先同步一次数值
@@ -57,11 +58,23 @@ namespace AlienUI.Core
                 switch (bindMode)
                 {
                     case EnumBindMode.OneWay:
-                        if (Source != null) DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
+                        {
+                            if (Source is DependencyObject dpSource) DependencyProperty.Subscribe(dpSource, SourcePropertyName, OnSourceDataChanged);
+                            else if (Source is INotifyPropertyChanged notifyObj)
+                            {
+                                notifyObj.PropertyChanged += SourcePropertyChanged;
+                            }
+                        }
                         break;
                     case EnumBindMode.TwoWay:
-                        if (Source != null) DependencyProperty.Subscribe(Source, SourcePropertyName, OnSourceDataChanged);
-                        DependencyProperty.Subscribe(Target, TargetPropertyName, OnTargetDataChanged);
+                        {
+                            if (Source is DependencyObject dpSource) DependencyProperty.Subscribe(dpSource, SourcePropertyName, OnSourceDataChanged);
+                            else if (Source is INotifyPropertyChanged notifyObj)
+                            {
+                                notifyObj.PropertyChanged += SourcePropertyChanged;
+                            }
+                            DependencyProperty.Subscribe(Target, TargetPropertyName, OnTargetDataChanged);
+                        }
                         break;
                 }
             }
@@ -80,7 +93,8 @@ namespace AlienUI.Core
 
         public void Disconnect()
         {
-            if (Source != null) DependencyProperty.Unsubscribe(Source, SourcePropertyName, OnSourceDataChanged);
+            if (Source is DependencyObject dpObj) DependencyProperty.Unsubscribe(dpObj, SourcePropertyName, OnSourceDataChanged);
+            else if (Source is INotifyPropertyChanged inotify) inotify.PropertyChanged -= SourcePropertyChanged;
             DependencyProperty.Unsubscribe(Target, TargetPropertyName, OnTargetDataChanged);
 
             var p = Target.GetDependencyProperty(TargetPropertyName);
@@ -95,7 +109,7 @@ namespace AlienUI.Core
             m_dataSync = true;
 
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
-            try { Source.SetValue(SourcePropertyName, newValue); }
+            try { Source.SetPropertyValue(SourcePropertyName, newValue); }
             finally { m_dataSync = false; }
         }
 
@@ -111,11 +125,27 @@ namespace AlienUI.Core
             finally { m_dataSync = false; }
         }
 
+
+        private void SourcePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (SourcePropertyName != e.PropertyName) return;
+
+            if (m_dataSync) return;
+
+            m_dataSync = true;
+
+            var newValue = sender.GetPropertyValue(e.PropertyName);
+            newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
+
+            try { Target.SetValue(TargetPropertyName, newValue); }
+            finally { m_dataSync = false; }
+        }
+
         public class BindSourceProperty
         {
             private Binding bind;
 
-            internal BindSourceProperty(Binding bind, DependencyObject source)
+            internal BindSourceProperty(Binding bind, object source)
             {
                 this.bind = bind;
                 this.bind.Source = source;
@@ -161,7 +191,7 @@ namespace AlienUI.Core
             }
         }
 
-        public static BindSourceProperty Create(DependencyObject source, string sourceCode)
+        public static BindSourceProperty Create(object source, string sourceCode)
         {
             var bind = new Binding(sourceCode);
             return new BindSourceProperty(bind, source);
@@ -175,7 +205,7 @@ namespace AlienUI.Core
     }
     internal static class BindUtility
     {
-        public static Binding.BindSourceProperty BeginBind(this DependencyObject source, string sourceCode)
+        public static Binding.BindSourceProperty BeginBind(this object source, string sourceCode)
         {
             return Binding.Create(source, sourceCode);
         }

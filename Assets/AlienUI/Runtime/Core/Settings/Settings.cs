@@ -86,7 +86,14 @@ namespace AlienUI
         public IEnumerable<AmlAsset> GetAllTemplateAssetsByTargetType(Type targetType)
         {
             m_userControl2TemplatesDict.TryGetValue(targetType, out var value);
-            return value.Select(r => r.Aml);
+            if (value != null)
+                return value.Select(r => r.Aml);
+            else return Enumerable.Empty<AmlAsset>();
+        }
+
+        public IEnumerable<AmlAsset> GetUIAssets()
+        {
+            return m_uiDict.Values.Select(t => t.Aml);
         }
 
 #if UNITY_EDITOR
@@ -122,6 +129,8 @@ namespace AlienUI
 
             public void CalcResourcesType()
             {
+                IsTemplateAsset = false;
+                TemplateTarget = null;
                 if (Aml == null) return;
 
                 XmlDocument xmlDoc = new XmlDocument();

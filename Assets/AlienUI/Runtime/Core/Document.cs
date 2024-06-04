@@ -16,11 +16,11 @@ namespace AlienUI.Core
         private Dictionary<AmlNodeElement, HashSet<AmlNodeElement>> m_parentChildrenRecords = new Dictionary<AmlNodeElement, HashSet<AmlNodeElement>>();
         private Dictionary<AmlNodeElement, AmlNodeElement> m_childParentRecords = new Dictionary<AmlNodeElement, AmlNodeElement>();
         private UIElement m_rootElement;
-        internal DependencyObject m_dataContext;
+        internal object m_dataContext;
         internal AmlNodeElement m_templateHost;
         internal Object m_xmlAsset;
 
-        public Document(DependencyObject dataContext, AmlNodeElement templateHost, Object xmlAsset)
+        public Document(object dataContext, AmlNodeElement templateHost, Object xmlAsset)
         {
             m_dataContext = dataContext;
             m_templateHost = templateHost;
@@ -169,7 +169,7 @@ namespace AlienUI.Core
                 if (BindUtility.IsBindingString(att.Value, out Match match))
                 {
                     var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                    DependencyObject source = null;
+                    object source = null;
                     switch (bindType)
                     {
                         case EnumBindingType.Binding: source = m_dataContext; break;
