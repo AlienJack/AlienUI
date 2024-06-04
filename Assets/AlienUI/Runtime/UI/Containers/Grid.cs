@@ -41,16 +41,7 @@ namespace AlienUI.UIElements
 
         protected override Vector2 CalcDesireSize()
         {
-            Vector2 result = new Vector2(Padding.left + Padding.right, Padding.top + Padding.bottom);
-
-            foreach (var child in UIChildren)
-            {
-                var childSize = child.GetDesireSize();
-                result.x += childSize.x;
-                result.y += childSize.y;
-            }
-
-            return result;
+            return new Vector2(100, 100);
         }
 
         public override void CalcChildrenLayout()
@@ -77,7 +68,7 @@ namespace AlienUI.UIElements
 
                 if (slots[pos])
                 {
-                    foreach(var item in slots)
+                    foreach (var item in slots)
                     {
                         if (!item.Value)
                         {

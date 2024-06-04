@@ -28,7 +28,7 @@ namespace AlienUI.UIElements
 
         protected override Vector2 CalcDesireSize()
         {
-            return new Vector2(100, 100);
+            return new Vector2(Width.Auto ? 100 : Width.Value, Height.Auto ? 100 : Height.Value);
         }
     }
 }
