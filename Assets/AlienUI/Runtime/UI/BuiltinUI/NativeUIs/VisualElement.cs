@@ -1,7 +1,7 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -28,7 +28,17 @@ namespace AlienUI.UIElements
 
         protected override Vector2 CalcDesireSize()
         {
-            return new Vector2(Width.Auto ? 100 : Width.Value, Height.Auto ? 100 : Height.Value);
+            var rect = new Vector2(Padding.left + Padding.right, Padding.top + Padding.bottom);
+
+            Vector2 addRect = default;
+            foreach (var child in UIChildren)
+            {
+                var deSize = child.GetDesireSize();
+                addRect.x = Mathf.Max(addRect.x, deSize.x);
+                addRect.y = Mathf.Max(addRect.y, deSize.y);
+            }
+
+            return rect + addRect;
         }
     }
 }

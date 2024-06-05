@@ -1,7 +1,11 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Width="200" Height="80" Name="Temp">
-  <Image Color="#383838FF" ImageType="Sliced" Content="DEMO/Border" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="Root">
-    <Label Color="#FFFFFFFF" FontSize="22" Content="{TemplateBinding Text,Mode=oneway}" Horizontal="Stretch" Vertical="Stretch" Name="ButtonTxt" />
-  </Image>
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp">
+  <Image ImageType="Sliced" Content="DEMO/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
+  <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
+    <Dock ControlChildSize="True">
+      <Image Content="{TemplateBinding Icon}" Width="30" Height="30" />
+      <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
+    </Dock>
+  </VisualElement>
   <DataTrigger Target="{TemplateBinding Self}">
     <Condition Value="Normal" PropertyName="State" />
     <PlayStoryboard Target="Normal" />
@@ -20,22 +24,22 @@
   </DataTrigger>
   <StoryboardGroup>
     <Storyboard Name="Hover">
-      <Animation Target="Root" PropertyName="Color">
+      <Animation Target="BG" PropertyName="Color">
         <AnimationKey Time="0.2" Value="#424242" />
       </Animation>
     </Storyboard>
     <Storyboard Name="Normal">
-      <Animation Target="Root" PropertyName="Color">
+      <Animation Target="BG" PropertyName="Color">
         <AnimationKey Time="0.2" Value="#383838" />
       </Animation>
     </Storyboard>
     <Storyboard Name="Pressing">
-      <Animation Target="Root" PropertyName="Color">
+      <Animation Target="BG" PropertyName="Color">
         <AnimationKey Time="0.2" Value="#6a6a6a" />
       </Animation>
     </Storyboard>
     <Storyboard Name="Disabled">
-      <Animation Target="Root" PropertyName="Color">
+      <Animation Target="BG" PropertyName="Color">
         <AnimationKey Time="0.2" Value="#2d2d2d88" />
       </Animation>
     </Storyboard>

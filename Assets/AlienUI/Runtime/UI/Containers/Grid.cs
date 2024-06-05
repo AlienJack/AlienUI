@@ -20,9 +20,9 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty PositionProperty =
-            DependencyProperty.RegisterAttached("GridPos", typeof(Vector2Int), typeof(Grid), new PropertyMetadata(Vector2Int.zero), OnValueChanged);
+            DependencyProperty.RegisterAttached("GridPos", typeof(Vector2Int), typeof(Grid), new PropertyMetadata(Vector2Int.zero), OnChildGridPosChanged);
 
-        private static void OnValueChanged(DependencyObject sender, object oldValue, object newValue)
+        private static void OnChildGridPosChanged(DependencyObject sender, object oldValue, object newValue)
         {
             if (sender is UIElement element && element.Parent is Grid grid)
             {
@@ -39,12 +39,12 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty GridDefineProperty =
             DependencyProperty.Register("GridDefine", typeof(GridDefine), typeof(Grid), new PropertyMetadata(GridDefine.Default), OnLayoutParamDirty);
 
-        protected override Vector2 CalcDesireSize()
+        protected override Vector2 OnCalcDesireSize(IReadOnlyList<UIElement> children)
         {
             return new Vector2(100, 100);
         }
 
-        public override void CalcChildrenLayout()
+        protected override void OnCalcChildrenLayout(IReadOnlyList<UIElement> children)
         {
             GridDefine.CalcCellSizes(ActualWidth - Padding.left - Padding.right, ActualHeight - Padding.top - Padding.bottom);
 

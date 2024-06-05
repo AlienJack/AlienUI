@@ -1,6 +1,7 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,24 @@ namespace AlienUI.UIElements
         }
         public static readonly DependencyProperty FontSizeProperty =
             DependencyProperty.Register("FontSize", typeof(int), typeof(Label), new PropertyMetadata(32), OnFontSizeChanged);
+
+        public bool AutoFontSize
+        {
+            get { return (bool)GetValue(AutoFontSizeProperty); }
+            set { SetValue(AutoFontSizeProperty, value); }
+        }
+        public static readonly DependencyProperty AutoFontSizeProperty =
+            DependencyProperty.Register("AutoFontSize", typeof(bool), typeof(Label), new PropertyMetadata(true), OnAutoFontSize);
+
+        private static void OnAutoFontSize(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as Label;
+            self.m_text.resizeTextForBestFit = self.AutoFontSize;
+            self.m_text.resizeTextMaxSize = self.FontSize;
+            self.m_text.resizeTextMinSize = 1;
+
+            self.SetLayoutDirty();
+        }
 
         private static void OnFontSizeChanged(DependencyObject sender, object oldValue, object newValue)
         {

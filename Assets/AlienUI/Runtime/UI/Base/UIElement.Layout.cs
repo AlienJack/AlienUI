@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.UIElements.ToolsScript;
+using UnityEditor.UI;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -52,7 +53,6 @@ namespace AlienUI.UIElements
             DependencyProperty.Register("Padding", typeof(BorderData), typeof(UIElement), new PropertyMetadata(default(BorderData), "Layout"), OnLayoutParamDirty);
 
 
-
         public Vector2 Offset
         {
             get { return (Vector2)GetValue(OffsetProperty); }
@@ -80,6 +80,24 @@ namespace AlienUI.UIElements
             self.Rect.localScale = (Vector2)newValue;
         }
 
+
+        public bool Active
+        {
+            get { return (bool)GetValue(ActiveProperty); }
+            set { SetValue(ActiveProperty, value); }
+        }
+
+        public static readonly DependencyProperty ActiveProperty =
+            DependencyProperty.Register("Active", typeof(bool), typeof(UIElement), new PropertyMetadata(true), OnActiveChanged);
+
+        private static void OnActiveChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as UIElement;
+            self.Rect.gameObject.SetActive(self.Active);
+
+            self.SetLayoutDirty();
+        }
+
         public float ActualWidth
         {
             get => m_rectTransform.rect.width;
@@ -100,6 +118,9 @@ namespace AlienUI.UIElements
 
         public Vector2 GetDesireSize()
         {
+            if (!Active)
+                return Vector2.zero;
+
             var desireSize = CalcDesireSize();
 
             if (!Width.Auto) desireSize.x = Width.Value;
@@ -138,7 +159,7 @@ namespace AlienUI.UIElements
             }
         }
 
-        private static void PerformUIElement(UIElement ui)
+        internal static void PerformUIElement(UIElement ui)
         {
             ui.PerformRectTransform();
 

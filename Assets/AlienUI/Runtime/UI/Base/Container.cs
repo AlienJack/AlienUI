@@ -1,15 +1,29 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
+using UnityEngine;
 
 namespace AlienUI.UIElements.Containers
 {
     [Description(Icon = "Container")]
-    public abstract class Container : UIElement
+    public abstract class Container : VisualElement
     {
+        public static bool GetIgnoreChild(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IgnoreChildProperty);
+        }
+
+        public static void SetIgnoreChild(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IgnoreChildProperty, value);
+        }
+
+        public static readonly DependencyProperty IgnoreChildProperty =
+            DependencyProperty.RegisterAttached("IgnoreChild", typeof(bool), typeof(Container), new PropertyMetadata(false), OnLayoutParamDirty);
+
+
         public ItemTemplate ItemTemplate
         {
             get { return (ItemTemplate)GetValue(ItemTemplateProperty); }
@@ -56,5 +70,24 @@ namespace AlienUI.UIElements.Containers
         }
 
         protected override void OnInitialized() { }
+
+        protected abstract Vector2 OnCalcDesireSize(IReadOnlyList<UIElement> children);
+
+        protected sealed override Vector2 CalcDesireSize()
+        {
+            return OnCalcDesireSize(UIChildren.Where(child => !GetIgnoreChild(child) && child.Active).ToList());
+        }
+
+        public sealed override void CalcChildrenLayout()
+        {
+            OnCalcChildrenLayout(UIChildren.Where(child => !GetIgnoreChild(child) && child.Active).ToList());
+            foreach (var child in UIChildren)
+            {
+                if (!GetIgnoreChild(child)) continue;
+                PerformUIElement(child);
+            }
+        }
+
+        protected abstract void OnCalcChildrenLayout(IReadOnlyList<UIElement> children);
     }
 }

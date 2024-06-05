@@ -1,6 +1,7 @@
 using AlienUI.Core.Commnands;
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using UnityEngine;
 
 namespace AlienUI.UIElements
 {
@@ -8,6 +9,15 @@ namespace AlienUI.UIElements
     public class Button : UserControl
     {
         public override ControlTemplate DefaultTemplate => new("Builtin.Button");
+
+        public Sprite Icon
+        {
+            get { return (Sprite)GetValue(IconProperty); }
+            set { SetValue(IconProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconProperty =
+            DependencyProperty.Register("Icon", typeof(Sprite), typeof(Button), new PropertyMetadata(null));
 
         public string Text
         {
@@ -35,8 +45,6 @@ namespace AlienUI.UIElements
 
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command", typeof(CommandBase), typeof(Button), new PropertyMetadata(null));
-
-
 
         public EnumButtonState State
         {

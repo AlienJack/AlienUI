@@ -17,7 +17,6 @@ namespace AlienUI.UIElements
             set { SetValue(MaskProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Mask.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MaskProperty =
             DependencyProperty.Register("Mask", typeof(bool), typeof(Image), new PropertyMetadata(false), OnMaskChanged);
 
@@ -26,16 +25,16 @@ namespace AlienUI.UIElements
             var self = sender as Image;
             if (self.Mask)
             {
-                if (self.mask == null) self.mask = self.Rect.gameObject.AddComponent<Mask>();
-                self.mask.showMaskGraphic = true;
-                self.mask.enabled = true;
+                if (self.nativecom_mask == null) self.nativecom_mask = self.Rect.gameObject.AddComponent<Mask>();
+                self.nativecom_mask.showMaskGraphic = true;
+                self.nativecom_mask.enabled = true;
             }
             else
             {
-                if (self.mask != null)
+                if (self.nativecom_mask != null)
                 {
-                    self.mask.showMaskGraphic = true;
-                    self.mask.enabled = false;
+                    self.nativecom_mask.showMaskGraphic = true;
+                    self.nativecom_mask.enabled = false;
                 }
             }
         }
@@ -52,25 +51,25 @@ namespace AlienUI.UIElements
         private static void OnTypeChanged(DependencyObject sender, object oldValue, object newValue)
         {
             var self = sender as Image;
-            self.img.type = (ImgType)newValue;
+            self.naticecom_img.type = (ImgType)newValue;
         }
 
-        private UGUIImg img;
-        private Mask mask;
+        private UGUIImg naticecom_img;
+        private Mask nativecom_mask;
 
         protected override void OnInitialized()
         {
-            img = m_rectTransform.gameObject.AddComponent<UGUIImg>();
+            naticecom_img = m_rectTransform.gameObject.AddComponent<UGUIImg>();
         }
 
         protected override void OnContentChanged(Sprite oldValue, Sprite newValue)
         {
-            img.sprite = newValue;
+            naticecom_img.sprite = newValue;
         }
 
         protected override Vector2 CalcDesireSize()
         {
-            return new Vector2 { x = img.preferredWidth, y = img.preferredHeight };
+            return new Vector2 { x = naticecom_img.preferredWidth, y = naticecom_img.preferredHeight };
         }
     }
 }

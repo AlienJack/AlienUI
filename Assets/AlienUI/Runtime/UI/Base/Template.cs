@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AlienUI.UIElements
 {
     [Description(Icon = "template")]
-    public class Template : UIElement
+    public class Template : VisualElement
     {
         public string Type
         {
@@ -26,14 +26,5 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty TemplateRootProperty =
             DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
 
-
-        protected override void OnInitialized()
-        {
-        }
-
-        protected override Vector2 CalcDesireSize()
-        {
-            return default;
-        }
     }
 }

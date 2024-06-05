@@ -415,7 +415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ta: {fileID: 5022602860645237092, guid: 3e80a026fe951034cbe74fe9ac8ddedc, type: 3}
-  settings: {fileID: 11400000, guid: 2ec2f41d973e9f248b778741b8154b30, type: 2}
   e: {fileID: 1594676383}
   uiRoot: {fileID: 767913552791226890}
 --- !u!4 &1048044903
@@ -462,6 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1c32ab652e8f34eb1189ba86222c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_runtimeSettings: {fileID: 11400000, guid: 2ec2f41d973e9f248b778741b8154b30, type: 2}
 --- !u!4 &1594676384
 Transform:
   m_ObjectHideFlags: 0
