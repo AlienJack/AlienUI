@@ -1,8 +1,8 @@
 <Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
-  <Image Color="#000000FF" ImageType="Sliced" Content="DEMO/Border" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
+  <Image ImageType="Sliced" Content="DEMO/Border" Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
     <Grid GridDefine="1*|40px,1*" Horizontal="Stretch" Vertical="Stretch">
-      <VisualElement Padding="4,4,4,4">
-        <Label Color="#FFFFFFFF" FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
+      <VisualElement Padding="4,4,8,4">
+        <Label FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
         <Button Text="X" Command="{TemplateBinding CloseCmd}" Width="40" Height="30" Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
       </VisualElement>
       <VisualElement Padding="4,4,4,4" GridPos="0,1">

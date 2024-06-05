@@ -187,7 +187,7 @@ namespace AlienUI.Core
                 }
                 else
                 {
-                    xmlParser.Begin(node, xNode, att);
+                    xmlParser.Begin(att);
                     xmlParser.SetPropertyType(dp.PropType);
                     if (!xmlParser.ParseValue()) continue;
 

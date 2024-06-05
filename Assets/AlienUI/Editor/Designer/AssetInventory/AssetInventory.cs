@@ -16,7 +16,11 @@ namespace AlienUI.Editors
         {
             var assets = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
-                .Where(t => !t.IsAbstract && t != typeof(Template) && t.IsSubclassOf(typeof(UIElement)))
+                .Where(t =>
+                    !t.IsAbstract &&
+                    !typeof(Template).IsAssignableFrom(t) && 
+                    !typeof(Window).IsAssignableFrom(t) &&
+                    (typeof(UIElement)).IsAssignableFrom(t))
                 .Select(t => new Asset(t))
                 .ToList();
 

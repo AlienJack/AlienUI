@@ -40,11 +40,8 @@ namespace AlienUI.Editors
                     DrawDesignerSettings(s_settingObj);
                     break;
                 case 1:
-                    if (GUILayout.Button("Recollect"))
-                    {
-                        s_settingObj.CollectAsset();
-                    }
-                    DrawDefaultFont(s_settingObj);
+                    if (GUILayout.Button("Recollect")) s_settingObj.CollectAsset();
+                    DrawWindow(s_settingObj);
                     DrawUI(s_settingObj);
                     DrawTemplate(s_settingObj);
                     break;
@@ -70,9 +67,23 @@ namespace AlienUI.Editors
             EditorGUILayout.EndVertical();
         }
 
-        private static void DrawDefaultFont(Settings setting)
+        private static ReorderableList m_windowDrawer;
+        private static void DrawWindow(Settings setting)
         {
-            setting.m_defaultLabelFont = (Font)EditorGUILayout.ObjectField("DefaultFont", setting.m_defaultLabelFont, typeof(Font), false);
+            if (m_windowDrawer == null)
+            {
+                m_windowDrawer = new ReorderableList(setting.m_windowDict.Values.ToList(), typeof(AmlResouces));
+                m_windowDrawer.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "WindowResources");
+                m_windowDrawer.drawElementCallback = (rect, index, isActive, isFocused) =>
+                {
+                    EditorGUI.BeginChangeCheck();
+                    var tempItem = m_windowDrawer.list[index] as AmlResouces;
+                    tempItem.Aml = EditorGUI.ObjectField(rect, tempItem.Aml, typeof(AmlAsset), false) as AmlAsset;
+                    if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(setting);
+                };
+            }
+
+            m_windowDrawer.DoLayoutList();
         }
 
         private static ReorderableList m_uiListDrawer;

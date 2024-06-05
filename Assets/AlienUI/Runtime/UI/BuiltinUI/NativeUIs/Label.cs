@@ -15,7 +15,7 @@ namespace AlienUI.UIElements
             set { SetValue(FontProperty, value); }
         }
         public static readonly DependencyProperty FontProperty =
-            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(Settings.Get().DefaultLabelFont), OnFontChanged);
+            DependencyProperty.Register("Font", typeof(Font), typeof(Label), new PropertyMetadata(Settings.Get().GetUnityAsset<Font>("Builtin", "DefaultFont")), OnFontChanged);
 
         public TextAlignHorizontal AlignHorizontal
         {

@@ -1,3 +1,4 @@
+using AlienUI.Core;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using AlienUI.UIElements.ToolsScript;
@@ -12,9 +13,6 @@ namespace AlienUI
     public partial class Settings : ScriptableObject
     {
         [SerializeField]
-        internal Font m_defaultLabelFont;
-        public Font DefaultLabelFont => m_defaultLabelFont;
-        [SerializeField]
         internal List<AmlResouces> m_amlResources = new List<AmlResouces>();
         [NonSerialized]
         internal Dictionary<string, AmlResouces> m_templatesDict = new Dictionary<string, AmlResouces>();
@@ -23,7 +21,11 @@ namespace AlienUI
         [NonSerialized]
         internal Dictionary<string, AmlResouces> m_uiDict = new Dictionary<string, AmlResouces>();
         [NonSerialized]
+        internal Dictionary<string, AmlResouces> m_windowDict = new Dictionary<string, AmlResouces>();
+        [NonSerialized]
         bool m_optimized;
+        [NonSerialized]
+        internal XmlTypeCollector m_collector = new XmlTypeCollector();
 
         [SerializeField]
         internal UnityReference m_reference;
@@ -49,9 +51,12 @@ namespace AlienUI
             m_templatesDict.Clear();
             m_userControl2TemplatesDict.Clear();
             m_uiDict.Clear();
+            m_collector.Collect();
+
             foreach (var item in m_amlResources)
             {
-                item.CalcResourcesType();
+                item.CalcResourcesType(m_collector);
+
                 if (item.IsTemplateAsset)
                 {
                     m_templatesDict[item.Name] = item;
@@ -61,15 +66,20 @@ namespace AlienUI
                 }
                 else
                 {
-                    m_uiDict[item.Name] = item;
+                    if (typeof(Window).IsAssignableFrom(item.AssetType))
+                    {
+                        m_windowDict[item.Name] = item;
+                    }
+                    else
+                    {
+                        m_uiDict[item.Name] = item;
+                    }
                 }
             }
 
             m_reference.OptimizeData();
-
             m_optimized = true;
         }
-
 
         public AmlAsset GetTemplateAsset(string templateName)
         {
@@ -125,21 +135,22 @@ namespace AlienUI
             public AmlAsset Aml;
 
             public string TemplateTarget { get; private set; }
-            public bool IsTemplateAsset { get; private set; }
+            public bool IsTemplateAsset => AssetType == typeof(Template);
 
-            public void CalcResourcesType()
+            public Type AssetType { get; private set; }
+
+            internal void CalcResourcesType(XmlTypeCollector collector)
             {
-                IsTemplateAsset = false;
                 TemplateTarget = null;
+                AssetType = null;
                 if (Aml == null) return;
 
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(Aml.Text);
                 XmlNode rootNode = xmlDoc.DocumentElement;
-                if (rootNode.NamespaceURI + "." + rootNode.Name != typeof(Template).FullName) return;
+                AssetType = collector.GetDependencyObjectType(rootNode);
 
                 TemplateTarget = rootNode.Attributes["Type"]?.Value;
-                if (TemplateTarget != null) IsTemplateAsset = true;
             }
         }
     }

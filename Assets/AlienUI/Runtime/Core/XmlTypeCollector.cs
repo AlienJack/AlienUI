@@ -112,7 +112,7 @@ namespace AlienUI.Core
             return Activator.CreateInstance(instanceType) as AmlNodeElement;
         }
 
-        private Type GetDependencyObjectType(XmlNode xnode)
+        internal Type GetDependencyObjectType(XmlNode xnode)
         {
             var shortName = xnode.LocalName;
             Type instanceType;

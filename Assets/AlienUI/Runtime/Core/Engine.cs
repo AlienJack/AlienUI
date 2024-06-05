@@ -12,11 +12,18 @@ namespace AlienUI
     [ExecuteInEditMode]
     public class Engine : MonoBehaviour
     {
+        [SerializeField]
+        private Settings m_runtimeSettings;
+
         internal XmlAttributeParser AttParser = new();
 
         private void Awake()
         {
-            if (Application.isPlaying) DontDestroyOnLoad(gameObject);
+            if (Application.isPlaying)
+            {
+                Settings.SettingGetter = () => m_runtimeSettings;
+                DontDestroyOnLoad(gameObject);
+            }
         }
 
         private UIElement CreateUIInternal(string xmlTxt, Transform parent, object dataContext, AmlNodeElement templateHost, UnityEngine.Object xmlAsset)

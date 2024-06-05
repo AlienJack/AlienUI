@@ -342,6 +342,7 @@ namespace AlienUI.Editors
             newUI.Engine = target.Engine;
             target.AddChild(newUI);
             newUI.Initialize();
+            newUI.RefreshPropertyNotify();
             newUI.Rect.SetParent(target.m_childRoot);
             target.Engine.SetDirty(target);
             Designer.SaveToAml();
