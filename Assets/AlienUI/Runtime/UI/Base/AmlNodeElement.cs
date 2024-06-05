@@ -129,6 +129,17 @@ namespace AlienUI.UIElements
             return this.Document.Resolve(resolveKey);
         }
 
+        private bool m_performed;
+        public void RaiseDocumentPerformed()
+        {
+            if (!m_performed) OnDocumentPerformed();
+            m_performed = true;
+
+            foreach (var child in Children)
+                child.RaiseDocumentPerformed();
+        }
+        protected virtual void OnDocumentPerformed() { }
+
 #if UNITY_EDITOR
         public List<(string, string)> xmlnsList;
 

@@ -35,7 +35,7 @@ namespace AlienUI.Core
                 if (m_converter == null)
                 {
                     var dstPropType = Target.GetDependencyPropertyType(TargetPropertyName);
-                    var srcPropType = Source.GetPropertyType(SourcePropertyName);
+                    var srcPropType = AlienUtility.GetPropertyType(Source, SourcePropertyName);
                     if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetPropertyName}");
                     if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourcePropertyName}");
                     if (dstPropType != srcPropType && !dstPropType.IsAssignableFrom(srcPropType))
@@ -49,7 +49,7 @@ namespace AlienUI.Core
                     }
                 }
 
-                var srcValue = Source.GetPropertyValue(SourcePropertyName);
+                var srcValue = AlienUtility.GetPropertyValue(Source, SourcePropertyName);
                 if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
 
                 //首先同步一次数值
@@ -134,7 +134,7 @@ namespace AlienUI.Core
 
             m_dataSync = true;
 
-            var newValue = sender.GetPropertyValue(e.PropertyName);
+            var newValue = AlienUtility.GetPropertyValue(sender, e.PropertyName);
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
 
             try { Target.SetValue(TargetPropertyName, newValue); }

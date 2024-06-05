@@ -22,6 +22,8 @@ namespace AlienUI.Models
         protected abstract T OnResolve(string originStr);
         public sealed override object Resolve(string originStr, Type resolveType)
         {
+            if (originStr == "{NULL}") return null;
+
             return OnResolve(originStr);
         }
 

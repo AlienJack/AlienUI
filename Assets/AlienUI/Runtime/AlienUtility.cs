@@ -10,26 +10,26 @@ namespace AlienUI.UIElements.ToolsScript
 {
     internal static class AlienUtility
     {
-        private static PropertyInfo GetProperty(this object obj, string propName)
+        private static PropertyInfo GetProperty(object obj, string propName)
         {
             var propInfo = obj.GetType().GetProperty(propName, BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance);
             return propInfo;
         }
 
-        internal static Type GetPropertyType(this object obj, string propName)
+        internal static Type GetPropertyType(object obj, string propName)
         {
             if (propName == "Self") return obj.GetType();
 
             if (obj is DependencyObject dpObj) return dpObj.GetDependencyPropertyType(propName);
-            return obj.GetProperty(propName)?.PropertyType;
+            return GetProperty(obj, propName)?.PropertyType;
         }
 
-        internal static object GetPropertyValue(this object obj, string propName)
+        internal static object GetPropertyValue(object obj, string propName)
         {
             if (propName == "Self") return obj;
 
             if (obj is DependencyObject dpObj) return dpObj.GetValue(propName);
-            var propInfo = obj.GetProperty(propName);
+            var propInfo = GetProperty(obj, propName);
             if (propInfo == null) return null;
 
             return propInfo.GetValue(obj, null);
@@ -39,14 +39,9 @@ namespace AlienUI.UIElements.ToolsScript
         {
             if (obj is DependencyObject dpObj) dpObj.SetValue(propName, value);
 
-            var propInfo = obj.GetProperty(propName);
+            var propInfo = GetProperty(obj, propName);
             if (propInfo == null) return;
             propInfo.SetValue(obj, value, null);
-        }
-
-        private static void ListenObj_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         internal static T AddMissingComponemt<T>(this GameObject go) where T : UnityEngine.Component

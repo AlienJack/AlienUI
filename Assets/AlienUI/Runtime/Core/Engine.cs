@@ -51,6 +51,8 @@ namespace AlienUI
 
                 uiGameObj.hideFlags = HideFlags.DontSave;
 
+                uiIns.RaiseDocumentPerformed();
+
                 return uiIns;
             }
             finally

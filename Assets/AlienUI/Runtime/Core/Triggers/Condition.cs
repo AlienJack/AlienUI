@@ -14,8 +14,6 @@ namespace AlienUI.Core.Resources
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(string), typeof(Condition), new PropertyMetadata(string.Empty));
 
-
-
         public string PropertyName
         {
             get { return (string)GetValue(PropertyNameProperty); }
@@ -32,7 +30,8 @@ namespace AlienUI.Core.Resources
             set { SetValue(CompareTypeProperty, value); }
         }
         public static readonly DependencyProperty CompareTypeProperty =
-            DependencyProperty.Register("CompareType", typeof(EnumCompareType), typeof(Condition), new PropertyMetadata(default(EnumCompareType)));
+            DependencyProperty.Register("CompareType", typeof(EnumCompareType), typeof(Condition), new PropertyMetadata(EnumCompareType.Equal));
+
 
         private object m_rawValue;
         private DependencyObject m_target;
@@ -45,7 +44,6 @@ namespace AlienUI.Core.Resources
         }
         public bool Test()
         {
-            if (m_rawValue == null) return false;
             var value = m_target.GetValue(PropertyName);
 
             var result = CompareType switch
@@ -55,6 +53,7 @@ namespace AlienUI.Core.Resources
                 EnumCompareType.GreaterThanOrEqual when value is IComparable comValue => comValue.CompareTo(m_rawValue) >= 0,
                 EnumCompareType.LessThan when value is IComparable comValue => comValue.CompareTo(m_rawValue) < 0,
                 EnumCompareType.LessTranOrEqual when value is IComparable comValue => comValue.CompareTo(m_rawValue) <= 0,
+                EnumCompareType.NotEqual => !object.Equals(value, m_rawValue),
                 _ => false
             };
 
@@ -64,6 +63,6 @@ namespace AlienUI.Core.Resources
 
     public enum EnumCompareType
     {
-        Equal, GreaterThan, GreaterThanOrEqual, LessThan, LessTranOrEqual
+        Equal, GreaterThan, GreaterThanOrEqual, LessThan, LessTranOrEqual, NotEqual
     }
 }

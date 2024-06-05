@@ -1,21 +1,18 @@
 <Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp">
-  <Image ImageType="Sliced" Content="DEMO/Border" Color="#383838FF" Horizontal="Stretch"
-    Vertical="Stretch" Name="BG" />
+  <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
   <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
     <Dock ControlChildSize="True">
-      <Image Name="Icon" Content="{TemplateBinding Icon}" Width="30" Height="30" />
+      <Image Content="{TemplateBinding Icon}" Width="30" Height="30" Active="False" Name="Icon" />
       <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
     </Dock>
   </VisualElement>
-
-
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition PropertyName="Icon" Value="none" />
-    <Setter Target="Icon" PropertyName="Activie" Value="false"/>
+    <Condition Value="{null}" PropertyName="Icon" />
+    <Setter Target="Icon" PropertyName="Active" Value="false" />
   </DataTrigger>
   <DataTrigger Target="{TemplateBinding Self}">
-    <Condition PropertyName="Icon" Value="none" Oppsite="true"/>
-    <Setter Target="Icon" PropertyName="Activie" Value="true"/>
+    <Condition Value="{null}" PropertyName="Icon" CompareType="NotEqual" />
+    <Setter Target="Icon" PropertyName="Active" Value="true" />
   </DataTrigger>
   <DataTrigger Target="{TemplateBinding Self}">
     <Condition Value="Normal" PropertyName="State" />
