@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace AlienUI.Models
@@ -14,6 +15,12 @@ namespace AlienUI.Models
             System.IO.File.WriteAllText(Path, Text);
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
+        }
+
+        public static event Action<string> OnAssetReimported;
+        public static void NotifyAmlReimported(string assetPath)
+        {
+            OnAssetReimported?.Invoke(assetPath);
         }
 #endif
     }

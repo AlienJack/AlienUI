@@ -35,8 +35,6 @@ namespace AlienUI
         private static void OnDrawSettingGUI(string searchContext)
         {
             SettingGUIDraw?.Invoke(searchContext);
-
-            
         }
     }
 

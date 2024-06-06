@@ -47,8 +47,25 @@ namespace AlienUI.Editors
             EditorApplication.update += OnUpdate;
             SceneView.duringSceneGui += SceneView_duringSceneGui;
             DesignerTool.OnSelected += DesignerTool_OnSelected;
-
+            AmlAsset.OnAssetReimported += AmlAsset_OnAssetReimported;
             Instance = this;
+        }
+
+        private void AmlAsset_OnAssetReimported(string path)
+        {
+            if (m_amlFile != null && m_amlFile.Path == path)
+            {
+                if (m_amlFile.Text.GetHashCode() == savingHash) return;
+
+                bool reload = EditorUtility.DisplayDialog(
+                    "Designer Warning",
+                    $"[{m_amlFile.name}] has been changed outside Designer.\nDo you want to load the changes?",
+                    "Reload", "Overwrite by Designer"
+                    );
+
+                if (reload) Reboot();
+                else SaveToAml();
+            }
         }
 
         private void OnUpdate()
@@ -61,6 +78,7 @@ namespace AlienUI.Editors
             EditorApplication.update -= OnUpdate;
             SceneView.duringSceneGui -= SceneView_duringSceneGui;
             DesignerTool.OnSelected -= DesignerTool_OnSelected;
+            AmlAsset.OnAssetReimported -= AmlAsset_OnAssetReimported;
 
             Instance = null;
         }
@@ -106,6 +124,7 @@ namespace AlienUI.Editors
         {
             indentQueue.Clear();
             indentQueue.Add(amlFile);
+            savingHash = 0;
             SetTarget(ui, amlFile);
         }
 
@@ -154,7 +173,7 @@ namespace AlienUI.Editors
             else
             {
                 indentQueue.Add(aa);
-
+                savingHash = 0;
                 initAml(aa);
             }
         }
@@ -351,6 +370,7 @@ namespace AlienUI.Editors
         }
 
 
+        private int savingHash;
         internal static void SaveToAml()
         {
             var designer = Instance;
@@ -359,7 +379,7 @@ namespace AlienUI.Editors
             var str = AmlGenerator.Gen(designer.m_target);
             designer.m_amlFile.Text = str;
             designer.m_amlFile.SaveToDisk();
-
+            designer.savingHash = designer.m_amlFile.Text.GetHashCode();
             designer.Refresh();
 
             Debug.Log($"{designer.m_amlFile.name} saved");

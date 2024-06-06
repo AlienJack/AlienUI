@@ -1,11 +1,11 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp">
+<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="ButtonTemplate">
+  <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
   <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
     <Dock ControlChildSize="True">
       <Image Content="{TemplateBinding Icon}" Width="30" Height="30" Active="False" Name="Icon" />
       <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
     </Dock>
   </VisualElement>
-  <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
   <DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">
     <Condition PropertyName="Icon" />
     <Setter Target="Icon" PropertyName="Active" Value="false" />

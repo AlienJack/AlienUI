@@ -26,9 +26,23 @@ namespace AlienUI.Editors
             amlAsset.Text = xmlContent;
             // 添加到导入上下文
             ctx.AddObjectToAsset("main obj", amlAsset);
-            ctx.SetMainObject(amlAsset);            
+            ctx.SetMainObject(amlAsset);
 
             EditorApplication.delayCall += handleCollectAsset;
+
+            var path = ctx.assetPath;
+            EditorApplication.CallbackFunction notify = null;
+            notify = () =>
+            {
+                EditorApplication.delayCall -= notify;
+                AmlAsset.NotifyAmlReimported(path);
+            };
+            EditorApplication.delayCall += notify;
+        }
+
+        private void handleAmlReimported()
+        {
+            EditorApplication.delayCall -= handleAmlReimported;
         }
 
         private void handleCollectAsset()
