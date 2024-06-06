@@ -17,7 +17,6 @@ namespace AlienUI.Core
         private Dictionary<string, Type> m_uiTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_triggerTypes = new Dictionary<string, Type>();
         private Dictionary<string, Type> m_resourcesTypes = new Dictionary<string, Type>();
-        private Dictionary<string, Type> m_triggerActionTypes = new Dictionary<string, Type>();
         private ConverterDict m_converterMaps = new ConverterDict();
         private Dictionary<string, ConverterBase> m_converterNameMap = new Dictionary<string, ConverterBase>();
 
@@ -27,7 +26,6 @@ namespace AlienUI.Core
             Type uibaseType = typeof(UIElement);
             Type triggerBaseType = typeof(Trigger);
             Type resourceBaseType = typeof(Resource);
-            Type triggerActionBaseType = typeof(TriggerAction);
             Type converterBaseType = typeof(ConverterBase);
 
             List<Type> allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
@@ -47,15 +45,11 @@ namespace AlienUI.Core
                 }
                 else if (type.IsSubclassOf(triggerBaseType))
                 {
-                    m_triggerTypes[type.Name] = type;
+                    m_triggerTypes[type.FullName] = type;
                 }
                 else if (type.IsSubclassOf(resourceBaseType))
                 {
-                    m_resourcesTypes[type.Name] = type;
-                }
-                else if (type.IsSubclassOf(triggerActionBaseType))
-                {
-                    m_triggerActionTypes[type.Name] = type;
+                    m_resourcesTypes[type.FullName] = type;
                 }
                 else if (type.IsSubclassOf(converterBaseType))
                 {
@@ -114,14 +108,12 @@ namespace AlienUI.Core
 
         internal Type GetDependencyObjectType(XmlNode xnode)
         {
-            var shortName = xnode.LocalName;
+            var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
             Type instanceType;
-            if (m_triggerTypes.TryGetValue(shortName, out instanceType)) return instanceType;
-            else if (m_resourcesTypes.TryGetValue(shortName, out instanceType)) return instanceType;
-            else if (m_triggerActionTypes.TryGetValue(shortName, out instanceType)) return instanceType;
+            if (m_triggerTypes.TryGetValue(fullName, out instanceType)) return instanceType;
+            else if (m_resourcesTypes.TryGetValue(fullName, out instanceType)) return instanceType;
             else
             {
-                var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
                 m_uiTypes.TryGetValue(fullName, out instanceType);
 
                 if (instanceType == null)

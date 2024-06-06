@@ -157,14 +157,14 @@ namespace AlienUI.UIElements
             return result;
         }
 
-        public string GetXmlNodeName()
+        public void GetXmlNodeName(out string prefix, out string name, out string namespaceURI)
         {
-            if (this is Trigger || this is Resource) return GetType().Name;
-
-            var name = GetType().FullName;
+            name = GetType().FullName;
+            prefix = string.Empty;
+            namespaceURI = string.Empty;
 
             var xmlnsList = GetXmlsnList();
-            if (xmlnsList == null) return name;
+            if (xmlnsList == null) return;
 
             foreach (var item in xmlnsList)
             {
@@ -173,15 +173,12 @@ namespace AlienUI.UIElements
 
                 if (name.StartsWith(path))
                 {
-                    string replacePath = string.Empty;
+                    name = name.Replace($"{path}.", string.Empty);
+                    namespaceURI = path;
                     var temp = xmlNsName.Split(':');
-                    if (temp.Length > 1) replacePath = temp[1];
-
-                    return name.Replace(path + '.', replacePath);
+                    if (temp.Length > 1) prefix = temp[1];
                 }
             }
-
-            return name;
         }
 #endif
     }

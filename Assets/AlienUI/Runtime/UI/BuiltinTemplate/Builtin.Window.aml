@@ -1,4 +1,8 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Window" TemplateRoot="Content"
+<Template xmlns="AlienUI.UIElements"
+  xmlns:t="AlienUI.Core.Triggers"
+  xmlns:r="AlienUI.Core.Resources"
+  Type="AlienUI.UIElements.Window"
+  TemplateRoot="Content"
   Width="800" Height="500">
   <Image ImageType="Sliced" Content="Builtin/Border" Color="#000000FF" Horizontal="Stretch"
     Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
@@ -8,16 +12,16 @@
         <Dock ControlChildSize="True" Horizontal="Right" Vertical="Stretch">
           <Button Icon="Builtin/MaxIcon" Text="" Command="{TemplateBinding SwitchMaximizStateCmd}"
             Name="MaxBtn">
-            <DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
-              <Condition Value="true" PropertyName="IsMaximized" />
-              <Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/RestoreIcon" />
-              <Setter Target="WndBottom" PropertyName="Content" />
-            </DataTrigger>
-            <DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
-              <Condition Value="true" PropertyName="IsMaximized" CompareType="NotEqual" />
-              <Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/MaxIcon" />
-              <Setter Target="WndBottom" PropertyName="Content" Value="Builtin/Border" />
-            </DataTrigger>
+            <t:DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
+              <r:Condition Value="true" PropertyName="IsMaximized" />
+              <r:Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/RestoreIcon" />
+              <r:Setter Target="WndBottom" PropertyName="Content" />
+            </t:DataTrigger>
+            <t:DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
+              <r:Condition Value="true" PropertyName="IsMaximized" CompareType="NotEqual" />
+              <r:Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/MaxIcon" />
+              <r:Setter Target="WndBottom" PropertyName="Content" Value="Builtin/Border" />
+            </t:DataTrigger>
           </Button>
           <Button Icon="Builtin/CloseIcon" Text="" Command="{TemplateBinding CloseCmd}"
             Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
@@ -28,21 +32,21 @@
           Vertical="Stretch" Name="Content" />
       </VisualElement>
     </Grid>
-    <EventTrigger Event="OnShow">
-      <PlayStoryboard Target="Show" />
-    </EventTrigger>
-    <StoryboardGroup>
-      <Storyboard Name="Show">
-        <Animation Target="WndBottom" PropertyName="Alpha">
-          <AnimationKey Value="0" />
-          <AnimationKey Time="0.5" Value="1" />
-        </Animation>
-        <Animation Target="WndBottom" PropertyName="Scale"
+    <t:EventTrigger Event="OnShow">
+      <r:PlayStoryboard Target="Show" />
+    </t:EventTrigger>
+    <r:StoryboardGroup>
+      <r:Storyboard Name="Show">
+        <r:Animation Target="WndBottom" PropertyName="Alpha">
+          <r:AnimationKey Value="0" />
+          <r:AnimationKey Time="0.5" Value="1" />
+        </r:Animation>
+        <r:Animation Target="WndBottom" PropertyName="Scale"
           Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:0.12833034992218018,&quot;Value&quot;:0.5676257014274597,&quot;InTangent&quot;:1.3469977378845215,&quot;OutTangent&quot;:1.3469977378845215,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.3333333432674408,&quot;OutWeight&quot;:0.3333333432674408},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
-          <AnimationKey Value="0,0" />
-          <AnimationKey Time="0.5" Value="1,1" />
-        </Animation>
-      </Storyboard>
-    </StoryboardGroup>
+          <r:AnimationKey Value="0,0" />
+          <r:AnimationKey Time="0.5" Value="1,1" />
+        </r:Animation>
+      </r:Storyboard>
+    </r:StoryboardGroup>
   </Image>
 </Template>

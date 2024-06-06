@@ -1,6 +1,7 @@
-﻿using AlienUI.Models;
+﻿using AlienUI.Core.Triggers;
+using AlienUI.Models;
 
-namespace AlienUI.Core.Triggers
+namespace AlienUI.Core.Resources
 {
     public class Setter : TriggerAction
     {

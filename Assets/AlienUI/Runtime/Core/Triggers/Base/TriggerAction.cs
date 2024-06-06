@@ -1,6 +1,6 @@
-using AlienUI.Core.Resources;
+using AlienUI.Core.Triggers;
 
-namespace AlienUI.Core.Triggers
+namespace AlienUI.Core.Resources
 {
     public abstract class TriggerAction : Resource
     {

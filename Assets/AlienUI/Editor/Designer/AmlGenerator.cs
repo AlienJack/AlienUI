@@ -1,7 +1,6 @@
 using AlienUI.Core;
 using AlienUI.Models;
 using AlienUI.UIElements;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
@@ -38,7 +37,8 @@ namespace AlienUI.Editors
 
         private static XmlElement GenElement(XmlDocument doc, AmlNodeElement element)
         {
-            var xmlEle = doc.CreateElement(element.GetXmlNodeName());
+            element.GetXmlNodeName(out string prefix, out string name, out string namespaceURI);
+            var xmlEle = doc.CreateElement(prefix, name, namespaceURI);
             if (element.xmlnsList != null)
             {
                 foreach (var xmlns in element.xmlnsList)

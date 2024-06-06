@@ -1,4 +1,4 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="ButtonTemplate">
+<Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Button" Name="ButtonTemplate">
   <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
   <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
     <Dock ControlChildSize="True">
@@ -6,50 +6,50 @@
       <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
     </Dock>
   </VisualElement>
-  <DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">
-    <Condition PropertyName="Icon" />
-    <Setter Target="Icon" PropertyName="Active" Value="false" />
-  </DataTrigger>
-  <DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">
-    <Condition PropertyName="Icon" CompareType="NotEqual" />
-    <Setter Target="Icon" PropertyName="Active" Value="true" />
-  </DataTrigger>
-  <DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
-    <Condition Value="Normal" PropertyName="State" />
-    <PlayStoryboard Target="Normal" />
-  </DataTrigger>
-  <DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
-    <Condition Value="Hover" PropertyName="State" />
-    <PlayStoryboard Target="Hover" />
-  </DataTrigger>
-  <DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
-    <Condition Value="Pressing" PropertyName="State" />
-    <PlayStoryboard Target="Pressing" />
-  </DataTrigger>
-  <DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
-    <Condition Value="Disabled" PropertyName="State" />
-    <PlayStoryboard Target="Disabled" />
-  </DataTrigger>
-  <StoryboardGroup>
-    <Storyboard Name="Hover">
-      <Animation Target="BG" PropertyName="Color">
-        <AnimationKey Time="0.2" Value="#424242" />
-      </Animation>
-    </Storyboard>
-    <Storyboard Name="Normal">
-      <Animation Target="BG" PropertyName="Color">
-        <AnimationKey Time="0.2" Value="#383838" />
-      </Animation>
-    </Storyboard>
-    <Storyboard Name="Pressing">
-      <Animation Target="BG" PropertyName="Color">
-        <AnimationKey Time="0.2" Value="#6a6a6a" />
-      </Animation>
-    </Storyboard>
-    <Storyboard Name="Disabled">
-      <Animation Target="BG" PropertyName="Color">
-        <AnimationKey Time="0.2" Value="#2d2d2d88" />
-      </Animation>
-    </Storyboard>
-  </StoryboardGroup>
+  <t:DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">
+    <r:Condition PropertyName="Icon" />
+    <r:Setter Target="Icon" PropertyName="Active" Value="false" />
+  </t:DataTrigger>
+  <t:DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">
+    <r:Condition PropertyName="Icon" CompareType="NotEqual" />
+    <r:Setter Target="Icon" PropertyName="Active" Value="true" />
+  </t:DataTrigger>
+  <t:DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
+    <r:Condition Value="Normal" PropertyName="State" />
+    <r:PlayStoryboard Target="Normal" />
+  </t:DataTrigger>
+  <t:DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
+    <r:Condition Value="Hover" PropertyName="State" />
+    <r:PlayStoryboard Target="Hover" />
+  </t:DataTrigger>
+  <t:DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
+    <r:Condition Value="Pressing" PropertyName="State" />
+    <r:PlayStoryboard Target="Pressing" />
+  </t:DataTrigger>
+  <t:DataTrigger PropertyName="State" Target="{TemplateBinding Self}">
+    <r:Condition Value="Disabled" PropertyName="State" />
+    <r:PlayStoryboard Target="Disabled" />
+  </t:DataTrigger>
+  <r:StoryboardGroup>
+    <r:Storyboard Name="Hover">
+      <r:Animation Target="BG" PropertyName="Color">
+        <r:AnimationKey Time="0.2" Value="#424242" />
+      </r:Animation>
+    </r:Storyboard>
+    <r:Storyboard Name="Normal">
+      <r:Animation Target="BG" PropertyName="Color">
+        <r:AnimationKey Time="0.2" Value="#383838" />
+      </r:Animation>
+    </r:Storyboard>
+    <r:Storyboard Name="Pressing">
+      <r:Animation Target="BG" PropertyName="Color">
+        <r:AnimationKey Time="0.2" Value="#6a6a6a" />
+      </r:Animation>
+    </r:Storyboard>
+    <r:Storyboard Name="Disabled">
+      <r:Animation Target="BG" PropertyName="Color">
+        <r:AnimationKey Time="0.2" Value="#2d2d2d88" />
+      </r:Animation>
+    </r:Storyboard>
+  </r:StoryboardGroup>
 </Template>
