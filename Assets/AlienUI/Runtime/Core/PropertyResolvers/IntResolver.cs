@@ -1,4 +1,3 @@
-using AlienUI.Models;
 using UnityEngine;
 
 namespace AlienUI.PropertyResolvers

@@ -48,7 +48,7 @@ namespace AlienUI
 
         internal void OptimizeData()
         {
-            m_templatesDict.Clear(); 
+            m_templatesDict.Clear();
             m_userControl2TemplatesDict.Clear();
             m_uiDict.Clear();
             m_collector.Collect();
@@ -58,7 +58,7 @@ namespace AlienUI
                 item.CalcResourcesType(m_collector);
 
                 if (item.IsTemplateAsset)
-                { 
+                {
                     m_templatesDict[item.Name] = item;
                     var type = Type.GetType(item.TemplateTarget);
                     if (type == null) continue;

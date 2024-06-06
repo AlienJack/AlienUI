@@ -1,5 +1,3 @@
-using AlienUI.Models;
-
 namespace AlienUI.Core.Converters
 {
     public class Object2String : ConverterBase<object, string>

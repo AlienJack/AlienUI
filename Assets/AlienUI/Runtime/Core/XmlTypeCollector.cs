@@ -1,7 +1,6 @@
 using AlienUI.Core.Converters;
 using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
-using AlienUI.Models;
 using AlienUI.PropertyResolvers;
 using AlienUI.UIElements;
 using System;

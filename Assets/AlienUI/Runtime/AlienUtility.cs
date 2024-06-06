@@ -1,10 +1,7 @@
 using AlienUI.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reflection;
 using UnityEngine;
-using static AlienUI.Models.DependencyProperty;
 
 namespace AlienUI.UIElements.ToolsScript
 {

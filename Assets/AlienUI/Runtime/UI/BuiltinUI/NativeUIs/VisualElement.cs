@@ -1,7 +1,5 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
-using System;
-using System.Linq;
 using UnityEngine;
 
 namespace AlienUI.UIElements

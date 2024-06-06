@@ -1,5 +1,3 @@
-using AlienUI.Models;
-
 namespace AlienUI.PropertyResolvers
 {
     public class BoolResolver : PropertyResolver<bool>
