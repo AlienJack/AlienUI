@@ -11,6 +11,15 @@ namespace AlienUI.UIElements
     {
         public override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Window");
 
+        public Command SwitchMaximizStateCmd
+        {
+            get { return (Command)GetValue(SwitchMaximizStateProperty); }
+            set { SetValue(SwitchMaximizStateProperty, value); }
+        }
+
+        public static readonly DependencyProperty SwitchMaximizStateProperty =
+            DependencyProperty.Register("SwitchMaximizStateCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().AmlDisable());
+
         public Command CloseCmd
         {
             get { return (Command)GetValue(CloseProperty); }
@@ -67,16 +76,27 @@ namespace AlienUI.UIElements
         protected override void OnInitialized()
         {
             CloseCmd.OnExecute += Close_OnExecute;
+            SwitchMaximizStateCmd.OnExecute += SwitchMaximizStateCmd_OnExecute;
             OnDrag += Window_OnDrag;
         }
 
-        private void MaximizeCmd_OnExecute()
+        private void SwitchMaximizStateCmd_OnExecute()
         {
-            throw new System.NotImplementedException();
+            IsMaximized = !IsMaximized;
         }
 
         private void Window_OnDrag(object sender, Events.OnDragEvent e)
         {
+            if (IsMaximized)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    Rect, e.EvtData.position, NodeProxy.Canvas.worldCamera, out Vector2 localPos);
+
+                m_orOffset = localPos;
+
+                IsMaximized = false;
+            }
+
             Offset += e.EvtData.delta / NodeProxy.Canvas.scaleFactor;
         }
 

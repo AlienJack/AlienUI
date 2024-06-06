@@ -1,14 +1,14 @@
 using AlienUI.Models;
+using AlienUI.PropertyResolvers;
 using AlienUI.UIElements;
 using System;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace AlienUI.Core
 {
     public class XmlAttributeParser
     {
-        private XmlAttribute m_xAtt;
-        private Type m_pType;
         private EnumResolver m_enumResolver = new EnumResolver();
         public object ResultValue { get; private set; }
 
@@ -20,16 +20,6 @@ namespace AlienUI.Core
             return newIns;
         }
 
-        public void Begin(XmlAttribute xAtt)
-        {
-            m_xAtt = xAtt;
-        }
-
-        public void SetPropertyType(Type propType)
-        {
-            m_pType = propType;
-        }
-
         public PropertyResolver GetAttributeResolver(Type propType)
         {
             if (propType.IsEnum)
@@ -38,17 +28,40 @@ namespace AlienUI.Core
             return Collector.GetAttributeResolver(propType);
         }
 
-        public bool ParseValue()
+        public void ParseValue(AmlNodeElement target, Type propType, string propName, string valueStr)
         {
-            var propertyResolver = GetAttributeResolver(m_pType);
-            if (propertyResolver == null)
+            if (BindUtility.IsBindingString(valueStr, out Match match))
             {
-                Engine.LogError($"依赖属性<color=yellow>{m_xAtt.Name}</color>的类型<color=white>{m_pType}</color>没有实现Resolver");
-                return false;
-            }
+                var bindType = BindUtility.ParseBindParam(match, out string srcPropName, out string converterName, out string modeName);
+                object source = null;
+                switch (bindType)
+                {
+                    case EnumBindingType.Binding: source = target.Document.m_dataContext; break;
+                    case EnumBindingType.TemplateBinding: source = target.Document.m_templateHost; break;
+                    default:
+                        Engine.LogError("BindType Invalid");
+                        break;
+                }
 
-            ResultValue = propertyResolver.Resolve(m_xAtt.Value, m_pType);
-            return true;
+                source.BeginBind(valueStr)
+                    .SetSourceProperty(srcPropName)
+                    .SetTarget(target)
+                    .SetTargetProperty(propName)
+                    .Apply(converterName, modeName);
+            }
+            else
+            {
+                var propertyResolver = GetAttributeResolver(propType);
+                if (propertyResolver == null)
+                {
+                    Engine.LogError($"依赖属性<color=yellow>{propName}</color>的类型<color=white>{propType}</color>没有实现Resolver");
+                    return;
+                }
+
+                ResultValue = propertyResolver.Resolve(valueStr, propType);
+
+                target.FillDependencyValue(propName, ResultValue);
+            }
         }
     }
 }

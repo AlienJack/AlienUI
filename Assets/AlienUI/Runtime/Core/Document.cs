@@ -165,39 +165,13 @@ namespace AlienUI.Core
                     Engine.LogError($"Not allow to set {dp.PropName} in AML file");
                     continue;
                 }
-
-                if (BindUtility.IsBindingString(att.Value, out Match match))
-                {
-                    var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                    object source = null;
-                    switch (bindType)
-                    {
-                        case EnumBindingType.Binding: source = m_dataContext; break;
-                        case EnumBindingType.TemplateBinding: source = m_templateHost; break;
-                        default:
-                            Engine.LogError("BindType Invalid");
-                            break;
-                    }
-
-                    source.BeginBind(att.Value)
-                        .SetSourceProperty(propName)
-                        .SetTarget(node)
-                        .SetTargetProperty(att.Name)
-                        .Apply(converterName, modeName);
-                }
-                else
-                {
-                    xmlParser.Begin(att);
-                    xmlParser.SetPropertyType(dp.PropType);
-                    if (!xmlParser.ParseValue()) continue;
-
-                    node.FillDependencyValue(dp, xmlParser.ResultValue);
+                xmlParser.ParseValue(node, dp.PropType, dp.PropName, att.Value);
 #if UNITY_EDITOR
-                    //this is only for Editor Designer to Instantiate a template aml
-                    if (!Application.isPlaying && m_templateHost == null && node is Template temp)
-                        m_templateHost = temp.Engine.AttParser.Collector.CreateInstance(temp.Type);
+                //this is only for Editor Designer to Instantiate a template aml
+                if (!Application.isPlaying && m_templateHost == null && node is Template temp)
+                    m_templateHost = temp.Engine.AttParser.Collector.CreateInstance(temp.Type);
 #endif
-                }
+
             }
         }
 

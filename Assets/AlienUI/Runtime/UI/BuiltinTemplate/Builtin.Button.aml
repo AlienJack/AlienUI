@@ -1,32 +1,33 @@
 <Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.Button" Name="Temp">
-  <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
+  <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch"
+    Vertical="Stretch" Name="BG" />
   <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
     <Dock ControlChildSize="True">
       <Image Content="{TemplateBinding Icon}" Width="30" Height="30" Active="False" Name="Icon" />
       <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
     </Dock>
   </VisualElement>
-  <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="{null}" PropertyName="Icon" />
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="Icon">
+    <Condition Value="{NULL}" PropertyName="Icon" />
     <Setter Target="Icon" PropertyName="Active" Value="false" />
   </DataTrigger>
-  <DataTrigger Target="{TemplateBinding Self}">
-    <Condition Value="{null}" PropertyName="Icon" CompareType="NotEqual" />
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="Icon">
+    <Condition Value="{NULL}" PropertyName="Icon" CompareType="NotEqual" />
     <Setter Target="Icon" PropertyName="Active" Value="true" />
   </DataTrigger>
-  <DataTrigger Target="{TemplateBinding Self}">
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="State">
     <Condition Value="Normal" PropertyName="State" />
     <PlayStoryboard Target="Normal" />
   </DataTrigger>
-  <DataTrigger Target="{TemplateBinding Self}">
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="State">
     <Condition Value="Hover" PropertyName="State" />
     <PlayStoryboard Target="Hover" />
   </DataTrigger>
-  <DataTrigger Target="{TemplateBinding Self}">
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="State">
     <Condition Value="Pressing" PropertyName="State" />
     <PlayStoryboard Target="Pressing" />
   </DataTrigger>
-  <DataTrigger Target="{TemplateBinding Self}">
+  <DataTrigger Target="{TemplateBinding Self}" PropertyName="State">
     <Condition Value="Disabled" PropertyName="State" />
     <PlayStoryboard Target="Disabled" />
   </DataTrigger>

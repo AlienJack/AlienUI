@@ -35,6 +35,15 @@ namespace AlienUI.Core.Triggers
             OnDispose();
         }
 
+        protected override void OnAddChild(AmlNodeElement childObj)
+        {
+            if (childObj is TriggerAction action)
+            {
+                action.OnInit(this);
+            }
+
+            base.OnAddChild(childObj);
+        }
 
         public void Execute()
         {
@@ -43,7 +52,7 @@ namespace AlienUI.Core.Triggers
 
             foreach (var action in actions)
             {
-                action.Excute();
+                if (!action.Excute()) return;
             }
         }
 

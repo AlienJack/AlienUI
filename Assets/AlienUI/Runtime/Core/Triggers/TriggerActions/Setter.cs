@@ -32,21 +32,32 @@ namespace AlienUI.Core.Triggers
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(string), typeof(Setter), new PropertyMetadata(null));
 
+        private DependencyObject m_target;
+        public override void OnInit(Trigger trigger)
+        {
+            m_target = Target.Get(this);
 
+            if (m_target == null)
+                m_target = trigger.Target.Get(this);
 
-        public override void Excute()
+            base.OnInit(trigger);
+        }
+
+        public override bool Excute()
         {
             var target = Target.Get(Document);
-            if (target == null) return;
+            if (target == null) return true;
 
             var prop = target.GetDependencyProperty(PropertyName);
-            if (prop == null) return;
+            if (prop == null) return true;
 
             var resolver = Engine.GetAttributeResolver(prop.PropType);
-            if (resolver == null) return;
+            if (resolver == null) return true;
 
             var newValue = resolver.Resolve(Value, prop.PropType);
             target.SetValue(prop, newValue);
+
+            return true;
         }
     }
 }

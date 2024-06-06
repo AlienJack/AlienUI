@@ -1,6 +1,6 @@
 using System;
 
-namespace AlienUI.Models
+namespace AlienUI.PropertyResolvers
 {
     public abstract class PropertyResolver
     {
@@ -22,6 +22,7 @@ namespace AlienUI.Models
         protected abstract T OnResolve(string originStr);
         public sealed override object Resolve(string originStr, Type resolveType)
         {
+            if (originStr == null) return null;
             if (originStr == "{NULL}") return null;
 
             return OnResolve(originStr);

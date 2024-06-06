@@ -1,9 +1,10 @@
+using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using System;
 
 namespace AlienUI.Core.Resources
 {
-    public class Condition : Resource
+    public class Condition : TriggerAction
     {
         public string Value
         {
@@ -32,17 +33,34 @@ namespace AlienUI.Core.Resources
         public static readonly DependencyProperty CompareTypeProperty =
             DependencyProperty.Register("CompareType", typeof(EnumCompareType), typeof(Condition), new PropertyMetadata(EnumCompareType.Equal));
 
+        public DependencyObjectRef Target
+        {
+            get { return (DependencyObjectRef)GetValue(TargetProperty); }
+            set { SetValue(TargetProperty, value); }
+        }
+
+        public static readonly DependencyProperty TargetProperty =
+            DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(Condition), new PropertyMetadata(default(DependencyObjectRef)));
 
         private object m_rawValue;
         private DependencyObject m_target;
-        public void ResolveCompareValue(DependencyObject target)
+        public override void OnInit(Trigger trigger)
         {
-            m_target = target;
+            m_target = Target.Get(this);
+
+            if (m_target == null)
+                m_target = trigger.Target.Get(this);
+
             var valueType = m_target.GetDependencyPropertyType(PropertyName);
             var t = Engine.GetAttributeResolver(valueType);
             m_rawValue = t?.Resolve(Value, valueType);
+
+            base.OnInit(trigger);
         }
-        public bool Test()
+
+
+
+        public override bool Excute()
         {
             var value = m_target.GetValue(PropertyName);
 

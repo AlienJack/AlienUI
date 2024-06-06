@@ -14,12 +14,14 @@ namespace AlienUI.Core.Triggers
             DependencyProperty.Register("Target", typeof(DependencyObjectRef), typeof(PlayStoryboard), new PropertyMetadata(default(DependencyObjectRef), "Data"));
 
 
-        public override void Excute()
+        public override bool Excute()
         {
             var sbIns = Target.Get(this) as Storyboard;
-            if (sbIns == null) return;
+            if (sbIns == null) return true;
 
             sbIns.Play();
+
+            return true;
         }
     }
 }
