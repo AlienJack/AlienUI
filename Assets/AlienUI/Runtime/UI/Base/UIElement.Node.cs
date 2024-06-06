@@ -73,10 +73,12 @@ namespace AlienUI.UIElements
             switch (childObj)
             {
                 case UIElement uiEle:
-                    if (uiEle.Rect != null && uiEle.Rect.parent == m_childRoot)
+                    foreach (var child in UIChildren)
                     {
-                        uiEle.Rect.SetSiblingIndex(Mathf.Max(0, newIndex - 1));
-                        SetLayoutDirty();
+                        if (child.Rect != null && child.Rect.parent == m_childRoot)
+                        {
+                            child.Rect.SetAsLastSibling();
+                        }
                     }
                     break;
             }
