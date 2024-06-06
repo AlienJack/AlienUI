@@ -1,6 +1,4 @@
 using AlienUI.Core;
-using AlienUI.Core.Resources;
-using AlienUI.Core.Triggers;
 using AlienUI.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,6 @@ namespace AlienUI.UIElements
     public abstract class AmlNodeElement : DependencyObject, IDependencyObjectResolver
     {
         private List<AmlNodeElement> m_childrens = new List<AmlNodeElement>();
-        private Dictionary<Type, List<AmlNodeElement>> m_typedChildrens = new Dictionary<Type, List<AmlNodeElement>>();
 
         internal List<AmlNodeElement> Children => m_childrens;
 
