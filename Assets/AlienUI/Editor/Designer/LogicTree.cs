@@ -81,6 +81,21 @@ namespace AlienUI.Editors
             Reload();
         }
 
+        public void SelectItem(UIElement sel)
+        {
+            List<int> selectIds = new List<int>();
+            foreach (var item in m_uiMaps)
+            {
+                if (item.Value == sel)
+                {
+                    selectIds.Add(item.Key);
+                    break;
+                }
+            }
+
+            SetSelection(selectIds, TreeViewSelectionOptions.RevealAndFrame | TreeViewSelectionOptions.FireSelectionChanged);
+        }
+
         protected override void ContextClickedItem(int id)
         {
             m_uiMaps.TryGetValue(id, out UIElement selection);
@@ -220,6 +235,8 @@ namespace AlienUI.Editors
                         var newUI = Designer.AddChild(genType, newParent);
                         newUI.UIParent.MoveChild(newUI, args.insertAtIndex);
                         Designer.SaveToAml();
+
+                        SelectItem(newUI);
                     }
                 }
                 else if (args.dragAndDropPosition == DragAndDropPosition.UponItem)
@@ -228,6 +245,7 @@ namespace AlienUI.Editors
                     {
                         var newUI = Designer.AddChild(genType, newParent);
                         Designer.SaveToAml();
+                        SelectItem(newUI);
                     }
                 }
             }
@@ -261,6 +279,8 @@ namespace AlienUI.Editors
                         }
 
                         Designer.SaveToAml();
+
+                        SelectItem(dragElement);
                     }
                 }
                 else if (args.dragAndDropPosition == DragAndDropPosition.UponItem)
@@ -278,6 +298,8 @@ namespace AlienUI.Editors
                         }
 
                         Designer.SaveToAml();
+
+                        SelectItem(dragElement);
                     }
                 }
             }

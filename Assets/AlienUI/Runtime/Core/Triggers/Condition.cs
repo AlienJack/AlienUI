@@ -58,8 +58,6 @@ namespace AlienUI.Core.Resources
             base.OnInit(trigger);
         }
 
-
-
         public override bool Excute()
         {
             var value = m_target.GetValue(PropertyName);
