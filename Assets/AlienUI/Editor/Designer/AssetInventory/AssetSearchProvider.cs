@@ -30,11 +30,11 @@ namespace AlienUI.Editors
             if (Target is UserControl uc)
             {
                 if (uc.Template.Valid)
-                    result.Add(new SearchTreeEntry(new GUIContent("Edit Template", Settings.Get().GetIcon("amlicon"))) { level = 1, userData = Target });
+                    result.Add(new SearchTreeEntry(new GUIContent("Edit Template", AlienEditorUtility.GetIcon("amlicon"))) { level = 1, userData = Target });
                 else if (uc.DefaultTemplate.Valid)
-                    result.Add(new SearchTreeEntry(new GUIContent("Create&Edit Default Template Copy", Settings.Get().GetIcon("amlicon"))) { level = 1, userData = Target });
+                    result.Add(new SearchTreeEntry(new GUIContent("Create&Edit Default Template Copy", AlienEditorUtility.GetIcon("amlicon"))) { level = 1, userData = Target });
             }
-            result.Add(new SearchTreeEntry(new GUIContent("Delete", Settings.Get().GetIcon("danger"))) { level = 1, userData = Target });
+            result.Add(new SearchTreeEntry(new GUIContent("Delete", AlienEditorUtility.GetIcon("danger"))) { level = 1, userData = Target });
 
             return result;
         }

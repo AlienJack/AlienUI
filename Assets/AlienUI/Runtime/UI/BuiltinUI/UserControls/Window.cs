@@ -33,10 +33,8 @@ namespace AlienUI.UIElements
             get { return (bool)GetValue(IsMaximizedProperty); }
             set { SetValue(IsMaximizedProperty, value); }
         }
-
         public static readonly DependencyProperty IsMaximizedProperty =
             DependencyProperty.Register("IsMaximized", typeof(bool), typeof(Window), new PropertyMetadata(false), OnIsMaximizedChanged);
-
 
         private Vector2 m_orOffset;
         private eHorizontalAlign m_orH_Align;

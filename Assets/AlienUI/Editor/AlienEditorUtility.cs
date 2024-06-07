@@ -4,6 +4,7 @@ using AlienUI.UIElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -13,6 +14,22 @@ namespace AlienUI.Editors
 {
     public static class AlienEditorUtility
     {
+        internal static Texture2D GetIcon(string iconName)
+        {
+            if (iconName == null) return null;
+
+            var guids = AssetDatabase.FindAssets("t:texture2d", new string[] { Path.Combine(Settings.RootPATH, "Editor/Icons") });
+            foreach (var id in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(id);
+                if (Path.GetFileNameWithoutExtension(path).ToLower() == iconName.ToLower())
+                {
+                    return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                }
+            }
+            return null;
+        }
+
         public static Texture2D GetIcon(this AmlNodeElement element)
         {
             var type = element.GetType();
@@ -22,10 +39,10 @@ namespace AlienUI.Editors
         public static Texture2D GetIcon(this Type type)
         {
             var des = type.GetCustomAttribute<DescriptionAttribute>(true);
-            if (des == null) return Settings.Get().GetIcon("DefaultUI");
+            if (des == null) return GetIcon("DefaultUI");
 
-            var icon = Settings.Get().GetIcon(des.Icon);
-            if (icon == null) return Settings.Get().GetIcon("DefaultUI");
+            var icon = GetIcon(des.Icon);
+            if (icon == null) return GetIcon("DefaultUI");
 
             return icon;
         }

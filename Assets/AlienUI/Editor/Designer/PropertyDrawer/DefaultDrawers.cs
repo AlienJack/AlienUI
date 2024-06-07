@@ -333,10 +333,10 @@ namespace AlienUI.Editors.PropertyDrawer
     public class HorizontalDrawer : PropertyDrawer<eHorizontalAlign>
     {
         // Horizontal Alignment Icons
-        private readonly GUIContent left = new GUIContent(Settings.Get().GetIcon("Left"));
-        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Center"));
-        private readonly GUIContent Right = new GUIContent(Settings.Get().GetIcon("Right"));
-        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch_H"));
+        private readonly GUIContent left = new GUIContent(AlienEditorUtility.GetIcon("Left"));
+        private readonly GUIContent Middle = new GUIContent(AlienEditorUtility.GetIcon("Center"));
+        private readonly GUIContent Right = new GUIContent(AlienEditorUtility.GetIcon("Right"));
+        private readonly GUIContent Stretch = new GUIContent(AlienEditorUtility.GetIcon("Stretch_H"));
 
 
         protected override eHorizontalAlign OnDraw(AmlNodeElement host, string label, eHorizontalAlign value)
@@ -360,10 +360,10 @@ namespace AlienUI.Editors.PropertyDrawer
     public class VerticalDrawer : PropertyDrawer<eVerticalAlign>
     {
         // Horizontal Alignment Icons
-        private readonly GUIContent Top = new GUIContent(Settings.Get().GetIcon("Upper"));
-        private readonly GUIContent Middle = new GUIContent(Settings.Get().GetIcon("Middle"));
-        private readonly GUIContent Bottom = new GUIContent(Settings.Get().GetIcon("Lower"));
-        private readonly GUIContent Stretch = new GUIContent(Settings.Get().GetIcon("Stretch_V"));
+        private readonly GUIContent Top = new GUIContent(AlienEditorUtility.GetIcon("Upper"));
+        private readonly GUIContent Middle = new GUIContent(AlienEditorUtility.GetIcon("Middle"));
+        private readonly GUIContent Bottom = new GUIContent(AlienEditorUtility.GetIcon("Lower"));
+        private readonly GUIContent Stretch = new GUIContent(AlienEditorUtility.GetIcon("Stretch_V"));
 
 
         protected override eVerticalAlign OnDraw(AmlNodeElement host, string label, eVerticalAlign value)

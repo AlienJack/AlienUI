@@ -53,8 +53,15 @@ namespace AlienUI
             m_uiDict.Clear();
             m_collector.Collect();
 
-            foreach (var item in m_amlResources)
+            for (int i = 0; i < m_amlResources.Count; i++)
             {
+                var item = m_amlResources[i];
+                if (item.Aml == null)
+                {
+                    m_amlResources.RemoveAt(i);
+                    i--;
+                    continue;
+                }
                 item.CalcResourcesType(m_collector);
 
                 if (item.IsTemplateAsset)
@@ -105,6 +112,12 @@ namespace AlienUI
         public IEnumerable<AmlAsset> GetUIAssets()
         {
             return m_uiDict.Values.Select(t => t.Aml);
+        }
+
+        public AmlResouces GetWindowAsset(string windowName)
+        {
+            m_windowDict.TryGetValue(windowName, out var value);
+            return value;
         }
 
 #if UNITY_EDITOR

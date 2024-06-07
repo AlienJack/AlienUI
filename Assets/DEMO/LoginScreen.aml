@@ -1,0 +1,3 @@
+<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources"
+    Name="LoginScreen" Title="LoginScreen" Width="800" Height="600">
+</Window>

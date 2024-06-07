@@ -38,22 +38,6 @@ namespace AlienUI
         public DefaultAsset DesignerLayout;
         public DefaultAsset BackLayout;
         public bool OpenAmlFileWhenOpenDesigner;
-
-        internal Texture2D GetIcon(string iconName)
-        {
-            if (iconName == null) return null;
-
-            var guids = AssetDatabase.FindAssets("t:texture2d", new string[] { Path.Combine(RootPATH, "Editor/Icons") });
-            foreach (var id in guids)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(id);
-                if (Path.GetFileNameWithoutExtension(path).ToLower() == iconName.ToLower())
-                {
-                    return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                }
-            }
-            return null;
-        }
     }
 }
 #endif

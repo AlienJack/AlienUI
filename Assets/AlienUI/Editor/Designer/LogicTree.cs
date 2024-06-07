@@ -34,7 +34,7 @@ namespace AlienUI.Editors
                 var rect = new Rect(args.rowRect);
                 rect.position += new Vector2(15, 0);
                 rect.width -= 15;
-                if (GUI.Button(rect, new GUIContent(args.item.displayName, Settings.Get().GetIcon("uparrow"))))
+                if (GUI.Button(rect, new GUIContent(args.item.displayName,AlienEditorUtility.GetIcon("uparrow"))))
                 {
                     Designer.Instance.BackIndent();
                 }

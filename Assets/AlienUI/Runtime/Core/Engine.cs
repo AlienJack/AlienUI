@@ -23,7 +23,6 @@ namespace AlienUI
             if (Application.isPlaying)
             {
                 Settings.SettingGetter = () => m_runtimeSettings;
-                DontDestroyOnLoad(gameObject);
             }
         }
 
@@ -68,7 +67,7 @@ namespace AlienUI
             return CreateUIInternal(xmlTxt, parent, dataContext, null, null);
         }
 
-        public UIElement CreateUI(AmlAsset amlAsset, Transform parent, DependencyObject dataContext)
+        public UIElement CreateUI(AmlAsset amlAsset, Transform parent, object dataContext)
         {
             return CreateUIInternal(amlAsset.Text, parent, dataContext, null, amlAsset);
         }
