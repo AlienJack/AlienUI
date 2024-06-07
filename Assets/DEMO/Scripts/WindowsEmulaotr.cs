@@ -13,6 +13,7 @@ namespace DEMO
         {
             var uiAsset = Settings.Get().GetWindowAsset("LoginScreen");
             UIManager.OpenWiondow<Window>(uiAsset);
+            UIManager.OpenWiondow<Window>(uiAsset);
         }
     }
 }

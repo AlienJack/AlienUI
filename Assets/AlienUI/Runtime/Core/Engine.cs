@@ -152,6 +152,32 @@ namespace AlienUI
             }
         }
 
+        private HashSet<UIElement> focusTargets = new HashSet<UIElement>();
+        internal void Focus(UIElement target)
+        {
+            HashSet<UIElement> willFocusItems = new HashSet<UIElement>();
+            while (target != null)
+            {
+                willFocusItems.Add(target);
+                target = target.UIParent;
+            }
+
+            foreach (var item in willFocusItems)
+            {
+                item.Focused = true;
+            }
+
+            foreach (var item in focusTargets)
+            {
+                if (!willFocusItems.Contains(item))
+                {
+                    item.Focused = false;
+                }
+            }
+
+            focusTargets = willFocusItems;
+        }
+
         private static Stack<Document> currentHandlingDoc = new Stack<Document>();
         internal static void Log(object message)
         {
@@ -172,7 +198,7 @@ namespace AlienUI
         internal void ForceHanldeDirty()
         {
             LateUpdate();
-        }
+        }        
 #endif
     }
 }

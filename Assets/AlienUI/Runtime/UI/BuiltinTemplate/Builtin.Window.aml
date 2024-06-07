@@ -1,35 +1,26 @@
-<Template xmlns="AlienUI.UIElements"
-  xmlns:t="AlienUI.Core.Triggers"
-  xmlns:r="AlienUI.Core.Resources"
-  Type="AlienUI.UIElements.Window"
-  TemplateRoot="Content"
-  Width="800" Height="500">
-  <Image ImageType="Sliced" Content="Builtin/Border" Color="#000000FF" Horizontal="Stretch"
-    Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
+<Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
+  <Image ImageType="Sliced" Content="Builtin/Border" Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
     <Grid GridDefine="1*|50px,1*" Horizontal="Stretch" Vertical="Stretch">
       <VisualElement Padding="4,4,8,4">
         <Label FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
         <Dock ControlChildSize="True" Horizontal="Right" Vertical="Stretch">
-          <Button Icon="Builtin/MaxIcon" Text="" Command="{TemplateBinding SwitchMaximizStateCmd}"
-            Name="MaxBtn">
-            <t:DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
+          <Button Icon="Builtin/MaxIcon" Text="" Command="{TemplateBinding SwitchMaximizStateCmd}" Name="MaxBtn">
+            <t:DataTrigger PropertyName="IsMaximized" Target="{TemplateBinding Self}">
               <r:Condition Value="true" PropertyName="IsMaximized" />
               <r:Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/RestoreIcon" />
               <r:Setter Target="WndBottom" PropertyName="Content" />
             </t:DataTrigger>
-            <t:DataTrigger Target="{TemplateBinding Self}" PropertyName="IsMaximized">
+            <t:DataTrigger PropertyName="IsMaximized" Target="{TemplateBinding Self}">
               <r:Condition Value="true" PropertyName="IsMaximized" CompareType="NotEqual" />
               <r:Setter Target="MaxBtn" PropertyName="Icon" Value="Builtin/MaxIcon" />
               <r:Setter Target="WndBottom" PropertyName="Content" Value="Builtin/Border" />
             </t:DataTrigger>
           </Button>
-          <Button Icon="Builtin/CloseIcon" Text="" Command="{TemplateBinding CloseCmd}"
-            Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
+          <Button Icon="Builtin/CloseIcon" Text="" Command="{TemplateBinding CloseCmd}" Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
         </Dock>
       </VisualElement>
       <VisualElement Padding="4,4,4,4">
-        <Image Mask="True" ImageType="Sliced" Content="Builtin/Border" Horizontal="Stretch"
-          Vertical="Stretch" Name="Content" />
+        <Image Mask="True" ImageType="Sliced" Content="Builtin/Border" Horizontal="Stretch" Vertical="Stretch" Name="Content" />
       </VisualElement>
     </Grid>
     <t:EventTrigger Event="OnShow">
@@ -41,12 +32,19 @@
           <r:AnimationKey Value="0" />
           <r:AnimationKey Time="0.5" Value="1" />
         </r:Animation>
-        <r:Animation Target="WndBottom" PropertyName="Scale"
-          Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:0.12833034992218018,&quot;Value&quot;:0.5676257014274597,&quot;InTangent&quot;:1.3469977378845215,&quot;OutTangent&quot;:1.3469977378845215,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.3333333432674408,&quot;OutWeight&quot;:0.3333333432674408},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+        <r:Animation Target="WndBottom" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:0.12833034992218018,&quot;Value&quot;:0.5676257014274597,&quot;InTangent&quot;:1.3469977378845215,&quot;OutTangent&quot;:1.3469977378845215,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.3333333432674408,&quot;OutWeight&quot;:0.3333333432674408},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
           <r:AnimationKey Value="0,0" />
           <r:AnimationKey Time="0.5" Value="1,1" />
         </r:Animation>
       </r:Storyboard>
     </r:StoryboardGroup>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="true" PropertyName="Focused" />
+      <r:Setter Target="WndBottom" PropertyName="Color" Value="#000000" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="WndBottom" PropertyName="Color" Value="#404040" />
+    </t:DataTrigger>
   </Image>
 </Template>

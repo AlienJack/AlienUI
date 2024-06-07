@@ -1,6 +1,7 @@
 using AlienUI.Core.Commnands;
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using System;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -17,7 +18,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty SwitchMaximizStateProperty =
-            DependencyProperty.Register("SwitchMaximizStateCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().AmlDisable());
+            DependencyProperty.Register("SwitchMaximizStateCmd", typeof(Command), typeof(Window), new PropertyMetadata(null).AmlDisable());
 
         public Command CloseCmd
         {
@@ -26,7 +27,7 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty CloseProperty =
-            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMetadata(new Command()).ReadOnly().AmlDisable());
+            DependencyProperty.Register("CloseCmd", typeof(Command), typeof(Window), new PropertyMetadata(null).AmlDisable());
 
         public bool IsMaximized
         {
@@ -72,7 +73,9 @@ namespace AlienUI.UIElements
 
         protected override void OnInitialized()
         {
+            CloseCmd = new Command();
             CloseCmd.OnExecute += Close_OnExecute;
+            SwitchMaximizStateCmd = new Command();
             SwitchMaximizStateCmd.OnExecute += SwitchMaximizStateCmd_OnExecute;
             OnDrag += Window_OnDrag;
         }

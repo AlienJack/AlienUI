@@ -68,7 +68,11 @@ namespace AlienUI
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            TargetObject?.RaisePointerDownEvent(TargetObject, eventData);
+            if (TargetObject != null)
+            {
+                TargetObject.RaisePointerDownEvent(TargetObject, eventData);
+                TargetObject.Engine.Focus(TargetObject);
+            }
         }
 
         public void OnPointerUp(PointerEventData eventData)

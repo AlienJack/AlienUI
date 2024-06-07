@@ -1,9 +1,31 @@
 ﻿using AlienUI.Models;
+using System;
 
 namespace AlienUI.UIElements
 {
     public partial class UIElement : AmlNodeElement
     {
+        public bool Focused
+        {
+            get { return (bool)GetValue(FocusedProperty); }
+            set { SetValue(FocusedProperty, value); }
+        }
+
+        public static readonly DependencyProperty FocusedProperty =
+            DependencyProperty.Register("Focused", typeof(bool), typeof(UIElement), new PropertyMetadata(false).AmlDisable(), OnFocusPropertyChanged);
+
+        private static void OnFocusPropertyChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as UIElement;
+            self.RaiseFocusChanged();
+        }
+
+        public event Action<UIElement> OnFocusChanged;
+        private void RaiseFocusChanged()
+        {
+            OnFocusChanged?.Invoke(this);
+        }
+
         public bool IsPointerOver
         {
             get { return (bool)GetValue(IsPointerHoverProperty); }

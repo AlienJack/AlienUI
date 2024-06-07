@@ -20,7 +20,7 @@ namespace AlienUI.UIElements
                 child.RaiseShow();
         }
 
-        protected event OnEventHandle<OnCloseEvent> OnClose;
+        public event OnEventHandle<OnCloseEvent> OnClose;
         internal void RaiseClose()
         {
             var evt = new OnCloseEvent(this);
