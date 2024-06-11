@@ -14,6 +14,7 @@ namespace AlienUI.Core
         public string SourcePropertyName { get; private set; }
         public AmlNodeElement Target { get; private set; }
         public string TargetPropertyName { get; private set; }
+        public DependencyProperty TargetProperty { get; private set; }
         public string SourceCode { get; private set; }
 
         private ConverterBase m_converter;
@@ -25,17 +26,30 @@ namespace AlienUI.Core
             TwoWay,
         }
 
-        public void Apply(string convertName, string mode)
+        public void Apply(string convertName, string mode, AmlNodeElement parent)
         {
             Enum.TryParse<EnumBindMode>(mode, true, out EnumBindMode bindMode);
 
             if (Source != null)
             {
+                Type dstPropType = null;
+                Type srcPropType = null;
                 m_converter = Target.Engine.GetConverter(convertName);
                 if (m_converter == null)
                 {
-                    var dstPropType = Target.GetDependencyPropertyType(TargetPropertyName);
-                    var srcPropType = AlienUtility.GetPropertyType(Source, SourcePropertyName);
+                    TargetProperty = Target.GetDependencyProperty(TargetPropertyName);
+                    if (TargetProperty != null)
+                        dstPropType = TargetProperty.PropType;
+                    else if (parent != null)//检查是否是附加属性
+                    {
+                        var parentDP = parent.GetDependencyProperty(TargetPropertyName);
+                        if (parentDP != null && parentDP.IsAttachedProerty)
+                        {
+                            TargetProperty = parentDP;
+                            dstPropType = parentDP.PropType;
+                        }
+                    }
+                    srcPropType = AlienUtility.GetPropertyType(Source, SourcePropertyName);
                     if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetPropertyName}");
                     if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourcePropertyName}");
                     if (dstPropType != srcPropType && !dstPropType.IsAssignableFrom(srcPropType))
@@ -53,7 +67,7 @@ namespace AlienUI.Core
                 if (m_converter != null) srcValue = m_converter.SrcToDst(srcValue);
 
                 //首先同步一次数值
-                Target.FillDependencyValue(TargetPropertyName, srcValue);
+                Target.FillDependencyValue(TargetProperty, srcValue);
 
                 switch (bindMode)
                 {
@@ -77,11 +91,10 @@ namespace AlienUI.Core
                         }
                         break;
                 }
-            }
 
-            var targetproperty = Target.GetDependencyProperty(TargetPropertyName);
-            if (targetproperty == null) Engine.LogError($"Binding Target Property {TargetPropertyName} not exist");
-            else targetproperty.SetBinding(this);
+                if (TargetProperty == null) Engine.LogError($"Binding Target Property {TargetPropertyName} not exist");
+                else TargetProperty.SetBinding(this);
+            }
         }
 
         private bool m_dataSync = false;
@@ -97,8 +110,7 @@ namespace AlienUI.Core
             else if (Source is INotifyPropertyChanged inotify) inotify.PropertyChanged -= SourcePropertyChanged;
             DependencyProperty.Unsubscribe(Target, TargetPropertyName, OnTargetDataChanged);
 
-            var p = Target.GetDependencyProperty(TargetPropertyName);
-            if (p != null) p.RemoveBinding(this);
+            if (TargetProperty != null) TargetProperty.RemoveBinding(this);
         }
 
         private void OnTargetDataChanged(DependencyObject sender, object oldValue, object newValue)
@@ -121,7 +133,7 @@ namespace AlienUI.Core
 
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
 
-            try { Target.SetValue(TargetPropertyName, newValue); }
+            try { Target.SetValue(TargetProperty, newValue); }
             finally { m_dataSync = false; }
         }
 
@@ -137,7 +149,7 @@ namespace AlienUI.Core
             var newValue = AlienUtility.GetPropertyValue(sender, e.PropertyName);
             newValue = m_converter != null ? m_converter.SrcToDst(newValue) : newValue;
 
-            try { Target.SetValue(TargetPropertyName, newValue); }
+            try { Target.SetValue(TargetProperty, newValue); }
             finally { m_dataSync = false; }
         }
 

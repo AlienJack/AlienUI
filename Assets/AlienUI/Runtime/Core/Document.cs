@@ -164,7 +164,7 @@ namespace AlienUI.Core
                     Engine.LogError($"Not allow to set {dp.PropName} in AML file");
                     continue;
                 }
-                xmlParser.ParseValue(node, dp.PropType, dp.PropName, att.Value);
+                xmlParser.ParseValue(node, parent, dp.PropType, dp.PropName, att.Value);
 #if UNITY_EDITOR
                 //this is only for Editor Designer to Instantiate a template aml
                 if (!Application.isPlaying && m_templateHost == null && node is Template temp)

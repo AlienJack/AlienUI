@@ -15,6 +15,8 @@ MonoBehaviour:
   m_amlResources:
   - Aml: {fileID: 5022602860645237092, guid: 07d9b3baa8f96824b8e45f6ac61c6679, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 48440c2ca59705e4ab7e1b2a98673b41, type: 3}
+  - Aml: {fileID: 5022602860645237092, guid: cdb523c94f7b778458d805f50417e1ab, type: 3}
+  - Aml: {fileID: 5022602860645237092, guid: d25c3982deb8a5944b07080d644309c3, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: f92bb917b2f846a4f8b6f79c4ac544a7, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 0632dfc972312aa439d529eedcf4a54f, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 35ae37fbe2784904091ca0f925b8b814, type: 3}
@@ -43,6 +45,10 @@ MonoBehaviour:
     - RefObject: {fileID: 21300000, guid: d69ba6c130f44a44488e720c9a6c1e4f, type: 3}
       Group: Builtin
       Name: RestoreIcon
+      TypeName: UnityEngine.Sprite
+    - RefObject: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+      Group: Builtin
+      Name: Background
       TypeName: UnityEngine.Sprite
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}

@@ -1,11 +1,12 @@
 using AlienUI.Models;
 using AlienUI.UIElements.Containers;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
-    public class Dock : Container
+    public class WeightDock : Container
     {
         public EnumDirection LayoutDirection
         {
@@ -14,19 +15,22 @@ namespace AlienUI.UIElements
         }
 
         public static readonly DependencyProperty LayoutDirectionProperty =
-            DependencyProperty.Register("LayoutDirection", typeof(EnumDirection), typeof(Dock), new PropertyMetadata(EnumDirection.Horizontal), OnLayoutParamDirty);
+            DependencyProperty.Register("LayoutDirection", typeof(EnumDirection), typeof(WeightDock), new PropertyMetadata(EnumDirection.Horizontal), OnLayoutParamDirty);
 
 
 
-        public bool ControlChildSize
+        public static float GetWeight(DependencyObject obj)
         {
-            get { return (bool)GetValue(ControlChildSizeProperty); }
-            set { SetValue(ControlChildSizeProperty, value); }
+            return (float)obj.GetValue(WeightProperty);
         }
 
-        public static readonly DependencyProperty ControlChildSizeProperty =
-            DependencyProperty.Register("ControlChildSize", typeof(bool), typeof(Dock), new PropertyMetadata(false), OnLayoutParamDirty);
+        public static void SetWeight(DependencyObject obj, float value)
+        {
+            obj.SetValue(WeightProperty, value);
+        }
 
+        public static readonly DependencyProperty WeightProperty =
+            DependencyProperty.RegisterAttached("Weight", typeof(float), typeof(WeightDock), new PropertyMetadata(1f), OnLayoutParamDirty);
 
         protected override Vector2 OnCalcDesireSize(IReadOnlyList<UIElement> children)
         {
@@ -56,6 +60,9 @@ namespace AlienUI.UIElements
         {
             Vector2 localPos = default;
             Vector2 contentRect = m_childRoot.rect.size;
+
+            var totalWeight = children.Count > 0 ? children.Sum(c => GetWeight(c)) : 1;
+
             foreach (var child in children)
             {
                 if (LayoutDirection == EnumDirection.Horizontal)
@@ -65,9 +72,8 @@ namespace AlienUI.UIElements
                     child.Rect.anchorMax = new Vector2(0, 1);
                     child.Rect.anchoredPosition = localPos;
 
-                    var childDesireSize = child.GetDesireSize();
-                    child.ActualWidth = childDesireSize.x;
-                    child.ActualHeight = ControlChildSize ? contentRect.y : childDesireSize.y;
+                    child.ActualWidth = contentRect.x * (GetWeight(child) / totalWeight);
+                    child.ActualHeight = contentRect.y;
 
                     localPos.x += child.ActualWidth;
                 }
@@ -79,9 +85,9 @@ namespace AlienUI.UIElements
                     child.Rect.anchorMax = new Vector2(0, 1);
                     child.Rect.anchoredPosition = localPos;
 
-                    var childDesireSize = child.GetDesireSize();
-                    child.ActualHeight = childDesireSize.y;
-                    child.ActualWidth = ControlChildSize ? contentRect.x : childDesireSize.y;
+
+                    child.ActualHeight = contentRect.y * (GetWeight(child) / totalWeight);
+                    child.ActualWidth = contentRect.x;
 
                     localPos.y += child.ActualHeight;
                 }

@@ -27,7 +27,7 @@ namespace AlienUI.Core
             return Collector.GetAttributeResolver(propType);
         }
 
-        public void ParseValue(AmlNodeElement target, Type propType, string propName, string valueStr)
+        public void ParseValue(AmlNodeElement target, AmlNodeElement parent, Type propType, string propName, string valueStr)
         {
             if (BindUtility.IsBindingString(valueStr, out Match match))
             {
@@ -46,7 +46,7 @@ namespace AlienUI.Core
                     .SetSourceProperty(srcPropName)
                     .SetTarget(target)
                     .SetTargetProperty(propName)
-                    .Apply(converterName, modeName);
+                    .Apply(converterName, modeName, parent);
             }
             else
             {

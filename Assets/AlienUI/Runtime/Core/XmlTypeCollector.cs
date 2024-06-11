@@ -159,5 +159,10 @@ namespace AlienUI.Core
 
             return result;
         }
+
+        internal List<Type> GetTypesOfSubType(Type type)
+        {
+            return m_uiTypes.Values.Where((t) => type.IsAssignableFrom(t)).ToList();
+        }
     }
 }

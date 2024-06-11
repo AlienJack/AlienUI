@@ -49,7 +49,8 @@ namespace AlienUI.Editors
 
             var allProperties = new List<DependencyProperty>();
             allProperties.AddRange(element.GetAllDependencyProperties());
-            allProperties.AddRange(element.GetAttachedProperties());
+            var attachedDPs = element.GetAttachedProperties();
+            allProperties.AddRange(attachedDPs);
             foreach (var dp in allProperties)
             {
                 if (dp.Meta.IsAmlDisable) continue;

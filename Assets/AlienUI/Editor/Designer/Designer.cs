@@ -661,7 +661,7 @@ namespace AlienUI.Editors
                     .SetSourceProperty(propName)
                     .SetTarget(selection)
                     .SetTargetProperty(property.PropName)
-                    .Apply(converterName, modeName);
+                    .Apply(converterName, modeName, selection.Parent);
 
                 SaveToAml();
             }

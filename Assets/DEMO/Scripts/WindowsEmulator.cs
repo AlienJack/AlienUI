@@ -5,15 +5,14 @@ using UnityEngine;
 
 namespace DEMO
 {
-    public class WindowsEmulaotr : MonoBehaviour
+    public class WindowsEmulator : MonoBehaviour
     {
         public UIManager UIManager;
 
         private void Start()
         {
             var uiAsset = Settings.Get().GetWindowAsset("LoginScreen");
-            UIManager.OpenWiondow<Window>(uiAsset);
-            UIManager.OpenWiondow<Window>(uiAsset);
+            UIManager.OpenWiondow<Window>(uiAsset);            
         }
     }
 }

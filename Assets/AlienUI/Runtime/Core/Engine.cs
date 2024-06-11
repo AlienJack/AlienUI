@@ -169,6 +169,7 @@ namespace AlienUI
 
             foreach (var item in focusTargets)
             {
+                if (item.Rect == null) continue;
                 if (!willFocusItems.Contains(item))
                 {
                     item.Focused = false;
@@ -198,7 +199,7 @@ namespace AlienUI
         internal void ForceHanldeDirty()
         {
             LateUpdate();
-        }        
+        }
 #endif
     }
 }

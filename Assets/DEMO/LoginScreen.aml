@@ -1,3 +1,3 @@
-<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources"
-    Name="LoginScreen" Title="LoginScreen" Width="800" Height="600">
+<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" IsMaximized="True" Title="LoginScreen" Template="Builtin.NonBorderWindow" Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen">
+  <ProgressBar MaxValue="179.2" Value="82.9" GapValue="96.3" />
 </Window>
