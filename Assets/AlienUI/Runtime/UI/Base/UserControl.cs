@@ -77,13 +77,17 @@ namespace AlienUI.UIElements
         {
             var targetTemplate = Template.Valid ? Template : DefaultTemplate;
 
-        reinstance:
             m_templateInstance = targetTemplate.Instantiate(Engine, m_rectTransform, DataContext, this) as Template;
             if (m_templateInstance == null)
             {
+                //try instantiate with DefaultTemplate
                 Engine.LogError($"Template Resource [{Template.Name}] not found");
-                targetTemplate = DefaultTemplate;
-                goto reinstance;
+                m_templateInstance = DefaultTemplate.Instantiate(Engine, m_rectTransform, DataContext, this) as Template;
+                if (m_templateInstance == null)
+                {
+                    Engine.LogError($"Template Resource [{DefaultTemplate.Name}] not found");
+                    return;
+                }
             }
             var templateRoot = m_templateInstance.m_rectTransform;
             templateRoot.anchorMin = new Vector2(0, 0);

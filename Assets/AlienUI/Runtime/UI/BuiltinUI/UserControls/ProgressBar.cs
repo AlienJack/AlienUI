@@ -5,7 +5,7 @@ namespace AlienUI.UIElements
 {
     public class ProgressBar : UserControl
     {
-        public override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.Slider");
+        public override ControlTemplate DefaultTemplate => new ControlTemplate("Builtin.ProgressBar");
 
         public float MaxValue
         {
