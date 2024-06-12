@@ -8,6 +8,7 @@ namespace AlienUI.UIElements.ToolsScript
     {
         protected override void OnPopulateMesh(VertexHelper vh)
         {
+            base.OnPopulateMesh(vh);
         }
     }
 }
