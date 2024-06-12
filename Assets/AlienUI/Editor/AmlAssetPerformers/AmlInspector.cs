@@ -113,6 +113,7 @@ namespace AlienUI.Editors
             previewRenderSetting.camera.allowMSAA = true;
 
             ui = engine.CreateUI(target as AmlAsset, canvas.transform, null);
+            engine.ForceHanldeDirty();
         }
 
         private void OnDisable()
