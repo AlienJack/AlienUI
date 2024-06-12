@@ -1,4 +1,16 @@
 <Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" IsMaximized="True" Title="LoginScreen" Template="Builtin.NonBorderWindow" Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen">
-  <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" />
-  <Curtain Horizontal="Stretch" Vertical="Stretch" />
+  <r:Storyboard Name="OnShow">
+    <r:Animation Target="bg" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+      <r:AnimationKey Value="1.05,1.05" />
+      <r:AnimationKey Time="3" Value="1,1" />
+    </r:Animation>
+  </r:Storyboard>
+  <t:EventTrigger Event="OnShow" Target="LoginScreen">
+    <r:PlayStoryboard Target="OnShow" />
+  </t:EventTrigger>
+  <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg" />
+  <Curtain Horizontal="Stretch" Vertical="Stretch">
+    <Label FontSize="150" AutoFontSize="False" Content="12:34" Vertical="Top" Offset="0,-120" Name="Time" />
+    <Label FontSize="48" AutoFontSize="False" Content="6月12日,星期三" Vertical="Top" Offset="0,-313.07" Name="Data" />
+  </Curtain>
 </Window>
