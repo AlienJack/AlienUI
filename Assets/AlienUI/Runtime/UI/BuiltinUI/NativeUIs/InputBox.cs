@@ -57,7 +57,7 @@ namespace AlienUI.UIElements
             HandleUGUIInputFieldEvent();
         }
 
-        protected override void OnTemplateLoaded()
+        protected override void OnTemplateApply()
         {
             if (m_templateInstance != null)
             {
