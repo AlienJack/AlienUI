@@ -18,9 +18,18 @@ namespace AlienUI.Editors
         [InitializeOnLoadMethod]
         public static void Init()
         {
+            EditorApplication.delayCall += TryInit;
+        }
+
+        private static void TryInit()
+        {
             s_settingObj = Settings.Get();
+            if (s_settingObj == null) return;
+
             s_settingObj.OptimizeData();
             Settings.SettingGUIDraw = OnGUI;
+
+            EditorApplication.delayCall -= TryInit;
         }
 
         private static int tableSelect;
