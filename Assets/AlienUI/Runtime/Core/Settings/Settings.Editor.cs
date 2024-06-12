@@ -16,7 +16,6 @@ namespace AlienUI
             var provider = new SettingsProvider("Project/AlienUI", SettingsScope.Project);
             provider.label = "AlienUI";
             provider.guiHandler = OnDrawSettingGUI;
-
             return provider;
         }
 

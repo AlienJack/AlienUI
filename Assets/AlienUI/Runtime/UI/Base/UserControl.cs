@@ -61,12 +61,12 @@ namespace AlienUI.UIElements
             foreach (var child in childrenNeedReParent)
                 self.AddChild(child);
 
-            self.OnTemplateLoaded();
+            self.OnTemplateApply();
 
             self.SetLayoutDirty();
         }
 
-        protected virtual void OnTemplateLoaded() { }
+        protected virtual void OnTemplateApply() { }
 
         protected override Vector2 CalcDesireSize()
         {

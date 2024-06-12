@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_amlResources:
   - Aml: {fileID: 5022602860645237092, guid: 07d9b3baa8f96824b8e45f6ac61c6679, type: 3}
+  - Aml: {fileID: 5022602860645237092, guid: 42a7fa94d8d6e5749b616b7d3ce31b41, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: 48440c2ca59705e4ab7e1b2a98673b41, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: cdb523c94f7b778458d805f50417e1ab, type: 3}
   - Aml: {fileID: 5022602860645237092, guid: d25c3982deb8a5944b07080d644309c3, type: 3}

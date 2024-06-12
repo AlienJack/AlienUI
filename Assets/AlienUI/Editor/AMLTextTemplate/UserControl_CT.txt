@@ -1,0 +1,7 @@
+namespace AlienUI.UIElements
+{
+    public class [FILENAME] : UserControl
+    {
+        public override ControlTemplate DefaultTemplate => throw new System.NotImplementedException();
+    }
+}

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace AlienUI.Editors
 {
-    public static class AMLCreator
+    public class AMLCreator : EndNameEditAction
     {
         [MenuItem("Assets/Create/AlienUI/CreateWindow AML File", priority = 0)]
         public static void CreateWindowAmlFile()
@@ -46,34 +46,32 @@ namespace AlienUI.Editors
         {
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
                 0,
-                ScriptableObject.CreateInstance<AmlCreator>().SetReplaceType(linkType),
+                ScriptableObject.CreateInstance<AMLCreator>().SetReplaceType(linkType),
                 createPath,
                 AlienEditorUtility.GetIcon("amlicon"),
                 AssetDatabase.LoadAssetAtPath<TextAsset>(codeTemplatePath).text
                 );
         }
 
-        class AmlCreator : EndNameEditAction
+
+        private Type type;
+
+        public AMLCreator SetReplaceType(Type type)
         {
-            private Type type;
+            this.type = type;
+            return this;
+        }
 
-            public AmlCreator SetReplaceType(Type type)
-            {
-                this.type = type;
-                return this;
-            }
+        public override void Action(int instanceId, string pathName, string resourceFile)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(pathName);
+            resourceFile = resourceFile.Replace("[FILENAME]", fileName);
 
-            public override void Action(int instanceId, string pathName, string resourceFile)
-            {
-                var fileName = Path.GetFileNameWithoutExtension(pathName);
-                resourceFile = resourceFile.Replace("[FILENAME]", fileName);
+            resourceFile = resourceFile.Replace("[CLASSNAME]", type.FullName);
 
-                resourceFile = resourceFile.Replace("[CLASSNAME]", type.FullName);
-
-                File.WriteAllText(pathName, resourceFile);
-                AssetDatabase.ImportAsset(pathName);
-                AssetDatabase.Refresh();
-            }
+            File.WriteAllText(pathName, resourceFile);
+            AssetDatabase.ImportAsset(pathName);
+            AssetDatabase.Refresh();
         }
     }
 }

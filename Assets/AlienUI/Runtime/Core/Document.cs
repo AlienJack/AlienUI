@@ -9,6 +9,7 @@ namespace AlienUI.Core
 {
     public class Document : IDependencyObjectResolver
     {
+
         private HashSet<AmlNodeElement> m_dpObjects = new HashSet<AmlNodeElement>();
         private Dictionary<AmlNodeElement, XmlNode> m_dpObjectsXmlMap = new Dictionary<AmlNodeElement, XmlNode>();
         private Dictionary<string, List<AmlNodeElement>> m_dpObjectsNameMap = new Dictionary<string, List<AmlNodeElement>>();
@@ -17,9 +18,9 @@ namespace AlienUI.Core
         private UIElement m_rootElement;
         internal object m_dataContext;
         internal AmlNodeElement m_templateHost;
-        internal Object m_xmlAsset;
+        internal UnityEngine.Object m_xmlAsset;
 
-        public Document(object dataContext, AmlNodeElement templateHost, Object xmlAsset)
+        public Document(object dataContext, AmlNodeElement templateHost, UnityEngine.Object xmlAsset)
         {
             m_dataContext = dataContext;
             m_templateHost = templateHost;
