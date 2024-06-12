@@ -8,7 +8,7 @@ using UnityEngine;
 namespace AlienUI.UIElements.Containers
 {
     [Description(Icon = "Container")]
-    public abstract class Container : VisualElement
+    public abstract class Container : UIElement
     {
         public static bool GetIgnoreChild(DependencyObject obj)
         {

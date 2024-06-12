@@ -1,9 +1,9 @@
 <Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Button" Name="ButtonTemplate">
   <Image ImageType="Sliced" Content="Builtin/Border" Color="#383838FF" Horizontal="Stretch" Vertical="Stretch" Name="BG" />
-  <VisualElement Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
+  <VisualElement Color="#00000000" Horizontal="Stretch" Vertical="Stretch" Padding="5,5,5,5">
     <Dock ControlChildSize="True">
       <Image Content="{TemplateBinding Icon}" Width="30" Height="30" Active="False" Name="Icon" />
-      <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Name="ButtonTxt" />
+      <Label FontSize="22" AutoFontSize="False" Content="{TemplateBinding Text}" Color="#000000FF" Name="ButtonTxt" />
     </Dock>
   </VisualElement>
   <t:DataTrigger PropertyName="Icon" Target="{TemplateBinding Self}">

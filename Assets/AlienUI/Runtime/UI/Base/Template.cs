@@ -1,10 +1,11 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using UnityEngine;
 
 namespace AlienUI.UIElements
 {
     [Description(Icon = "template")]
-    public class Template : VisualElement
+    public class Template : UIElement
     {
         public string Type
         {
@@ -25,5 +26,8 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty TemplateRootProperty =
             DependencyProperty.Register("TemplateRoot", typeof(DependencyObjectRef), typeof(Template), new PropertyMetadata(default(DependencyObjectRef)));
 
+        protected override void OnInitialized()
+        {
+        }
     }
 }

@@ -23,20 +23,5 @@ namespace AlienUI.UIElements
         }
 
         protected override void OnInitialized() { }
-
-        protected override Vector2 CalcDesireSize()
-        {
-            var rect = new Vector2(Padding.left + Padding.right, Padding.top + Padding.bottom);
-
-            Vector2 addRect = default;
-            foreach (var child in UIChildren)
-            {
-                var deSize = child.GetDesireSize();
-                addRect.x = Mathf.Max(addRect.x, deSize.x);
-                addRect.y = Mathf.Max(addRect.y, deSize.y);
-            }
-
-            return rect + addRect;
-        }
     }
 }

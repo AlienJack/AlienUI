@@ -47,5 +47,8 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty GapValueProperty =
             DependencyProperty.Register("GapValue", typeof(float), typeof(ProgressBar), new PropertyMetadata(0.5f));
 
+        protected override void OnInitialized()
+        {
+        }
     }
 }

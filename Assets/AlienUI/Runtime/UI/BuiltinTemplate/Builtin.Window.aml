@@ -1,7 +1,7 @@
 <Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Window" TemplateRoot="Content" Width="800" Height="500">
-  <Image ImageType="Sliced" Content="Builtin/Border" Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
+  <Image ImageType="Sliced" Content="Builtin/Border" Color="#404040FF" Horizontal="Stretch" Vertical="Stretch" Padding="2,2,2,2" Name="WndBottom">
     <Grid GridDefine="1*|50px,1*" Horizontal="Stretch" Vertical="Stretch">
-      <VisualElement Padding="4,4,8,4">
+      <VisualElement Color="#000000FF" Padding="4,4,8,4">
         <Label FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
         <Dock ControlChildSize="True" Horizontal="Right" Vertical="Stretch">
           <Button Icon="Builtin/MaxIcon" Text="" Command="{TemplateBinding SwitchMaximizStateCmd}" Name="MaxBtn">
@@ -19,7 +19,7 @@
           <Button Icon="Builtin/CloseIcon" Text="" Command="{TemplateBinding CloseCmd}" Horizontal="Right" Vertical="Stretch" Name="CloseBtn" />
         </Dock>
       </VisualElement>
-      <VisualElement Padding="4,4,4,4">
+      <VisualElement Color="#000000FF" Padding="4,4,4,4">
         <Image Mask="True" ImageType="Sliced" Content="Builtin/Border" Horizontal="Stretch" Vertical="Stretch" Name="Content" />
       </VisualElement>
     </Grid>

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AlienUI.UIElements
 {
     [Description(Icon = "controller")]
-    public abstract class UserControl : VisualElement
+    public abstract class UserControl : UIElement
     {
         public abstract ControlTemplate DefaultTemplate { get; }
 

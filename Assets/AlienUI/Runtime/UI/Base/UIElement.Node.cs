@@ -38,6 +38,8 @@ namespace AlienUI.UIElements
             }
         }
 
+        public Canvas Canvas => NodeProxy.Canvas;
+
         internal NodeProxy NodeProxy => m_proxy;
 
         protected override void OnAddChild(AmlNodeElement childObj)

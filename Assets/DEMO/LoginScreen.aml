@@ -1,1 +1,4 @@
-<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" IsMaximized="True" Title="LoginScreen" Template="Builtin.NonBorderWindow" Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen" />
+<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" IsMaximized="True" Title="LoginScreen" Template="Builtin.NonBorderWindow" Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen">
+  <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" />
+  <Curtain Horizontal="Stretch" Vertical="Stretch" />
+</Window>

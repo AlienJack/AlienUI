@@ -51,6 +51,10 @@ MonoBehaviour:
       Group: Builtin
       Name: Background
       TypeName: UnityEngine.Sprite
+    - RefObject: {fileID: 21300000, guid: 497b6d45cd76fdb46b34746dcc66b2ee, type: 3}
+      Group: DEMO
+      Name: BG
+      TypeName: UnityEngine.Sprite
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}
   DesignSize: {x: 1920, y: 1080}
