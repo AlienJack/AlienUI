@@ -10,7 +10,7 @@ namespace AlienUI.UIElements
             set { SetValue(ContentProperty, value); }
         }
         public static readonly DependencyProperty ContentProperty =
-            DependencyProperty.Register("Content", typeof(T), typeof(ContentPresent<T>), new PropertyMetadata(default(T)), OnContentChangedHandle);
+            DependencyProperty.Register("Content", typeof(T), typeof(ContentPresent<T>), new PropertyMetadata(default(T)) { Group = $"Content<{typeof(T).Name}>" }, OnContentChangedHandle);
 
         private static void OnContentChangedHandle(DependencyObject sender, object oldValue, object newValue)
         {
