@@ -9,11 +9,16 @@ namespace AlienUI.UIElements
 
         public delegate void OnEventHandle<EV>(object sender, EV e) where EV : Event;
 
+        public void RaiseCustomEvent(Event evt)
+        {
+            OnEventInvoke?.Invoke(this, evt);
+        }
+
         protected event OnEventHandle<OnShowEvent> OnShow;
         internal void RaiseShow()
         {
             var evt = new OnShowEvent(this);
-            OnEventInvoke?.Invoke(null, evt);
+            OnEventInvoke?.Invoke(this, evt);
             OnShow?.Invoke(this, evt);
 
             foreach (var child in UIChildren)
@@ -24,7 +29,7 @@ namespace AlienUI.UIElements
         internal void RaiseClose()
         {
             var evt = new OnCloseEvent(this);
-            OnEventInvoke?.Invoke(null, evt);
+            OnEventInvoke?.Invoke(this, evt);
             OnClose?.Invoke(this, evt);
 
             foreach (var child in UIChildren) child.RaiseClose();
