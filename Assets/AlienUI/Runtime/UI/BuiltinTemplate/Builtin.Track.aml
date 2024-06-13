@@ -1,0 +1,3 @@
+<Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Track" TemplateRoot="Root" Width="200" Height="30" Name="Builtin.Track">
+  <VisualElement Color="#00000000" Horizontal="Stretch" Vertical="Stretch" Name="Root" />
+</Template>
