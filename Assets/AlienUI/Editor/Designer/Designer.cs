@@ -651,7 +651,7 @@ namespace AlienUI.Editors
                 switch (bindType)
                 {
                     case EnumBindingType.Binding: source = selection.DataContext; break;
-                    case EnumBindingType.TemplateBinding: source = selection.TemplateHost; break;
+                    case EnumBindingType.TemplateBinding: source = selection.Document.m_templateHost; break;
                     default:
                         Engine.LogError("BindType Invalid");
                         break;

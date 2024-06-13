@@ -18,7 +18,6 @@ namespace AlienUI.UIElements
 
         public Engine Engine { get; set; }
         public object DataContext => Document.m_dataContext;
-        public DependencyObject TemplateHost => Document.m_templateHost;
         public Document Document { get; set; }
 
         public string Name
