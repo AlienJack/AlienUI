@@ -1,7 +1,8 @@
 using AlienUI.Core.Commnands;
-using AlienUI.Events;
 using AlienUI.Models;
-using System;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 namespace AlienUI.UIElements
@@ -26,8 +27,6 @@ namespace AlienUI.UIElements
         }
         public static readonly DependencyProperty CurtainProgressProperty =
             DependencyProperty.Register("CurtainProgress", typeof(float), typeof(float), new PropertyMetadata(0f), OnCurtainProgressChanged);
-
-
 
         public CommandBase Command
         {
@@ -55,11 +54,18 @@ namespace AlienUI.UIElements
             OnEndDrag += Curtain_OnEndDrag;
         }
 
+        private TweenerCore<float, float, FloatOptions> rollBackTween;
         private void Curtain_OnEndDrag(object sender, Events.OnEndDragEvent e)
         {
             if (CurtainProgress < OpenThreshold)
             {
-                CurtainProgress = 0f;
+                if (rollBackTween == null)
+                    rollBackTween = DOTween.To(() => CurtainProgress, (x) => CurtainProgress = x, 0f, 1f).SetEase(Ease.OutQuad);
+                else
+                {
+                    rollBackTween.Rewind();
+                    rollBackTween.Restart();
+                }
             }
             else
             {
