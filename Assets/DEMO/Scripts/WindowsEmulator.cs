@@ -1,6 +1,7 @@
 using AlienUI;
 using AlienUI.UIElements;
 using AlienUI.UIManager;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace DEMO
 
             var uiAsset = setting.GetWindowAsset("LoginScreen");
             yield return null;
-            UIManager.OpenWiondow<Window>(uiAsset);
+            UIManager.OpenWiondow<Window>(uiAsset, new LoginScreenVM());
         }
     }
 }

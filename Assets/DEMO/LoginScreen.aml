@@ -15,7 +15,7 @@
   </t:EventTrigger>
   <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg" />
   <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">
-    <Label FontSize="150" AutoFontSize="False" Content="12:34" Vertical="Top" Offset="0,-120" Name="Time" />
-    <Label FontSize="48" AutoFontSize="False" Content="6月12日,星期三" Vertical="Top" Offset="0,-313.07" Name="Data" />
+    <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top" Offset="0,-120" Name="Time" />
+    <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top" Offset="0,-313.07" Name="Data" />
   </Curtain>
 </Window>

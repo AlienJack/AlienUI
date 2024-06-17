@@ -60,9 +60,16 @@ namespace AlienUI.UIElements
             if (CurtainProgress < OpenThreshold)
             {
                 if (rollBackTween == null)
-                    rollBackTween = DOTween.To(() => CurtainProgress, (x) => CurtainProgress = x, 0f, 1f).SetEase(Ease.OutQuad);
+                    rollBackTween =
+                        DOTween.To(
+                            () => CurtainProgress,
+                            (x) => CurtainProgress = x,
+                            0f,
+                            0.5f)
+                        .SetEase(Ease.OutQuint).SetAutoKill(false);
                 else
                 {
+                    rollBackTween.ChangeStartValue(CurtainProgress);
                     rollBackTween.Rewind();
                     rollBackTween.Restart();
                 }
@@ -84,6 +91,11 @@ namespace AlienUI.UIElements
 
             var deltaValuePer = deltaValue / endValue;
             CurtainProgress = Mathf.Clamp01(CurtainProgress + deltaValuePer);
+
+            if (rollBackTween != null)
+            {
+                rollBackTween.Pause();
+            }
         }
 
         public class OnCurtainOpened : AlienUI.Events.Event

@@ -1,5 +1,6 @@
 using AlienUI.UIElements;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,6 +36,7 @@ namespace AlienUI
 
         private Graphic m_graphElement;
         private CanvasGroup m_canvasRenderer;
+        private MaterialModifier m_materialModifier;
 
         private void Awake()
         {
@@ -55,6 +57,24 @@ namespace AlienUI
         internal void SetRaycast(bool value)
         {
             m_graphElement.raycastTarget = value;
+        }
+
+        public void RemoveMaterialModifier()
+        {
+            if (m_materialModifier == null) return;
+
+            if (Application.isEditor)
+                DestroyImmediate(m_materialModifier);
+            else
+                Destroy(m_materialModifier);
+        }
+
+        public void AddMaterialmodifier(Material mat)
+        {
+            if(m_materialModifier==null)
+                m_materialModifier=gameObject.AddComponent<MaterialModifier>();
+
+            m_materialModifier.SetMaterial(mat);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -115,5 +135,7 @@ namespace AlienUI
         {
             TargetObject?.RaiseScroll(TargetObject, eventData);
         }
+
+
     }
 }
