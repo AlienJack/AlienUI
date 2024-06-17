@@ -1,11 +1,14 @@
+using AlienUI.Core.Resources;
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
 using System;
+using UnityEditor.UI;
 using UnityEngine;
 
 namespace AlienUI.UIElements
 {
     [Description(Icon = "ve")]
+    [AllowChild(typeof(Effect))]
     public class VisualElement : UIElement
     {
         public Color Color
@@ -22,24 +25,6 @@ namespace AlienUI.UIElements
         {
             var self = sender as VisualElement;
             self.NodeProxy.Color = (Color)newValue;
-        }
-
-        public Material Effect
-        {
-            get { return (Material)GetValue(EffectProperty); }
-            set { SetValue(EffectProperty, value); }
-        }
-
-        public static readonly DependencyProperty EffectProperty =
-            DependencyProperty.Register("Effect", typeof(Material), typeof(VisualElement), new PropertyMetadata(null), OnEffectChanged);
-
-        private static void OnEffectChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            var self = sender as VisualElement;
-            if (self.Effect == null)
-                self.NodeProxy.RemoveMaterialModifier();
-            else
-                self.NodeProxy.AddMaterialmodifier(self.Effect);
         }
 
         protected override void OnInitialized() { }

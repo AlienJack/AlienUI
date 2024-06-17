@@ -31,7 +31,7 @@ namespace AlienUI.Core.Triggers
                 OnInit();
             }
         }
-        protected override void OnParentRemoved()
+        protected override void OnParentRemoved(AmlNodeElement removedParent)
         {
             OnDispose();
         }

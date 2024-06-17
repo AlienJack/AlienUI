@@ -283,17 +283,17 @@ namespace AlienUI.Editors.PropertyDrawer
         }
     }
 
-    public class SpriteDrawer : PropertyDrawer<Sprite>
+    public abstract class UnityObjectDrawer<T> : PropertyDrawer<T> where T : UnityEngine.Object
     {
-        protected override Sprite OnDraw(AmlNodeElement host, string label, Sprite value)
+        protected override T OnDraw(AmlNodeElement host, string label, T value)
         {
             EditorGUILayout.BeginVertical();
-            value = (Sprite)EditorGUILayout.ObjectField(label, value, typeof(Sprite), false);
+            value = (T)EditorGUILayout.ObjectField(label, value, typeof(T), false);
             if (value != null)
             {
                 if (Settings.Get().GetUnityAssetPath(value, out string group, out string assetName))
                 {
-                    EditorGUILayout.HelpBox($"Sprite From {group}.{assetName}", MessageType.Info);
+                    EditorGUILayout.HelpBox($"{typeof(T).Name} From {group}.{assetName}", MessageType.Info);
                 }
                 else
                 {
@@ -305,12 +305,17 @@ namespace AlienUI.Editors.PropertyDrawer
         }
     }
 
-    public class FontDrawer : PropertyDrawer<Font>
+    public class ShaderDrawer : UnityObjectDrawer<Shader>
     {
-        protected override Font OnDraw(AmlNodeElement host, string label, Font value)
-        {
-            return (Font)EditorGUILayout.ObjectField(label, value, typeof(Font), false);
-        }
+
+    }
+
+    public class SpriteDrawer : UnityObjectDrawer<Sprite>
+    {
+    }
+
+    public class FontDrawer : UnityObjectDrawer<Font>
+    {
     }
 
     public class DependencyObjectRefDrawer : PropertyDrawer<DependencyObjectRef>

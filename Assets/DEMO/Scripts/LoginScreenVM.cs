@@ -1,9 +1,6 @@
 using AlienUI.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Timers;
-using UnityEngine;
 
 namespace DEMO
 {
@@ -14,7 +11,7 @@ namespace DEMO
             get
             {
                 var dateNow = DateTime.Now;
-                return $"{dateNow.Hour}:{dateNow.Minute}";
+                return $"{dateNow.Hour:00}:{dateNow.Minute:00}";
             }
         }
 

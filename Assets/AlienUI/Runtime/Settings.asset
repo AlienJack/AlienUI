@@ -56,6 +56,10 @@ MonoBehaviour:
       Group: DEMO
       Name: BG
       TypeName: UnityEngine.Sprite
+    - RefObject: {fileID: 4800000, guid: c0eac946e5de0f54b8b25d134b65678e, type: 3}
+      Group: Builtin
+      Name: Blur
+      TypeName: UnityEngine.Shader
   EditPrefab: {fileID: 8452385890781906195, guid: 76653997ef769214abc4ca08b6fd7004, type: 3}
   PreviewPrefab: {fileID: 8452385890781906195, guid: 439748e880ef9b344ba87bab1e86c6ad, type: 3}
   DesignSize: {x: 1920, y: 1080}

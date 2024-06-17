@@ -90,16 +90,18 @@ namespace AlienUI.UIElements
 
         protected void SetParent(AmlNodeElement parentNode)
         {
+            var oldParent = m_parent;
+
             m_parent = parentNode;
             if (m_parent != null)
                 OnParentSet(m_parent);
-            else
-                OnParentRemoved();
+            else if (oldParent != null)
+                OnParentRemoved(oldParent);
         }
 
         protected virtual void OnParentSet(AmlNodeElement parent) { }
 
-        protected virtual void OnParentRemoved() { }
+        protected virtual void OnParentRemoved(AmlNodeElement removedParent) { }
 
         private bool refreshed;
         internal void RefreshPropertyNotify()

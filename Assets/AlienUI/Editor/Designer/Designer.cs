@@ -646,16 +646,7 @@ namespace AlienUI.Editors
         {
             if (BindUtility.IsBindingString(inputSorce, out Match match))
             {
-                var bindType = BindUtility.ParseBindParam(match, out string propName, out string converterName, out string modeName);
-                object source = null;
-                switch (bindType)
-                {
-                    case EnumBindingType.Binding: source = selection.DataContext; break;
-                    case EnumBindingType.TemplateBinding: source = selection.Document.m_templateHost; break;
-                    default:
-                        Engine.LogError("BindType Invalid");
-                        break;
-                }
+                object source = BindUtility.ParseBindParam(match, selection.Document, out string propName, out string converterName, out string modeName);
 
                 source.BeginBind(inputSorce)
                     .SetSourceProperty(propName)

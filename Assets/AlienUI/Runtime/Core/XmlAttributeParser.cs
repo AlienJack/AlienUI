@@ -31,16 +31,7 @@ namespace AlienUI.Core
         {
             if (BindUtility.IsBindingString(valueStr, out Match match))
             {
-                var bindType = BindUtility.ParseBindParam(match, out string srcPropName, out string converterName, out string modeName);
-                object source = null;
-                switch (bindType)
-                {
-                    case EnumBindingType.Binding: source = target.Document.m_dataContext; break;
-                    case EnumBindingType.TemplateBinding: source = target.Document.m_templateHost; break;
-                    default:
-                        Engine.LogError("BindType Invalid");
-                        break;
-                }
+                object source = BindUtility.ParseBindParam(match, target.Document, out string srcPropName, out string converterName, out string modeName);
 
                 source.BeginBind(valueStr)
                     .SetSourceProperty(srcPropName)

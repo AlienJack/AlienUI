@@ -228,7 +228,7 @@ namespace AlienUI.Core
             return match.Success;
         }
 
-        public static EnumBindingType ParseBindParam(Match match, out string propName, out string converterName, out string modeName)
+        public static object ParseBindParam(Match match, Document doc, out string propName, out string converterName, out string modeName)
         {
             propName = string.Empty;
             converterName = string.Empty;
@@ -255,7 +255,18 @@ namespace AlienUI.Core
                 }
             }
 
-            return bindType;
+            object source = null;
+
+            switch (bindType)
+            {
+                case EnumBindingType.Binding: source = doc.m_dataContext; break;
+                case EnumBindingType.TemplateBinding: source = doc.m_templateHost; break;
+                default:
+                    Engine.LogError("BindType Invalid");
+                    break;
+            }
+
+            return source;
         }
     }
 }
