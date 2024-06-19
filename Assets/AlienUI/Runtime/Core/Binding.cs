@@ -30,25 +30,27 @@ namespace AlienUI.Core
         {
             Enum.TryParse<EnumBindMode>(mode, true, out EnumBindMode bindMode);
 
+            Type dstPropType = null;
+            Type srcPropType = null;
+
+            TargetProperty = Target.GetDependencyProperty(TargetPropertyName);
+            if (TargetProperty != null)
+                dstPropType = TargetProperty.PropType;
+            else if (parent != null)//检查是否是附加属性
+            {
+                var parentDP = parent.GetDependencyProperty(TargetPropertyName);
+                if (parentDP != null && parentDP.IsAttachedProerty)
+                {
+                    TargetProperty = parentDP;
+                    dstPropType = parentDP.PropType;
+                }
+            }
+
             if (Source != null)
             {
-                Type dstPropType = null;
-                Type srcPropType = null;
                 m_converter = Target.Engine.GetConverter(convertName);
                 if (m_converter == null)
                 {
-                    TargetProperty = Target.GetDependencyProperty(TargetPropertyName);
-                    if (TargetProperty != null)
-                        dstPropType = TargetProperty.PropType;
-                    else if (parent != null)//检查是否是附加属性
-                    {
-                        var parentDP = parent.GetDependencyProperty(TargetPropertyName);
-                        if (parentDP != null && parentDP.IsAttachedProerty)
-                        {
-                            TargetProperty = parentDP;
-                            dstPropType = parentDP.PropType;
-                        }
-                    }
                     srcPropType = AlienUtility.GetPropertyType(Source, SourcePropertyName);
                     if (dstPropType == null) Engine.LogError($"Binding {Target.GetType()} has no such property named {TargetPropertyName}");
                     if (srcPropType == null) Engine.LogError($"Binding {Source.GetType()} has no such property named {SourcePropertyName}");
@@ -91,10 +93,10 @@ namespace AlienUI.Core
                         }
                         break;
                 }
-
-                if (TargetProperty == null) Engine.LogError($"Binding Target Property {TargetPropertyName} not exist");
-                else TargetProperty.SetBinding(this);
             }
+
+            if (TargetProperty == null) Engine.LogError($"Binding Target Property {TargetPropertyName} not exist");
+            else TargetProperty.SetBinding(this);
         }
 
         private bool m_dataSync = false;

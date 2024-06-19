@@ -25,7 +25,7 @@
   <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg">
     <r:BlurEffect Name="BGBlur" />
   </Image>
-  <Curtain Horizontal="Stretch" Vertical="Stretch" Alpha="1" Name="Curtain">
+  <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">
     <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top" Offset="0,-120" Name="Time" />
     <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top" Offset="0,-313.07" Name="Data" />
   </Curtain>
