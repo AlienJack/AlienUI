@@ -34,6 +34,7 @@ namespace AlienUI.Core
 
         public Coroutine StartCoroutine(IEnumerator itor)
         {
+            if (!Application.isPlaying) return null;
             return m_rootElement.NodeProxy.StartCoroutine(itor);
         }
 

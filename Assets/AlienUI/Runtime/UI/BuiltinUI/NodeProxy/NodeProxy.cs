@@ -1,6 +1,7 @@
 using AlienUI.UIElements;
 using AlienUI.UIElements.ToolsScript;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -36,7 +37,7 @@ namespace AlienUI
 
         private Graphic m_graphElement;
         private CanvasGroup m_canvasRenderer;
-        private MaterialModifier m_materialModifier;
+        private Dictionary<Material, MaterialModifier> modifierMap = new Dictionary<Material, MaterialModifier>();
 
         private void Awake()
         {
@@ -59,22 +60,27 @@ namespace AlienUI
             m_graphElement.raycastTarget = value;
         }
 
-        public void RemoveMaterialModifier()
+        public void RemoveMaterialModifier(Material mat)
         {
-            if (m_materialModifier == null) return;
+            if (mat == null) return;
+            if (!modifierMap.ContainsKey(mat)) return;
+
+            var removingModifer = modifierMap[mat];
+            modifierMap.Remove(mat);
 
             if (Application.isEditor)
-                DestroyImmediate(m_materialModifier);
+                DestroyImmediate(removingModifer);
             else
-                Destroy(m_materialModifier);
+                Destroy(removingModifer);
         }
 
         public void AddMaterialmodifier(Material mat)
         {
-            if(m_materialModifier==null)
-                m_materialModifier=gameObject.AddComponent<MaterialModifier>();
+            if (mat == null) return;
+            if (modifierMap.ContainsKey(mat)) return;
 
-            m_materialModifier.SetMaterial(mat);
+            modifierMap[mat] = gameObject.AddComponent<MaterialModifier>();
+            modifierMap[mat].SetMaterial(mat);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

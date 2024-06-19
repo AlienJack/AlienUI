@@ -48,6 +48,8 @@ namespace AlienUI.UIElements
             tempRoot.Alpha = 1f - (self.CurtainProgress / self.OpenThreshold);
         }
 
+        private bool m_isOpened;
+
         protected override void OnInitialized()
         {
             OnDrag += Curtain_OnDrag;
@@ -57,6 +59,8 @@ namespace AlienUI.UIElements
         private TweenerCore<float, float, FloatOptions> rollBackTween;
         private void Curtain_OnEndDrag(object sender, Events.OnEndDragEvent e)
         {
+            if (m_isOpened) return;
+
             if (CurtainProgress < OpenThreshold)
             {
                 if (rollBackTween == null)
@@ -76,6 +80,7 @@ namespace AlienUI.UIElements
             }
             else
             {
+                m_isOpened = true;
                 CurtainProgress = 1f;
                 Command?.Execute();
                 RaiseCustomEvent(new OnCurtainOpened());
@@ -84,6 +89,8 @@ namespace AlienUI.UIElements
 
         private void Curtain_OnDrag(object sender, Events.OnDragEvent e)
         {
+            if (m_isOpened) return;
+
             var tempRoot = m_templateInstance.TemplateRoot.Get(m_templateInstance.Document) as UIElement;
 
             var deltaValue = e.EvtData.delta.y / Canvas.scaleFactor;

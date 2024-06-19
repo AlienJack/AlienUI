@@ -10,13 +10,22 @@
       <r:AnimationKey Time="1" Value="1" />
     </r:Animation>
   </r:Storyboard>
+  <r:Storyboard Name="ShowLoginContent">
+    <r:Animation Target="BGBlur" PropertyName="BlurFactor">
+      <r:AnimationKey Value="0" />
+      <r:AnimationKey Time="1" Value="3" />
+    </r:Animation>
+  </r:Storyboard>
   <t:EventTrigger Event="OnShow" Target="LoginScreen">
     <r:PlayStoryboard Target="OnShow" />
   </t:EventTrigger>
+  <t:EventTrigger Event="OnCurtainOpened" Target="Curtain">
+    <r:PlayStoryboard Target="ShowLoginContent" />
+  </t:EventTrigger>
   <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg">
-    <r:BlurEffect />
+    <r:BlurEffect Name="BGBlur" />
   </Image>
-  <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">
+  <Curtain Horizontal="Stretch" Vertical="Stretch" Alpha="1" Name="Curtain">
     <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top" Offset="0,-120" Name="Time" />
     <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top" Offset="0,-313.07" Name="Data" />
   </Curtain>

@@ -8,10 +8,8 @@ namespace AlienUI
         private Material _material;
         public void SetMaterial(Material mat)
         {
-            if (mat == null)
-                _material = null;
-            else
-                _material = new Material(mat);
+            _material = mat;
+            GetComponent<Graphic>()?.SetMaterialDirty();
         }
 
         public Material GetModifiedMaterial(Material baseMaterial)

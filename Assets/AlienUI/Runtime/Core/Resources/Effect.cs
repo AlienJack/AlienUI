@@ -6,25 +6,26 @@ namespace AlienUI.Core.Resources
 {
     public abstract class Effect : Resource
     {
-        public Shader Shader
+        protected abstract Shader GetShader();
+        protected Material m_mat;
+
+        public Effect()
         {
-            get { return (Shader)GetValue(ShaderProperty); }
-            set { SetValue(ShaderProperty, value); }
+            if (GetShader() is Shader shader)
+                m_mat = new Material(shader);
         }
 
-        public static readonly DependencyProperty ShaderProperty =
-            DependencyProperty.Register("Shader", typeof(Shader), typeof(Effect), new PropertyMetadata(Settings.Get().GetUnityAsset<Shader>("Builtin", "Blur")), OnShaderChanged);
-
-        private static void OnShaderChanged(DependencyObject sender, object oldValue, object newValue)
+        protected override void OnDocumentPerformed()
         {
-            var self = sender as Effect;
+            if (Parent is VisualElement ve)
+                ve.NodeProxy.AddMaterialmodifier(m_mat);
+        }
 
-            if (self.Parent is VisualElement ve)
+        protected override void OnParentSet(AmlNodeElement parent)
+        {
+            if (parent is VisualElement ve && ve.NodeProxy != null)
             {
-                if (self.Shader != null)
-                    ve.NodeProxy.AddMaterialmodifier(new Material(self.Shader));
-                else
-                    ve.NodeProxy.AddMaterialmodifier(null);
+                ve.NodeProxy.AddMaterialmodifier(m_mat);
             }
         }
 
@@ -32,7 +33,7 @@ namespace AlienUI.Core.Resources
         {
             if (removedParent is VisualElement ve)
             {
-                ve.NodeProxy.RemoveMaterialModifier();
+                ve.NodeProxy.RemoveMaterialModifier(m_mat);
             }
         }
     }

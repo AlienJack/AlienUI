@@ -1,4 +1,4 @@
-﻿Shader "Custom/UI/Fast Gaussian Blur(Optimized)"
+﻿Shader "AleinUI/Blur"
 {
     Properties
     {
@@ -13,11 +13,10 @@
 
         _ColorMask ("Color Mask", Float) = 15
 
-        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        _BlurFactor("BlurFactor",Float)=0.5
 
-        _BlurSize("Blur Size", Range(0,0.5)) = 0
-        _Interval("Gaussian Interval", Float) = 0.1
-		[KeywordEnum(Low, Medium, High)] _Samples ("Sample amount", Float) = 0
+
+        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
     }
 
     SubShader
@@ -47,188 +46,107 @@
         Blend SrcAlpha OneMinusSrcAlpha
         ColorMask [_ColorMask]
 
-		Pass
-		{
-            Name "BlurH"
-			CGPROGRAM
-			#include "UnityCG.cginc"
-            #include "UnityUI.cginc"
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#pragma multi_compile _SAMPLES_LOW _SAMPLES_MEDIUM _SAMPLES_HIGH
-            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
-            #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
-
-			sampler2D _MainTex;
-            fixed4 _Color;
-			float _BlurSize;
-			float _StandardDeviation;
-            float _Interval;
-
-
-			#define PI 3.14159265359
-			#define E 2.71828182846
-
-			#if _SAMPLES_LOW
-			#define SAMPLES 2
-			#elif _SAMPLES_MEDIUM
-			#define SAMPLES 3
-			#else
-			#define SAMPLES 5
-			#endif
-
-            #define _StandardDeviation 0.3f
-			#define stDevSquared _StandardDeviation*_StandardDeviation
-			#define gauseV1 0.5f/(PI*stDevSquared)
-			#define gauseV2 -0.5f/stDevSquared
-
-			struct appdata{
-				float4 vertex   : POSITION;
-                float4 color    : COLOR;
-                float2 texcoord : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct v2f{
-				float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
-                float4 texcoord  : TEXCOORD0;
-                float4 blurGassian : TEXCOORD1;
-                UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			v2f vert(appdata v){
-				v2f OUT;
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-                float4 vPosition = UnityObjectToClipPos(v.vertex);
-                OUT.vertex = vPosition;
-				OUT.texcoord = float4(v.texcoord, 0, gauseV1 * pow(E, gauseV2 * 16 * _Interval * _Interval));
-                OUT.color = v.color * _Color;
-                OUT.blurGassian = float4(gauseV1,
-                    gauseV1 * pow(E, gauseV2 * _Interval * _Interval),
-                    gauseV1 * pow(E, gauseV2 * 4 * _Interval * _Interval),
-                    gauseV1 * pow(E, gauseV2 * 9 * _Interval * _Interval));
-                return OUT;
-			}
-
-			fixed4 frag(v2f i) : SV_TARGET{
-				float4 col = 0;
-				float sum = 0;
-                float gassianVal[5] = {
-                    i.blurGassian.x, 
-                    i.blurGassian.y, 
-                    i.blurGassian.z, 
-                    i.blurGassian.w, 
-                    i.texcoord.w
-                };
-
-				for(int index = 0; index < SAMPLES; index++)
-				{
-                    float indexPlus0P5 = index + 0.5f;
-					float2 offset = float2((indexPlus0P5 / SAMPLES) * _BlurSize, 0);
-					float gauss = gassianVal[index];
-                    float2 uv1 = i.texcoord + offset;
-                    float2 uv2 = i.texcoord - offset;
-					col += (tex2D(_MainTex, uv1) + tex2D(_MainTex, uv2)) * gauss;
-                    sum += gauss * 2;
-				}
-
-				col = col / sum;
-				return col;
-			}
-
-			ENDCG
-		}
-
-		GrabPass
+        Pass
         {
-            "_GrabUI"
-        }
+            Name "Default"
+        CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 2.0
 
-		Pass
-        {
-			Name "BlurV"
-            CGPROGRAM
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
 
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#pragma multi_compile _SAMPLES_LOW _SAMPLES_MEDIUM _SAMPLES_HIGH
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 
-			float _BlurSize;
-			float _StandardDeviation;
-            float _Interval;
-
-            sampler2D _GrabUI;
-
-			#define PI 3.14159265359
-			#define E 2.71828182846
-
-			#if _SAMPLES_LOW
-			#define SAMPLES 2
-			#elif _SAMPLES_MEDIUM
-			#define SAMPLES 3
-			#else
-			#define SAMPLES 5
-			#endif
-
-            #define _StandardDeviation 0.3f
-			#define stDevSquared _StandardDeviation*_StandardDeviation
-			#define gauseV1 0.5f/(PI*stDevSquared)
-			#define gauseV2 -0.5f/stDevSquared
+            struct appdata_t
+            {
+                float4 vertex   : POSITION;
+                float4 color    : COLOR;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
 
             struct v2f
             {
-                float4 grabPos : TEXCOORD0;
-                float4 pos : SV_POSITION;
-                float4 blurGassian : TEXCOORD1;
-                float2 blurGassian2 : TEXCOORD2;
+                float4 vertex   : SV_POSITION;
+                fixed4 color    : COLOR;
+                float2 texcoord  : TEXCOORD0;
+                float4 worldPosition : TEXCOORD1;
+                UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            v2f vert(appdata_base v) {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.grabPos = ComputeGrabScreenPos(o.pos);
-                o.blurGassian = float4(gauseV1,
-                    gauseV1 * pow(E, gauseV2 * _Interval * _Interval),
-                    gauseV1 * pow(E, gauseV2 * 4 * _Interval * _Interval),
-                    gauseV1 * pow(E, gauseV2 * 9 * _Interval * _Interval));
-                o.blurGassian2 = float2(gauseV1 * pow(E, gauseV2 * 16 * _Interval * _Interval), 0);
-                return o;
+            sampler2D _MainTex;
+            fixed4 _Color;
+            fixed4 _TextureSampleAdd;
+            float4 _ClipRect;
+            float4 _MainTex_ST;           
+            float4 _MainTex_TexelSize;           
+            float _BlurFactor;
+
+            v2f vert(appdata_t v)
+            {
+                v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                OUT.worldPosition = v.vertex;
+                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+
+                OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+
+                OUT.color = v.color * _Color;
+                return OUT;
             }
 
-            half4 frag(v2f i) : SV_Target
+            fixed4 Tex2DBlurring (sampler2D tex, half2 texcood, half2 blur)
             {
-				float4 col = 0;
-				float sum = 0;
-                float gassianVal[5] = {
-                    i.blurGassian.x, 
-                    i.blurGassian.y, 
-                    i.blurGassian.z, 
-                    i.blurGassian.w, 
-                    i.blurGassian2.x
-                };
-                for(int index = 0; index < SAMPLES; index++)
-				{
-                    float indexPlus0P5 = index + 0.5f;
-					float4 offset = float4(0, (indexPlus0P5 / SAMPLES) * _BlurSize, 0, 0);
-					float gauss = gassianVal[index];
-                    float4 uv1 = i.grabPos + offset;
-                    float4 uv2 = i.grabPos - offset;
-					col += (tex2Dproj(_GrabUI, uv1) + tex2Dproj(_GrabUI, uv2)) * gauss;
-                    sum += gauss * 2;
-				}
-				col = col / sum;
-				return col;
+                half4 mask = (0,0,1,1);
+                
+                const int KERNEL_SIZE = 7;
+                const float KERNEL_[7] = { 0.1719, 0.4566, 0.8204, 1.0, 0.8204, 0.4566, 0.1719};
+                
+                float4 o = 0;
+                float sum = 0;
+                float2 shift = 0;
+                for(int x = 0; x < KERNEL_SIZE; x++)
+                {
+                    shift.x = blur.x * (float(x) - KERNEL_SIZE/2);
+                    for(int y = 0; y < KERNEL_SIZE; y++)
+                    {
+                        shift.y = blur.y * (float(y) - KERNEL_SIZE/2);
+                        float2 uv = texcood + shift;
+                        float weight = KERNEL_[x] * KERNEL_[y];
+                        sum += weight;
+                        #if EX
+                        fixed masked = min(mask.x <= uv.x, uv.x <= mask.z) * min(mask.y <= uv.y, uv.y <= mask.w);
+                        o += lerp(fixed4(0.5, 0.5, 0.5, 0), tex2D(tex, uv), masked) * weight;
+                        #else
+                        o += tex2D(tex, uv) * weight;
+                        #endif
+                    }
+                }
+                return o / sum;
             }
-            ENDCG
+
+            fixed4 frag(v2f IN) : SV_Target
+            {
+                half2 uv = IN.texcoord.xy;
+                
+                half4 color = (Tex2DBlurring(_MainTex, IN.texcoord, _BlurFactor * _MainTex_TexelSize.xy * 2) + _TextureSampleAdd);
+
+                
+                #ifdef UNITY_UI_CLIP_RECT
+                color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+                #endif
+
+                #ifdef UNITY_UI_ALPHACLIP
+                clip (color.a - 0.001);
+                #endif
+
+                return color;
+            }
+        ENDCG
         }
     }
 }
