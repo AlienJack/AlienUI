@@ -37,6 +37,17 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty IsMaximizedProperty =
             DependencyProperty.Register("IsMaximized", typeof(bool), typeof(Window), new PropertyMetadata(false), OnIsMaximizedChanged);
 
+
+
+        public bool CanDragMove
+        {
+            get { return (bool)GetValue(CanDragMoveProperty); }
+            set { SetValue(CanDragMoveProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanDragMoveProperty =
+            DependencyProperty.Register("CanDragMove", typeof(bool), typeof(Window), new PropertyMetadata(true));
+
         private Vector2 m_orOffset;
         private eHorizontalAlign m_orH_Align;
         private eVerticalAlign m_orV_Align;
@@ -87,6 +98,8 @@ namespace AlienUI.UIElements
 
         private void Window_OnDrag(object sender, Events.OnDragEvent e)
         {
+            if (!CanDragMove) return;
+
             if (IsMaximized)
             {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
