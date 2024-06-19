@@ -35,6 +35,7 @@ namespace AlienUI.Core
         public Coroutine StartCoroutine(IEnumerator itor)
         {
             if (!Application.isPlaying) return null;
+            if (!m_rootElement.NodeProxy.gameObject.activeInHierarchy) return null;
             return m_rootElement.NodeProxy.StartCoroutine(itor);
         }
 

@@ -1,14 +1,10 @@
-<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources"
-  IsMaximized="True" CanDragMove="False" Title="LoginScreen" Template="Builtin.NonBorderWindow"
-  Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen">
+<Window xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" IsMaximized="True" CanDragMove="False" Title="LoginScreen" Template="Builtin.NonBorderWindow" Width="800" Height="600" Horizontal="Stretch" Vertical="Stretch" Name="LoginScreen">
   <r:Storyboard Name="OnShow">
-    <r:Animation Target="bg" PropertyName="Scale"
-      Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+    <r:Animation Target="bg" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
       <r:AnimationKey Value="1.02,1.02" />
       <r:AnimationKey Time="1.5" Value="1,1" />
     </r:Animation>
-    <r:Animation Target="Curtain" PropertyName="Alpha"
-      Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+    <r:Animation Target="Curtain" PropertyName="Alpha" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
       <r:AnimationKey Value="0" />
       <r:AnimationKey Time="0.5" Value="0" />
       <r:AnimationKey Time="1" Value="1" />
@@ -29,17 +25,17 @@
   </t:EventTrigger>
   <t:EventTrigger Event="OnCurtainOpened" Target="Curtain">
     <r:PlayStoryboard Target="ShowLoginControllers" />
+    <r:Setter Target="LoginControllers" PropertyName="Active" Value="true" />
+    <r:Setter Target="Curtain" PropertyName="Active" Value="false" />
   </t:EventTrigger>
   <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg">
     <r:BlurEffect Name="BGBlur" />
   </Image>
-  <VisualElement Alpha="0" Color="#FFFFFF00" Horizontal="Stretch" Vertical="Stretch" Name="LoginControllers">
+  <VisualElement Color="#FFFFFF00" Horizontal="Stretch" Vertical="Stretch" Active="False" Alpha="0" Name="LoginControllers">
     <Button />
   </VisualElement>
   <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">
-    <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top"
-      Offset="0,-120" Name="Time" />
-    <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top"
-      Offset="0,-313.07" Name="Data" />
+    <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top" Offset="0,-120" Name="Time" />
+    <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top" Offset="0,-313.07" Name="Data" />
   </Curtain>
 </Window>

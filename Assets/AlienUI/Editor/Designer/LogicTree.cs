@@ -34,7 +34,7 @@ namespace AlienUI.Editors
                 var rect = new Rect(args.rowRect);
                 rect.position += new Vector2(15, 0);
                 rect.width -= 15;
-                if (GUI.Button(rect, new GUIContent(args.item.displayName,AlienEditorUtility.GetIcon("uparrow"))))
+                if (GUI.Button(rect, new GUIContent(args.item.displayName, AlienEditorUtility.GetIcon("uparrow"))))
                 {
                     Designer.Instance.BackIndent();
                 }
@@ -144,47 +144,100 @@ namespace AlienUI.Editors
             var rootItem = new TreeViewItem { id = 0, depth = -1 };
             var allItems = new List<TreeViewItem>();
 
-            int startDepth = 0;
+            TreeViewItem indentItem = null;
             if (m_indentParent != null)
             {
-                var indepenItem = new TreeViewItem(m_indentParent.GetHashCode(), startDepth, m_indentParent.name);
-                allItems.Add(indepenItem);
-
-                startDepth = 1;
+                indentItem = new TreeViewItem(m_indentParent.GetHashCode(), 0, m_indentParent.name);
+                allItems.Add(indentItem);
             }
 
-            var treeItem = ToTreeViewItem(m_root, startDepth);
+            if (indentItem != null)
+            {
+                rootItem.AddChild(indentItem);
+            }
+
+            var treeItem = ToTreeViewItem(m_root);
             allItems.Add(treeItem);
             m_uiMaps[treeItem.id] = m_root;
 
-            FillTreeItemData(m_root, m_root.Document, ref allItems, startDepth + 1);
-            DepthNormalizer.NormalizeDepths(allItems);
-            SetupParentsAndChildrenFromDepths(rootItem, allItems);
+            if (indentItem != null)
+                indentItem.AddChild(treeItem);
+            else
+                rootItem.AddChild(treeItem);
+
+            FillTreeItemData(m_root, m_root.Document, ref allItems);
+
+            SetupParentProperty(allItems);
+            SetupDepthsFromParentsAndChildren(rootItem);
             return rootItem;
         }
 
-        private void FillTreeItemData(UIElement parent, Document doc, ref List<TreeViewItem> items, int depth)
+        private void SetupParentProperty(List<TreeViewItem> allItems)
+        {
+            Dictionary<int, TreeViewItem> treeItemMap = new Dictionary<int, TreeViewItem>();
+            foreach (var treeItem in allItems)
+            {
+                treeItemMap[treeItem.id] = treeItem;
+            }
+            Dictionary<UIElement, int> uiMap = new Dictionary<UIElement, int>();
+            foreach (var item in m_uiMaps)
+            {
+                uiMap[item.Value] = item.Key;
+            }
+
+            foreach (var item in m_uiMaps)
+            {
+                var treeItem = treeItemMap[item.Key];
+                var uiObj = item.Value;
+
+                var parent = GetSameDocParent(uiObj);
+                if (parent == null) continue;
+
+                int parentId = parent.GetHashCode();
+                TreeViewItem parentTreeItem = treeItemMap[parentId];
+
+                parentTreeItem.AddChild(treeItem);
+            }
+        }
+
+        private AmlNodeElement GetSameDocParent(AmlNodeElement node)
+        {
+            var parent = node.Parent;
+            while (true)
+            {
+                if (parent == null) return null;
+
+                if (parent.Document == node.Document)
+                    return parent;
+
+                parent = parent.Parent;
+            }
+        }
+
+
+        private void FillTreeItemData(UIElement parent, Document doc, ref List<TreeViewItem> items)
         {
             foreach (var child in parent.UIChildren)
             {
-                var treeItem = ToTreeViewItem(child, depth);
+                var treeItem = ToTreeViewItem(child);
 
                 if (child.Document == doc)
                 {
                     items.Add(treeItem);
+
                     m_uiMaps[treeItem.id] = child;
                 }
 
-                FillTreeItemData(child, doc, ref items, depth + 1);
+                FillTreeItemData(child, doc, ref items);
             }
         }
 
-        private TreeViewItem ToTreeViewItem(UIElement ui, int depth)
+        private TreeViewItem ToTreeViewItem(UIElement ui)
         {
             var treeItem = new TreeViewItem
             {
                 id = ui.GetHashCode(),
-                depth = depth,
+                depth = 0,
                 displayName = ui.Name != null ? $"#{ui.Name}" : $"[{ui.GetType().Name}]",
                 icon = ui.GetIcon()
             };
