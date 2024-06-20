@@ -184,6 +184,8 @@ namespace AlienUI.Editors
 
             foreach (var item in m_uiMaps)
             {
+                if (!treeItemMap.ContainsKey(item.Key)) continue;
+
                 var treeItem = treeItemMap[item.Key];
                 var uiObj = item.Value;
 

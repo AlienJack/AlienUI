@@ -48,7 +48,13 @@ namespace AlienUI.UIElements
             tempRoot.Alpha = 1f - (self.CurtainProgress / self.OpenThreshold);
         }
 
-        private bool m_isOpened;
+        public bool IsOpened
+        {
+            get { return (bool)GetValue(IsOpenedProperty); }
+            set { SetValue(IsOpenedProperty, value); }
+        }
+        public static readonly DependencyProperty IsOpenedProperty =
+            DependencyProperty.Register("IsOpened", typeof(bool), typeof(Curtain), new PropertyMetadata(false).AmlDisable());
 
         protected override void OnInitialized()
         {
@@ -59,7 +65,7 @@ namespace AlienUI.UIElements
         private TweenerCore<float, float, FloatOptions> rollBackTween;
         private void Curtain_OnEndDrag(object sender, Events.OnEndDragEvent e)
         {
-            if (m_isOpened) return;
+            if (IsOpened) return;
 
             if (CurtainProgress < OpenThreshold)
             {
@@ -80,7 +86,7 @@ namespace AlienUI.UIElements
             }
             else
             {
-                m_isOpened = true;
+                IsOpened = true;
                 CurtainProgress = 1f;
                 Command?.Execute();
                 RaiseCustomEvent(new OnCurtainOpened());
@@ -89,7 +95,7 @@ namespace AlienUI.UIElements
 
         private void Curtain_OnDrag(object sender, Events.OnDragEvent e)
         {
-            if (m_isOpened) return;
+            if (IsOpened) return;
 
             var tempRoot = m_templateInstance.TemplateRoot.Get(m_templateInstance.Document) as UIElement;
 

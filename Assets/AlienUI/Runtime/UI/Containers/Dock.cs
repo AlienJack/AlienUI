@@ -18,6 +18,14 @@ namespace AlienUI.UIElements
 
 
 
+        public float Space
+        {
+            get { return (float)GetValue(SpaceProperty); }
+            set { SetValue(SpaceProperty, value); }
+        }
+        public static readonly DependencyProperty SpaceProperty =
+            DependencyProperty.Register("Space", typeof(float), typeof(Dock), new PropertyMetadata(0f), OnLayoutParamDirty);
+
         public bool ControlChildSize
         {
             get { return (bool)GetValue(ControlChildSizeProperty); }
@@ -34,17 +42,19 @@ namespace AlienUI.UIElements
             rect.x += Padding.left + Padding.right;
             rect.y += Padding.top + Padding.bottom;
 
-            foreach (var child in children)
+            for (int i = 0; i < children.Count; i++)
             {
+                var child = children[i];
+
                 var childDesireSize = child.GetDesireSize();
                 if (LayoutDirection == EnumDirection.Horizontal)
                 {
-                    rect.x += childDesireSize.x;
+                    rect.x += childDesireSize.x + (i == children.Count - 1 ? 0 : Space);
                     rect.y = Mathf.Max(rect.y, childDesireSize.y);
                 }
                 else if (LayoutDirection == EnumDirection.Vertical)
                 {
-                    rect.y += child.GetDesireSize().x;
+                    rect.y += childDesireSize.y + (i == children.Count - 1 ? 0 : Space);
                     rect.x = Mathf.Max(rect.x, childDesireSize.x);
                 }
             }
@@ -56,8 +66,10 @@ namespace AlienUI.UIElements
         {
             Vector2 localPos = default;
             Vector2 contentRect = m_childRoot.rect.size;
-            foreach (var child in children)
+            for (int i = 0; i < children.Count; i++)
             {
+                var child = children[i];
+
                 if (LayoutDirection == EnumDirection.Horizontal)
                 {
                     child.Rect.pivot = new Vector2(0, 1);
@@ -69,7 +81,7 @@ namespace AlienUI.UIElements
                     child.ActualWidth = childDesireSize.x;
                     child.ActualHeight = ControlChildSize ? contentRect.y : childDesireSize.y;
 
-                    localPos.x += child.ActualWidth;
+                    localPos.x += child.ActualWidth + (i == children.Count - 1 ? 0 : Space);
                 }
                 else if (LayoutDirection == EnumDirection.Vertical)
                 {
@@ -83,7 +95,7 @@ namespace AlienUI.UIElements
                     child.ActualHeight = childDesireSize.y;
                     child.ActualWidth = ControlChildSize ? contentRect.x : childDesireSize.y;
 
-                    localPos.y += child.ActualHeight;
+                    localPos.y -= child.ActualHeight + (i == children.Count - 1 ? 0 : Space);
                 }
                 child.CalcChildrenLayout();
             }

@@ -5,20 +5,22 @@ namespace AlienUI.UIElements
     public abstract partial class UIElement : AmlNodeElement
     {
         public delegate void OnEventInvokeHandle(object sender, Event e);
-        internal event OnEventInvokeHandle OnEventInvoke;
+        internal event OnEventInvokeHandle OnEventForTriggerInvoke;
 
         public delegate void OnEventHandle<EV>(object sender, EV e) where EV : Event;
 
         public void RaiseCustomEvent(Event evt)
         {
-            OnEventInvoke?.Invoke(this, evt);
+            OnEventForTriggerInvoke?.Invoke(this, evt);
         }
 
         protected event OnEventHandle<OnShowEvent> OnShow;
         internal void RaiseShow()
         {
             var evt = new OnShowEvent(this);
-            OnEventInvoke?.Invoke(this, evt);
+
+            //不要在编辑器模式下触发show,避免一些trigger动画改变属性
+            if (UnityEngine.Application.isPlaying) OnEventForTriggerInvoke?.Invoke(this, evt);
             OnShow?.Invoke(this, evt);
 
             foreach (var child in UIChildren)
@@ -29,7 +31,7 @@ namespace AlienUI.UIElements
         internal void RaiseClose()
         {
             var evt = new OnCloseEvent(this);
-            OnEventInvoke?.Invoke(this, evt);
+            OnEventForTriggerInvoke?.Invoke(this, evt);
             OnClose?.Invoke(this, evt);
 
             foreach (var child in UIChildren) child.RaiseClose();
@@ -45,21 +47,21 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnPointerEnterEvent> OnPointerEnter;
         internal void RaisePointerEnterEvent(object sender, OnPointerEnterEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
             OnPointerEnter?.Invoke(sender, e);
         }
 
         protected event OnEventHandle<OnPointerExitEvent> OnPointerExit;
         internal void RaisePointerExitEvent(object sender, OnPointerExitEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
             OnPointerExit?.Invoke(sender, e);
         }
 
         protected event OnEventHandle<OnPointerDownEvent> OnPointerDown;
         internal void RaisePointerDownEvent(object sender, OnPointerDownEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnPointerDown != null)
             {
@@ -72,7 +74,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnPointerUpEvent> OnPointerUp;
         internal void RaisePointerUpEvent(object sender, OnPointerUpEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnPointerUp != null)
             {
@@ -85,7 +87,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnPointerClickEvent> OnPointerClick;
         internal void RaisePointerClickEvent(object sender, OnPointerClickEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnPointerClick != null)
             {
@@ -98,7 +100,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnInitializePotentialDragEvent> OnInitializePotentialDrag;
         internal void RaiseInitializePotentialDragEvent(object sender, OnInitializePotentialDragEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnInitializePotentialDrag != null)
             {
@@ -111,7 +113,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnBeginDragEvent> OnBeginDrag;
         internal void RaiseBeginDrag(object sender, OnBeginDragEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnBeginDrag != null)
             {
@@ -124,7 +126,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnDragEvent> OnDrag;
         internal void RaiseDrag(object sender, OnDragEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnDrag != null)
             {
@@ -137,7 +139,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnEndDragEvent> OnEndDrag;
         internal void RaiseEndDrag(object sender, OnEndDragEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnEndDrag != null)
             {
@@ -150,7 +152,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnDropEvent> OnDrop;
         internal void RaiseDrop(object sender, OnDropEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnDrop != null)
             {
@@ -163,7 +165,7 @@ namespace AlienUI.UIElements
         protected event OnEventHandle<OnScrollEvent> OnScroll;
         internal void RaiseScroll(object sender, OnScrollEvent e)
         {
-            OnEventInvoke?.Invoke(sender, e);
+            OnEventForTriggerInvoke?.Invoke(sender, e);
 
             if (OnScroll != null)
             {
