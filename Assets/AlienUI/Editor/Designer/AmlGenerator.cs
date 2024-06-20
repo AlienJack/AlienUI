@@ -2,6 +2,7 @@ using AlienUI.Core;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using UnityEngine;
@@ -29,7 +30,7 @@ namespace AlienUI.Editors
                 xparent = xmlEle;
             }
 
-            foreach (AmlNodeElement child in element.Children)
+            foreach (AmlNodeElement child in element.Children.OrderBy(c=>c is UIElement?0:1))
             {
                 Gen(xDoc, xparent, child, doc);
             }

@@ -2,15 +2,12 @@ using AlienUI.Core;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace AlienUI.Editors
 {
