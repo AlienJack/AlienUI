@@ -12,6 +12,8 @@ namespace AlienUI.UIManager
         [SerializeField]
         private Engine m_engine;
 
+        public Engine Engine => m_engine;
+
         private RectTransform m_hudRoot;
         private RectTransform m_windowRoot;
         private RectTransform m_floatRoot;

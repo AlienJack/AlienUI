@@ -9,7 +9,15 @@ namespace DEMO
 {
     public class WindowsEmulator : MonoBehaviour
     {
+        public static WindowsEmulator Instance { get; private set; }
+
         public UIManager UIManager;
+        public Engine Engine => UIManager.Engine;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private IEnumerator Start()
         {

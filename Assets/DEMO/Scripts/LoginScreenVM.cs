@@ -11,7 +11,7 @@ namespace DEMO
             get
             {
                 var dateNow = DateTime.Now;
-                return $"{dateNow.Hour:00}:{dateNow.Minute:00}";
+                return $"{dateNow.Hour:00}:{dateNow.Minute:00}:{dateNow.Second:00}";
             }
         }
 
@@ -26,15 +26,18 @@ namespace DEMO
 
         public LoginScreenVM()
         {
-            Timer timer = new Timer(1);
+            Timer timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            RaisePropertyChanged("CurrentData");
-            RaisePropertyChanged("CurrentTime");
+            WindowsEmulator.Instance.Engine.Dispatch(() =>
+            {
+                RaisePropertyChanged("CurrentData");
+                RaisePropertyChanged("CurrentTime");
+            });
         }
     }
 }

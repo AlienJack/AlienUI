@@ -26,6 +26,12 @@ namespace AlienUI
             }
         }
 
+        private List<Action> m_dispatchActions = new List<Action>();
+        public void Dispatch(Action action)
+        {
+            m_dispatchActions.Add(action);
+        }
+
         private UIElement CreateUIInternal(string xmlTxt, Transform parent, object dataContext, AmlNodeElement templateHost, UnityEngine.Object xmlAsset)
         {
             try
@@ -149,6 +155,12 @@ namespace AlienUI
                 }
                 layoutTask.Clear();
                 Canvas.ForceUpdateCanvases();
+            }
+
+            if (m_dispatchActions.Count > 0)
+            {
+                foreach (var action in m_dispatchActions) action.Invoke();
+                m_dispatchActions.Clear();
             }
         }
 
