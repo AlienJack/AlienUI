@@ -108,7 +108,7 @@ namespace AlienUI.Core
 
         internal Type GetDependencyObjectType(XmlNode xnode)
         {
-            var fullName = xnode.NamespaceURI + "." + xnode.LocalName;
+            var fullName = string.IsNullOrEmpty(xnode.NamespaceURI) ? xnode.LocalName : xnode.NamespaceURI + "." + xnode.LocalName;
             Type instanceType;
             if (m_triggerTypes.TryGetValue(fullName, out instanceType)) return instanceType;
             else if (m_resourcesTypes.TryGetValue(fullName, out instanceType)) return instanceType;
