@@ -1,5 +1,6 @@
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,8 +19,25 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty TemplateProperty =
             DependencyProperty.Register("Template", typeof(ControlTemplate), typeof(UserControl), new PropertyMetadata(default(ControlTemplate)), OnTemplatePropertyChanged);
 
+        public bool Interactable
+        {
+            get { return (bool)GetValue(InteractableProperty); }
+            set { SetValue(InteractableProperty, value); }
+        }
+
+        public static readonly DependencyProperty InteractableProperty =
+            DependencyProperty.Register("Interactable", typeof(bool), typeof(UserControl), new PropertyMetadata(true), OnInteractableChanged);
+
+        private static void OnInteractableChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as UserControl;
+            self.OnInteractableValueChanged();
+        }
+
         internal Template m_templateInstance;
         private UIElement m_templateRoot;
+
+        protected virtual void OnInteractableValueChanged() { }
 
         private static void OnTemplatePropertyChanged(DependencyObject sender, object oldValue, object newValue)
         {

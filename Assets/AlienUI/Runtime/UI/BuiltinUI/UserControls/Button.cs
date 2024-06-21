@@ -55,16 +55,6 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty StateProperty =
             DependencyProperty.Register("State", typeof(EnumButtonState), typeof(Button), new PropertyMetadata(EnumButtonState.Normal));
 
-        public bool Interactable
-        {
-            get { return (bool)GetValue(InteractableProperty); }
-            set { SetValue(InteractableProperty, value); }
-        }
-
-        public static readonly DependencyProperty InteractableProperty =
-            DependencyProperty.Register("Interactable", typeof(bool), typeof(Button), new PropertyMetadata(true));
-
-
         protected override void OnInitialized()
         {
             OnPointerClick += Button_OnPointerClick;

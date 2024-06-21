@@ -1,6 +1,8 @@
 
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
+using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace AlienUI.UIElements
@@ -15,6 +17,11 @@ namespace AlienUI.UIElements
         }
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new PropertyMetadata(string.Empty), OnTextChanged);
+        private static void OnTextChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as InputBox;
+            self.m_inputField.SetTextWithoutNotify((string)newValue);
+        }
 
         public string PlaceHolder
         {
@@ -25,25 +32,32 @@ namespace AlienUI.UIElements
         public static readonly DependencyProperty PlaceHolderProperty =
             DependencyProperty.Register("PlaceHolder", typeof(string), typeof(InputBox), new PropertyMetadata("Write here"));
 
-        private static void OnTextChanged(DependencyObject sender, object oldValue, object newValue)
-        {
-            var self = sender as InputBox;
-            self.m_inputField.SetTextWithoutNotify((string)newValue);
-        }
-
         public InputField.InputType InputType
         {
             get { return (InputField.InputType)GetValue(InputTypeProperty); }
             set { SetValue(InputTypeProperty, value); }
         }
-
         public static readonly DependencyProperty InputTypeProperty =
             DependencyProperty.Register("InputType", typeof(InputField.InputType), typeof(InputBox), new PropertyMetadata(InputField.InputType.Standard), OnInputTypeChanged);
-
         private static void OnInputTypeChanged(DependencyObject sender, object oldValue, object newValue)
         {
             var self = sender as InputBox;
             self.m_inputField.inputType = (InputField.InputType)newValue;
+        }
+
+        public Color CaretColor
+        {
+            get { return (Color)GetValue(CaretColorProperty); }
+            set { SetValue(CaretColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty CaretColorProperty =
+            DependencyProperty.Register("CaretColor", typeof(Color), typeof(InputBox), new PropertyMetadata(Color.white), OnCaretColorChanged);
+
+        private static void OnCaretColorChanged(DependencyObject sender, object oldValue, object newValue)
+        {
+            var self = sender as InputBox;
+            self.m_inputField.caretColor = self.CaretColor;
         }
 
         private InputField m_inputField;
@@ -55,6 +69,11 @@ namespace AlienUI.UIElements
             m_inputField.onValueChanged.AddListener(OnInputFieldTextChanged);
 
             HandleUGUIInputFieldEvent();
+        }
+
+        protected override void OnInteractableValueChanged()
+        {
+            m_inputField.interactable = Interactable;
         }
 
         protected override void OnTemplateApply()
