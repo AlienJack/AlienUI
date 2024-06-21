@@ -140,6 +140,7 @@ namespace AlienUI.Editors
         {
             var rootItem = new TreeViewItem { id = 0, depth = -1 };
             var allItems = new List<TreeViewItem>();
+            m_uiMaps = new Dictionary<int, UIElement>();
 
             TreeViewItem indentItem = null;
             if (m_indentParent != null)
