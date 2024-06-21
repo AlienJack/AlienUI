@@ -77,7 +77,7 @@ namespace AlienUI.Core.Resources
 
             var newValue = resolver.Resolve(Value, prop.PropType);
 
-            if (Smooth)
+            if (Smooth && Application.isPlaying)
             {
                 m_smoothingCor = Document.StartCoroutine(SmoothSet(resolver, prop, target, newValue));
             }
