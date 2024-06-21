@@ -3,9 +3,10 @@
     <r:BlurEffect Name="BGBlur" />
   </Image>
   <VisualElement Color="#FFFFFF00" Horizontal="Stretch" Vertical="Stretch" Name="LoginControllers">
-    <Dock LayoutDirection="Vertical" Space="16.36" ControlChildSize="True">
-      <Image Width="200" Height="200" Name="head" Content="DEMO/Avatar" />
+    <Dock LayoutDirection="Vertical" Space="16.36">
+      <Image Content="DEMO/Avatar" Width="200" Height="200" Name="head" />
       <Label FontSize="42" AutoFontSize="False" Content="AlienUI" Name="UserName" />
+      <InputBox PlaceHolder="Input Password Hero" InputType="Password" Width="300" Height="50" />
     </Dock>
   </VisualElement>
   <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">

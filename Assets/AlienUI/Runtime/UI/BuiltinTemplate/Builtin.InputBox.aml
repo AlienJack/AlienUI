@@ -1,6 +1,46 @@
-<Template xmlns="AlienUI.UIElements" Type="AlienUI.UIElements.InputBox" Width="200" Height="40">
-  <Image Horizontal="Stretch" Vertical="Stretch" Padding="4,4,4,4" Name="Bg">
-    <Label AlignHorizontal="Left" FontSize="15" Content="{TemplateBinding PlaceHolder}" Color="#B7B7B7FF" Horizontal="Stretch" Vertical="Stretch" Name="PlaceHolder" />
-    <Label AlignHorizontal="Left" FontSize="15" Color="#000000FF" Horizontal="Stretch" Vertical="Stretch" Name="TextCom" />
+<Template xmlns="AlienUI.UIElements" xmlns:r="AlienUI.Core.Resources" xmlns:t="AlienUI.Core.Triggers" Type="AlienUI.UIElements.InputBox" Width="200" Height="40">
+  <Image Mask="True" ImageType="Sliced" Content="Builtin/Border" Color="#2D2D2DFF" Horizontal="Stretch" Vertical="Stretch" Name="Bg">
+    <Image ImageType="Sliced" Content="Builtin/Border" Color="#979a9d" Horizontal="Stretch" Vertical="Stretch" Padding="8,8,8,8" Name="line">
+      <Label AlignHorizontal="Left" FontSize="15" AutoFontSize="False" Content="{TemplateBinding PlaceHolder}" Color="#B7B7B7FF" Horizontal="Stretch" Vertical="Stretch" Name="PlaceHolder" />
+      <Label AlignHorizontal="Left" FontSize="15" AutoFontSize="False" Horizontal="Stretch" Vertical="Stretch" Name="TextCom" />
+      <r:ClipEffect Clip="0.2" />
+    </Image>
+    <t:DataTrigger PropertyName="IsPointerOver" Target="{TemplateBinding Self}">
+      <r:Condition Value="true" PropertyName="IsPointerOver" />
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="Bg" PropertyName="Color" Value="#323232" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="IsPointerOver" Target="{TemplateBinding Self}">
+      <r:Condition Value="false" PropertyName="IsPointerOver" />
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="Bg" PropertyName="Color" Value="#2d2d2d" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="false" PropertyName="IsPointerOver" />
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="Bg" PropertyName="Color" Value="#2d2d2d" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="true" PropertyName="IsPointerOver" />
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="Bg" PropertyName="Color" Value="#323232" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="true" PropertyName="Focused" />
+      <r:Setter Target="Bg" PropertyName="Color" Value="#1d1f21" />
+      <r:Setter Target="line" PropertyName="Color" Value="#008dff" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Focused" Target="{TemplateBinding Self}">
+      <r:Condition Value="false" PropertyName="Focused" />
+      <r:Setter Target="line" PropertyName="Color" Value="#979a9d" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Interactable" Target="{TemplateBinding Self}">
+      <r:Condition Value="false" PropertyName="Interactable" />
+      <r:Setter Target="Bg" PropertyName="Alpha" Value="0.7" />
+    </t:DataTrigger>
+    <t:DataTrigger PropertyName="Interactable" Target="{TemplateBinding Self}">
+      <r:Condition Value="true" PropertyName="Interactable" />
+      <r:Setter Target="Bg" PropertyName="Alpha" Value="1" />
+    </t:DataTrigger>
   </Image>
 </Template>

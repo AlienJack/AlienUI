@@ -3,7 +3,7 @@
     <Grid GridDefine="1*|50px,1*" Horizontal="Stretch" Vertical="Stretch">
       <VisualElement Color="#000000FF" Padding="4,4,8,4">
         <Label FontSize="25" Content="{TemplateBinding Title}" Horizontal="Left" />
-        <Dock ControlChildSize="True" Horizontal="Right" Vertical="Stretch">
+        <Dock ChildHorizontalAlign="Left" Horizontal="Right" Vertical="Stretch">
           <Button Icon="Builtin/MaxIcon" Text="" Command="{TemplateBinding SwitchMaximizStateCmd}" Name="MaxBtn">
             <t:DataTrigger PropertyName="IsMaximized" Target="{TemplateBinding Self}">
               <r:Condition Value="true" PropertyName="IsMaximized" />
