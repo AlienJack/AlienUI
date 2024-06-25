@@ -391,7 +391,6 @@ namespace AlienUI.Editors
             if (designer.drawContext.Count == 0) return;
             var target = designer.drawContext[^1];
 
-            EGL.BeginHorizontal();
             DrawTitle(designer, target);
             DrawProperties(target);
 
@@ -471,6 +470,7 @@ namespace AlienUI.Editors
 
         private static void DrawTitle(Designer designer, AmlNodeElement target)
         {
+            EGL.BeginHorizontal();
             if (designer.drawContext.Count > 1)
             {
                 for (int i = 0; i < designer.drawContext.Count - 1; i++)
@@ -486,7 +486,8 @@ namespace AlienUI.Editors
                     GL.Label("/");
                 }
             }
-            EGL.LabelField(new GUIContent(target.GetType().Name, target.GetIcon()), new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
+            var guicontent = new GUIContent(target.GetType().Name, target.GetIcon());
+            EGL.LabelField(guicontent, new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
             GL.FlexibleSpace();
             EGL.EndHorizontal();
         }
