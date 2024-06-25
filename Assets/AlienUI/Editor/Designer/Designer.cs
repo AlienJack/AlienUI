@@ -517,7 +517,11 @@ namespace AlienUI.Editors
                 if (child is UIElement) continue;
                 EGL.BeginHorizontal();
                 {
-                    if (GL.Button($"Edit {child.Name ?? child.GetType().Name}"))
+                    var icon = child.GetIcon();
+                    var typeName = child.GetType().Name;
+                    string showName = typeName;
+                    if (child.Name != null) showName += $" [{child.Name}]";
+                    if (GL.Button(new GUIContent($"Edit {showName}", icon),GUILayout.Height(20)))
                     {
                         select = child;
                     }
