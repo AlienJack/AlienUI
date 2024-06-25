@@ -1,10 +1,5 @@
-using AlienUI.Core.Resources;
-using AlienUI.Core.Triggers;
 using AlienUI.UIElements;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace AlienUI.Editors
 {

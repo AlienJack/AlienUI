@@ -30,7 +30,7 @@ namespace AlienUI.Editors
                 xparent = xmlEle;
             }
 
-            foreach (AmlNodeElement child in element.Children.OrderBy(c=>c is UIElement?0:1))
+            foreach (AmlNodeElement child in element.Children.OrderBy(c => c is UIElement ? 0 : 1))
             {
                 Gen(xDoc, xparent, child, doc);
             }

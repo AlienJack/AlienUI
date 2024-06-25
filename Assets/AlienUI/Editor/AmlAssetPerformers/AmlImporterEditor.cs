@@ -1,10 +1,5 @@
-﻿using AlienUI.Models;
-using System.IO;
-using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.AssetImporters;
-using UnityEditor.ProjectWindowCallback;
-using UnityEngine;
 
 namespace AlienUI.Editors
 {
@@ -21,6 +16,6 @@ namespace AlienUI.Editors
 
         public override void OnInspectorGUI() { }
 
-        
+
     }
 }

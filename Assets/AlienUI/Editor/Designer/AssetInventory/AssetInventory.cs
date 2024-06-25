@@ -18,7 +18,7 @@ namespace AlienUI.Editors
                 .SelectMany(a => a.GetTypes())
                 .Where(t =>
                     !t.IsAbstract &&
-                    !typeof(Template).IsAssignableFrom(t) && 
+                    !typeof(Template).IsAssignableFrom(t) &&
                     !typeof(Window).IsAssignableFrom(t) &&
                     (typeof(UIElement)).IsAssignableFrom(t))
                 .Select(t => new Asset(t))

@@ -2,12 +2,9 @@ using AlienUI.Core.Commnands;
 using AlienUI.Models;
 using AlienUI.UIElements;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEditor;
-using UnityEditor.UI;
 using UnityEngine;
 
 namespace AlienUI.Editors.PropertyDrawer

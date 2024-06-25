@@ -32,7 +32,7 @@ namespace AlienUI.UIManager
             m_floatRoot = createUINode("[Float]");
         }
 
-        public T OpenWiondow<T>(Settings.AmlResouces amlRes, ViewModel viewModel = null) where T : Window
+        public T OpenWindow<T>(Settings.AmlResouces amlRes, ViewModel viewModel = null) where T : Window
         {
             if (amlRes == null) return null;
             if (amlRes.Aml == null) return null;

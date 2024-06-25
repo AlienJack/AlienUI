@@ -27,7 +27,7 @@ namespace DEMO
 
             var uiAsset = setting.GetWindowAsset("LoginScreen");
             yield return null;
-            UIManager.OpenWiondow<Window>(uiAsset, new LoginScreenVM());
+            UIManager.OpenWindow<Window>(uiAsset, new LoginScreenVM());
         }
     }
 }

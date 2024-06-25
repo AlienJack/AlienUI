@@ -1,12 +1,9 @@
 using AlienUI.Models;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEditor.Callbacks;
 using UnityEditor.SceneManagement;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace AlienUI.Editors

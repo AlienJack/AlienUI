@@ -61,7 +61,7 @@ public class TextInputWindow : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
 
-        
+
 
         firstShow = false;
     }
