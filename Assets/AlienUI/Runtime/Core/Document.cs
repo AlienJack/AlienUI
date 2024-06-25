@@ -2,6 +2,7 @@
 using AlienUI.UIElements;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 
@@ -83,6 +84,11 @@ namespace AlienUI.Core
 
             m_parentChildrenRecords[parentNode].Add(newNodeIns);
             m_childParentRecords[newNodeIns] = parentNode;
+        }
+
+        public List<AmlNodeElement> GetAllElements()
+        {
+            return m_dpObjects.ToList();
         }
 
         public T Query<T>(string name) where T : DependencyObject
