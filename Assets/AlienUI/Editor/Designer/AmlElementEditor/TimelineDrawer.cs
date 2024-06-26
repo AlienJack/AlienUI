@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace AlienUI.Editors.TimelineDrawer
@@ -40,7 +41,7 @@ namespace AlienUI.Editors.TimelineDrawer
 
             float totalTime = keys.Max();
 
-            keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll, new Rect(keyRegionDrawRect) { width = totalTime * Scale + 10, height = keyRegionDrawRect.height - 20 });
+            keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll, new Rect(keyRegionDrawRect) { width = totalTime * Scale + 10 * Scale, height = keyRegionDrawRect.height - 20 });
 
             //画刻度
             for (int i = 0; i <= (int)(totalTime + 30) * 10; i++)
@@ -55,6 +56,26 @@ namespace AlienUI.Editors.TimelineDrawer
                 rect.x = keyRegionDrawRect.x + time * Scale + 5f - rect.width * 0.5f;
 
                 GUI.DrawTexture(rect, Texture2D.linearGrayTexture, ScaleMode.StretchToFill);
+
+                var timelabelRect = new Rect(rect);
+                timelabelRect.y += 30f + 5f;
+                timelabelRect.width = 30f;
+                timelabelRect.height = 30f;
+                timelabelRect.x -= timelabelRect.width * 0.5f;
+                if (atSecond)
+                    EditorGUI.LabelField(timelabelRect, time.ToString(), new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
+                else
+                {
+                    var fadeAlpha = 1f;
+                    if (Scale > 250) fadeAlpha = 1f;
+                    else if (Scale <= 250 && Scale >= 240) fadeAlpha = 1 - ((250 - Scale) / 10f);
+                    else fadeAlpha = 0f;
+
+                    var temp = GUI.color;
+                    GUI.color = new Color(1, 1, 1, fadeAlpha);
+                    EditorGUI.LabelField(timelabelRect, time.ToString(), new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
+                    GUI.color = temp;
+                }
             }
 
             for (int i = 0; i < keys.Count; i++)

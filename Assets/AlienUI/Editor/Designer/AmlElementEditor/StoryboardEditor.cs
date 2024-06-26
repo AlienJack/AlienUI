@@ -21,7 +21,7 @@ namespace AlienUI.Editors
             using (new EditorGUILayout.VerticalScope())
             {
                 if (!m_scaleMap.TryGetValue(element, out var scale)) scale = 60f;
-                m_scaleMap[element] = EditorGUILayout.Slider(scale, 10, 500);
+                m_scaleMap[element] = EditorGUILayout.Slider(scale, 60f, 500);
 
                 foreach (var ani in anis)
                 {
