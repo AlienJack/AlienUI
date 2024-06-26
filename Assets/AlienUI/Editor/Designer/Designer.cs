@@ -470,26 +470,26 @@ namespace AlienUI.Editors
 
         private static void DrawTitle(Designer designer, AmlNodeElement target)
         {
-            EGL.BeginHorizontal();
             if (designer.drawContext.Count > 1)
             {
                 for (int i = 0; i < designer.drawContext.Count - 1; i++)
                 {
+                    EGL.BeginHorizontal();
                     var parent = designer.drawContext[i];
                     var name = parent.Name ?? parent.GetType().Name;
                     if (GL.Button(new GUIContent(name, parent.GetIcon()), GUILayout.Height(18)))
                     {
                         designer.drawContext = designer.drawContext.Take(i + 1).ToList();
                         designer.UpdateCurrentDraw();
+                        EGL.EndHorizontal();
                         break;
                     }
                     GL.Label("/");
+                    EGL.EndHorizontal();
                 }
             }
             var guicontent = new GUIContent(target.GetType().Name, target.GetIcon());
             EGL.LabelField(guicontent, new GUIStyle(EditorStyles.label) { fontSize = 18 }, GL.Height(20));
-            GL.FlexibleSpace();
-            EGL.EndHorizontal();
         }
 
         private static void DrawCustom(Designer designer, AmlNodeElement target)
@@ -522,7 +522,7 @@ namespace AlienUI.Editors
                     var typeName = child.GetType().Name;
                     string showName = typeName;
                     if (child.Name != null) showName += $" [{child.Name}]";
-                    if (GL.Button(new GUIContent($"Edit {showName}", icon),GUILayout.Height(20)))
+                    if (GL.Button(new GUIContent($"Edit {showName}", icon), GUILayout.Height(20)))
                     {
                         select = child;
                     }

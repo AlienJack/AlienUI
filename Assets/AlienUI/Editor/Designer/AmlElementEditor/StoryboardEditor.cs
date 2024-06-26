@@ -13,15 +13,19 @@ namespace AlienUI.Editors
 {
     public class StoryboardEditor : ElementExtraEdit<Storyboard>
     {
+        private Dictionary<Storyboard, float> m_scaleMap = new Dictionary<Storyboard, float>();
+        private Dictionary<Animation, AnimationTimelineUI> m_animationDrawerMap = new Dictionary<Animation, AnimationTimelineUI>();
         protected override void OnDraw(UIElement host, Storyboard element)
         {
-            var anis = element.GetChildren<Core.Resources.Animation>();
+            var anis = element.GetChildren<Animation>();
             using (new EditorGUILayout.VerticalScope())
             {
+                if (!m_scaleMap.TryGetValue(element, out var scale)) scale = 60f;
+                m_scaleMap[element] = EditorGUILayout.Slider(scale, 10, 500);
+
                 foreach (var ani in anis)
                 {
                     EditorGUILayout.LabelField(string.Empty, EditorStyles.helpBox, GUILayout.Height(100));
-
                     if (Event.current.type != EventType.Used && Event.current.type != EventType.Layout)
                     {
                         var rect = GUILayoutUtility.GetLastRect();
@@ -29,8 +33,9 @@ namespace AlienUI.Editors
                         rect.xMax -= 4;
                         rect.yMin += 4;
                         rect.yMax -= 4;
-                        var timelineUi = new AnimationTimelineUI(ani);
-                        timelineUi.Draw(rect);
+                        if (!m_animationDrawerMap.ContainsKey(ani)) m_animationDrawerMap[ani] = new AnimationTimelineUI(ani);
+                        m_animationDrawerMap[ani].Scale = m_scaleMap[element];
+                        m_animationDrawerMap[ani].Draw(rect);
                     }
                 }
             }
@@ -94,7 +99,7 @@ namespace AlienUI.Editors
                     if (index != -1)
                         animation.PropertyName = options[index];
                 }
-                
+
                 if (animation.GetBinding(Animation.OffsetProperty) is Binding offsetBind)
                 {
                     var offsetFieldRect = new Rect(propertyFieldRect);
@@ -112,15 +117,15 @@ namespace AlienUI.Editors
                 {
                     var offsetFieldRect = new Rect(propertyFieldRect);
                     offsetFieldRect.y += propertyFieldRect.height + 2;
-                    offsetFieldRect.width = infoDrawRect.width-7;
+                    offsetFieldRect.width = infoDrawRect.width - 7;
                     var temp = EditorGUIUtility.labelWidth;
-                    EditorGUIUtility.labelWidth = 60-7;
+                    EditorGUIUtility.labelWidth = 60 - 7;
                     animation.Offset = EditorGUI.FloatField(offsetFieldRect, "Offset", animation.Offset);
                     EditorGUIUtility.labelWidth = temp;
                 }
 
                 var curveFieldRect = new Rect(propertyFieldRect);
-                curveFieldRect.y += propertyFieldRect.height*2 + 4;
+                curveFieldRect.y += propertyFieldRect.height * 2 + 4;
                 curveFieldRect.width = infoDrawRect.width - 7;
                 var temp1 = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 60 - 7;
@@ -132,7 +137,11 @@ namespace AlienUI.Editors
             {
                 Designer.SaveToAml();
             }
+        }
 
+        protected override List<float> GetKeyTime(Animation target)
+        {
+            return target.GetChildren<AnimationKey>().Select(key => key.Time + target.Offset).ToList();
         }
     }
 }
