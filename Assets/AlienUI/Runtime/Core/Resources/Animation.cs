@@ -63,7 +63,7 @@ namespace AlienUI.Core.Resources
             self.m_needPrepareData = true;
         }
 
-        private PropertyResolver m_resolver;
+        internal PropertyResolver m_resolver;
         private Type m_resolverType;
         private DependencyObject m_target;
 
@@ -74,22 +74,13 @@ namespace AlienUI.Core.Resources
 
 
         private bool m_needPrepareData;
-        private void PrepareDatas()
+        internal void PrepareDatas()
         {
             if (m_needPrepareData)
             {
                 cacheTargetAndResolver();
-                cacheKeyframes();
 
                 m_needPrepareData = false;
-            }
-        }
-
-        private void cacheKeyframes()
-        {
-            foreach (var key in m_keys)
-            {
-                key.ActualValue = m_resolver.Resolve(key.Value, m_resolverType);
             }
         }
 
@@ -126,11 +117,12 @@ namespace AlienUI.Core.Resources
             time -= Offset;
 
             peekEdgeKeys(time, out float progress, out var left, out var right);
-            object from = left != null ? left.ActualValue : m_defaultValue;
-            object to = right != null ? right.ActualValue : from;
+            object from = left != null ? left.GetActualValue(m_resolver) : m_defaultValue;
+            object to = right != null ? right.GetActualValue(m_resolver) : from;
 
             progress = Curve.Evaluate(Curve.length * progress);
             value = m_resolver.Lerp(from, to, progress);
+
             return true;
         }
 

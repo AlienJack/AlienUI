@@ -97,7 +97,7 @@ namespace AlienUI.Editors
             return result;
         }
 
-        public static void DrawSceneBorder(this RectTransform rectTrans, Vector2 leftTopPos, Vector2 size, Color drawColor, Action<Rect> OnGUI = null)
+        public static void DrawSceneBorder(this RectTransform rectTrans, Vector2 leftTopPos, Vector2 size, Color drawColor, Action<Rect> OnGUI = null, Color flashColor = default)
         {
             var gridRect = rectTrans;
             size *= gridRect.localScale;
@@ -113,31 +113,36 @@ namespace AlienUI.Editors
 
             var temp = Handles.color;
             Handles.color = drawColor;
+
             Handles.DrawLine(posLT, posRT, 2);
             Handles.DrawLine(posRT, posRB, 2);
             Handles.DrawLine(posRB, posLB, 2);
             Handles.DrawLine(posLB, posLT, 2);
             Handles.color = temp;
 
+
+
+            Handles.BeginGUI();
+
+            var screenPos = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posLT);
+            screenPos.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPos.y;
+
+            var screenPosMax = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posRB);
+            screenPosMax.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPosMax.y;
+
+            var rectSize = screenPosMax - screenPos;
+            var rect = new Rect { position = screenPos, width = rectSize.x, height = rectSize.y };
+
             if (OnGUI != null)
             {
-                Handles.BeginGUI();
-
-                var screenPos = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posLT);
-                screenPos.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPos.y;
-
-                var screenPosMax = SceneView.lastActiveSceneView.camera.WorldToScreenPoint(posRB);
-                screenPosMax.y = SceneView.lastActiveSceneView.camera.pixelHeight - screenPosMax.y;
-
-                var rectSize = screenPosMax - screenPos;
-                var rect = new Rect { position = screenPos, width = rectSize.x, height = rectSize.y };
-
                 GUILayout.BeginArea(rect);
                 OnGUI(rect);
                 GUILayout.EndArea();
-
-                Handles.EndGUI();
             }
+
+            using (new AlienEditorUtility.GUIColorScope(flashColor))
+                GUI.DrawTexture(rect, Texture2D.whiteTexture);
+            Handles.EndGUI();
         }
 
         private static List<Type> unityAssetsTypes;

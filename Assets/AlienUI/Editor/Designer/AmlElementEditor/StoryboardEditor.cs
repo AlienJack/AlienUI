@@ -143,5 +143,34 @@ namespace AlienUI.Editors
         {
             return target.GetChildren<AnimationKey>().Select(key => key.Time + target.Offset).ToList();
         }
+
+        protected override void OnKeyTipDraw(Vector2 position, int hoverKeyIndex)
+        {
+            var keys = m_dataContext.GetChildren<AnimationKey>();
+            var key = keys[hoverKeyIndex];
+
+
+
+            var content = new GUIContent($"time:{key.Time + m_dataContext.Offset}");
+            var timeRect = new Rect(position, default);
+            timeRect.width = content.text.Length * 7+10;
+            timeRect.height = 18f;
+            
+            m_dataContext.PrepareDatas();
+            var keyValue = key.GetActualValue(m_dataContext.m_resolver).ToString();
+            var valueRect = new Rect(timeRect);
+            valueRect.width = keyValue.Length * 7 + 10;
+            valueRect.height = 18f;
+            valueRect.y += timeRect.height;
+
+            var tipPosition = new Rect(position, default);
+            tipPosition.width = Mathf.Max(timeRect.width,valueRect.width);
+            tipPosition.height = timeRect.height + valueRect.height;
+
+            using (new AlienEditorUtility.GUIColorScope(Color.black)) GUI.DrawTexture(tipPosition, Texture2D.whiteTexture);
+
+            GUI.Label(timeRect, content);
+            GUI.Label(valueRect, keyValue);
+        }
     }
 }

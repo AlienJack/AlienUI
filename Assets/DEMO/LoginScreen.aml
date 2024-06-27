@@ -8,37 +8,39 @@
         <r:CircleMaskEffect />
       </Image>
       <Label FontSize="42" AutoFontSize="False" Content="AlienUI" Name="UserName" />
-      <InputBox PlaceHolder="Input Password Hero" InputType="Password" Width="300" Height="50" />
+      <InputBox PlaceHolder="Input Password Here" InputType="Password" Width="300" Height="50" />
     </Dock>
   </VisualElement>
   <Curtain Horizontal="Stretch" Vertical="Stretch" Name="Curtain">
     <Label FontSize="150" AutoFontSize="False" Content="{Binding CurrentTime}" Vertical="Top" Offset="0,-120" Name="Time" />
     <Label FontSize="48" AutoFontSize="False" Content="{Binding CurrentDate}" Vertical="Top" Offset="0,-313.07" Name="Data" />
   </Curtain>
-  <r:Storyboard Name="OnShow">
-    <r:Animation Target="bg" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
-      <r:AnimationKey Value="1.02,1.02" />
-      <r:AnimationKey Time="1.5" Value="1,1" />
-    </r:Animation>
-    <r:Animation Target="Curtain" PropertyName="Alpha" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
-      <r:AnimationKey Value="0" />
-      <r:AnimationKey Time="0.5" Value="0" />
-      <r:AnimationKey Time="1" Value="1" />
-    </r:Animation>
-  </r:Storyboard>
-  <r:Storyboard Name="ShowLoginControllers">
-    <r:Animation Target="BGBlur" PropertyName="BlurFactor">
-      <r:AnimationKey Value="0" />
-      <r:AnimationKey Time="1" Value="2" />
-    </r:Animation>
-    <r:Animation Target="LoginControllers" PropertyName="Alpha">
-      <r:AnimationKey Value="0" />
-      <r:AnimationKey Time="2" Value="1" />
-    </r:Animation>
-    <r:Animation Target="bg" PropertyName="Scale">
-      <r:AnimationKey Time="1" Value="1.1,1.1" />
-    </r:Animation>
-  </r:Storyboard>
+  <r:StoryboardGroup>
+    <r:Storyboard Name="OnShow">
+      <r:Animation Target="bg" PropertyName="Scale" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+        <r:AnimationKey Value="1.02,1.02" />
+        <r:AnimationKey Time="1.5" Value="1,1" />
+      </r:Animation>
+      <r:Animation Target="Curtain" PropertyName="Alpha" Curve="{&quot;keyframes&quot;:[{&quot;Time&quot;:0.0,&quot;Value&quot;:0.0,&quot;InTangent&quot;:2.0,&quot;OutTangent&quot;:2.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0},{&quot;Time&quot;:1.0,&quot;Value&quot;:1.0,&quot;InTangent&quot;:0.0,&quot;OutTangent&quot;:0.0,&quot;TangentMode&quot;:0,&quot;WeightedMode&quot;:0,&quot;InWeight&quot;:0.0,&quot;OutWeight&quot;:0.0}]}">
+        <r:AnimationKey Value="0" />
+        <r:AnimationKey Time="0.5" Value="0" />
+        <r:AnimationKey Time="3" Value="1" />
+      </r:Animation>
+    </r:Storyboard>
+    <r:Storyboard Name="ShowLoginControllers">
+      <r:Animation Target="BGBlur" PropertyName="BlurFactor">
+        <r:AnimationKey Value="0" />
+        <r:AnimationKey Time="1" Value="2" />
+      </r:Animation>
+      <r:Animation Target="LoginControllers" PropertyName="Alpha">
+        <r:AnimationKey Value="0" />
+        <r:AnimationKey Time="2" Value="1" />
+      </r:Animation>
+      <r:Animation Target="bg" PropertyName="Scale">
+        <r:AnimationKey Time="1" Value="1.1,1.1" />
+      </r:Animation>
+    </r:Storyboard>
+  </r:StoryboardGroup>
   <t:EventTrigger Event="OnShow" Target="LoginScreen">
     <r:PlayStoryboard Target="OnShow" />
     <r:Setter Target="LoginControllers" PropertyName="Active" Value="false" />

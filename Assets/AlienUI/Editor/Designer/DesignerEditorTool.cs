@@ -27,6 +27,7 @@ namespace AlienUI.Editors
         private void DesignerTool_OnRequestSelect(UIElement obj)
         {
             targetUI = obj;
+            flashColor = Color.cyan;
             Selection.activeGameObject = obj.Rect.gameObject;
 
             SceneView.RepaintAll();
@@ -40,6 +41,7 @@ namespace AlienUI.Editors
             OnRequestSelect -= DesignerTool_OnRequestSelect;
         }
 
+        Color flashColor = default;
         public override void OnToolGUI(EditorWindow window)
         {
             var evt = Event.current;
@@ -66,7 +68,12 @@ namespace AlienUI.Editors
             if (targetUI != null)
             {
                 if (targetUI.Rect != null)
-                    AlienEditorUtility.DrawSceneBorder(targetUI.Rect, Vector2.zero, new Vector2(targetUI.ActualWidth, targetUI.ActualHeight), Color.cyan);
+                {
+                    AlienEditorUtility.DrawSceneBorder(targetUI.Rect, Vector2.zero, new Vector2(targetUI.ActualWidth, targetUI.ActualHeight), Color.cyan, null, flashColor);
+                    flashColor.a = Mathf.MoveTowards(flashColor.a, 0, 0.005f);
+                    if (flashColor.a > 0)
+                        SceneView.RepaintAll();
+                }
                 else
                     targetUI = null;
             }

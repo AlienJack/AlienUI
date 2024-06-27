@@ -7,7 +7,7 @@ namespace AlienUI.Editors.TimelineDrawer
 {
     public abstract class TimelineDrawer<T>
     {
-        private T m_dataContext;
+        protected T m_dataContext;
 
         public float Scale = 30f;
 
@@ -33,6 +33,9 @@ namespace AlienUI.Editors.TimelineDrawer
             OnDrawInfo(infoDrawRect, m_dataContext);
         }
 
+        private int hoverKeyIndex = -1;
+        private Rect hoverKeyRect = default;
+
         private Vector2 keyRegionScoll;
         private void DrawKeyRegion(Rect keyRegionDrawRect)
         {
@@ -41,7 +44,12 @@ namespace AlienUI.Editors.TimelineDrawer
 
             float totalTime = keys.Max();
 
-            keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll, new Rect(keyRegionDrawRect) { width = totalTime * Scale + 10 * Scale, height = keyRegionDrawRect.height - 20 });
+            keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll,
+                new Rect(keyRegionDrawRect)
+                {
+                    width = totalTime * Scale + 10 * Scale,
+                    height = keyRegionDrawRect.height - 20
+                });
 
             //画刻度
             for (int i = 0; i <= (int)(totalTime + 30) * 10; i++)
@@ -78,21 +86,38 @@ namespace AlienUI.Editors.TimelineDrawer
                 }
             }
 
+            hoverKeyIndex = -1;
+            //画关键帧
             for (int i = 0; i < keys.Count; i++)
             {
                 var rect = new Rect(keyRegionDrawRect);
-                rect.width = 10f;
-                rect.height = 10f;
+                rect.width = 11f;
+                rect.height = 11f;
                 rect.y = keyRegionDrawRect.y;
                 rect.x = keyRegionDrawRect.x + keys[i] * Scale;
 
                 GUI.DrawTexture(rect, AlienEditorUtility.GetIcon("key"), ScaleMode.StretchToFill);
+                GUIUtility.GetControlID("timelinekey".GetHashCode(), FocusType.Passive);
+                if (rect.Contains(Event.current.mousePosition))
+                {
+                    hoverKeyIndex = i;
+                    hoverKeyRect = rect;
+                }
             }
 
-
             GUI.EndScrollView();
+
+            if (hoverKeyIndex != -1)
+            {
+                var startPos = hoverKeyRect.position;
+                startPos.x += 20;
+                startPos.y += 5;
+                OnKeyTipDraw(startPos, hoverKeyIndex);
+            }
+            Designer.Instance.Repaint();
         }
 
+        protected abstract void OnKeyTipDraw(Vector2 position, int keyIndex);
         protected abstract List<float> GetKeyTime(T target);
         protected abstract void OnDrawInfo(Rect infoDrawRect, T target);
     }
