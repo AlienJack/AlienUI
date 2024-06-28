@@ -21,9 +21,9 @@ namespace AlienUI.Editors.TimelineDrawer
 
         public void Draw(Rect rect)
         {
-            var infoDrawRect = new Rect(rect) { height = rect.height - 20, y = rect.y + 20 };
+            var infoDrawRect = new Rect(rect) { height = rect.height - 20-5, y = rect.y + 20 + 5 };
             infoDrawRect.width = rect.width * 0.4f;
-            var keyRegionDrawRect = new Rect(rect) { height = rect.height - 20, y = rect.y + 20 };
+            var keyRegionDrawRect = new Rect(rect) { height = rect.height - 20-5, y = rect.y + 20 + 5 };
             keyRegionDrawRect.width = rect.width - infoDrawRect.width;
             keyRegionDrawRect.x += infoDrawRect.width;
 

@@ -26,7 +26,7 @@ namespace AlienUI.Editors
 
                 foreach (var ani in anis)
                 {
-                    EditorGUILayout.LabelField(string.Empty, EditorStyles.helpBox, GUILayout.Height(120));
+                    EditorGUILayout.LabelField(string.Empty, EditorStyles.helpBox, GUILayout.Height(125));
                     if (Event.current.type != EventType.Used && Event.current.type != EventType.Layout)
                     {
                         var rect = GUILayoutUtility.GetLastRect();
