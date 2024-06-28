@@ -36,23 +36,25 @@ namespace AlienUI.Editors.TimelineDrawer
         private int hoverKeyIndex = -1;
         private Rect hoverKeyRect = default;
 
+        private List<float> xPos = new List<float>();
         private Vector2 keyRegionScoll;
         private void DrawKeyRegion(Rect keyRegionDrawRect)
         {
             GUI.Box(keyRegionDrawRect, string.Empty);
             var keys = GetKeyTime(m_dataContext);
 
-            float totalTime = keys.Max();
+            float totalTime = keys.Max()+4;
 
             keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll,
                 new Rect(keyRegionDrawRect)
                 {
-                    width = totalTime * Scale + 10 * Scale,
+                    width = totalTime * Scale,
                     height = keyRegionDrawRect.height - 20
                 });
 
+            xPos.Clear();
             //画刻度
-            for (int i = 0; i <= (int)(totalTime + 30) * 10; i++)
+            for (int i = 0; i <= (int)(totalTime*10); i++)
             {
                 var time = i * 0.1f;
 
@@ -62,7 +64,7 @@ namespace AlienUI.Editors.TimelineDrawer
                 rect.height = atSecond ? 30f : 15f;
                 rect.y = keyRegionDrawRect.y;
                 rect.x = keyRegionDrawRect.x + time * Scale + 5f - rect.width * 0.5f;
-
+                xPos.Add(rect.x);
                 GUI.DrawTexture(rect, Texture2D.linearGrayTexture, ScaleMode.StretchToFill);
 
                 var timelabelRect = new Rect(rect);
@@ -97,28 +99,91 @@ namespace AlienUI.Editors.TimelineDrawer
                 rect.x = keyRegionDrawRect.x + keys[i] * Scale;
 
                 GUI.DrawTexture(rect, AlienEditorUtility.GetIcon("key"), ScaleMode.StretchToFill);
-                GUIUtility.GetControlID("timelinekey".GetHashCode(), FocusType.Passive);
                 if (rect.Contains(Event.current.mousePosition))
                 {
                     hoverKeyIndex = i;
                     hoverKeyRect = rect;
+
+                    if (Event.current.type == EventType.MouseDrag)
+                    {
+                        //拖拽中,不处理
+                        if (DragAndDrop.GetGenericData("DragAnimationKey") == null)
+                        {
+                            DragAndDrop.SetGenericData("DragAnimationKey", new KeyDragData(m_dataContext, hoverKeyIndex));
+                            DragAndDrop.StartDrag("DragAnimationKey");
+                            DragAndDrop.visualMode = DragAndDropVisualMode.Move;
+                        }
+                    }
                 }
             }
 
             GUI.EndScrollView();
 
-            if (hoverKeyIndex != -1)
+            if (DragAndDrop.GetGenericData("DragAnimationKey") is KeyDragData dragData && dragData.m_datacontext.Equals(m_dataContext))
             {
-                var startPos = hoverKeyRect.position - keyRegionScoll;
+                var startPos = Event.current.mousePosition;
                 startPos.x += 20;
                 startPos.y += 5;
-                OnKeyTipDraw(startPos, hoverKeyIndex);
+                OnKeyTipDraw(startPos, dragData.m_keyIndex);
+
+                if (Event.current.type == EventType.DragUpdated)
+                {
+                    if (GetNearTime(Event.current.mousePosition.x, out var nearTime))
+                        OnDragKey(dragData.m_keyIndex, nearTime);
+                }
+                else if (Event.current.type == EventType.DragExited)
+                {
+                    DragAndDrop.AcceptDrag();
+                    DragAndDrop.SetGenericData("DragAnimationKey", null);
+                }
             }
+            else
+            {
+                if (hoverKeyIndex != -1)
+                {
+                    var startPos = hoverKeyRect.position - keyRegionScoll;
+                    startPos.x += 20;
+                    startPos.y += 5;
+                    OnKeyTipDraw(startPos, hoverKeyIndex);
+                }
+            }
+
             Designer.Instance.Repaint();
+        }
+
+        private bool GetNearTime(float x, out float time)
+        {
+            time = 0;
+
+            for (int i = 0; i < xPos.Count; i++)
+            {
+                var calibX = xPos[i];
+                if (calibX >= x)
+                {
+                    time = i * 0.1f;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         protected abstract void OnKeyTipDraw(Vector2 position, int keyIndex);
         protected abstract List<float> GetKeyTime(T target);
         protected abstract void OnDrawInfo(Rect infoDrawRect, T target);
+
+        protected abstract void OnDragKey(int keyIndex, float time);
+    }
+
+    internal class KeyDragData
+    {
+        internal object m_datacontext;
+        internal int m_keyIndex;
+
+        internal KeyDragData(object datacontext, int keyIndex)
+        {
+            m_datacontext = datacontext;
+            m_keyIndex = keyIndex;
+        }
     }
 }

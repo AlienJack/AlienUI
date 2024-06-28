@@ -139,6 +139,15 @@ namespace AlienUI.Editors
             }
         }
 
+        protected override void OnDragKey(int keyIndex, float time)
+        {
+            var keys = m_dataContext.GetChildren<AnimationKey>();
+            var key = keys[keyIndex];
+            key.Time = time;
+
+            Designer.SaveToAml();
+        }
+
         protected override List<float> GetKeyTime(Animation target)
         {
             return target.GetChildren<AnimationKey>().Select(key => key.Time + target.Offset).ToList();
