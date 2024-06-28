@@ -97,8 +97,6 @@ namespace AlienUI.Core.Resources
 
         internal void StageDefaultValue()
         {
-            PrepareDatas();
-
             if (m_target != null)
                 m_defaultValue = m_target.GetValue(PropertyName);
         }

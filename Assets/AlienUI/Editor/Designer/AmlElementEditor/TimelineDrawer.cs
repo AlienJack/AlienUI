@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace AlienUI.Editors.TimelineDrawer
         protected T m_dataContext;
 
         public float Scale = 30f;
+        public float PlayCursor = 0f;
 
         public TimelineDrawer(T timelineObj)
         {
@@ -18,14 +20,25 @@ namespace AlienUI.Editors.TimelineDrawer
 
         public void Draw(Rect rect)
         {
-            var infoDrawRect = new Rect(rect);
+            var infoDrawRect = new Rect(rect) { height = rect.height - 20, y = rect.y + 20 };
             infoDrawRect.width = rect.width * 0.4f;
-            var keyRegionDrawRect = new Rect(rect);
+            var keyRegionDrawRect = new Rect(rect) { height = rect.height - 20, y = rect.y + 20 };
             keyRegionDrawRect.width = rect.width - infoDrawRect.width;
             keyRegionDrawRect.x += infoDrawRect.width;
 
             DrawInfo(infoDrawRect);
             DrawKeyRegion(keyRegionDrawRect);
+        }
+
+        private void DrawPlayCursorLine(float time, Rect keyRegionDrawRect)
+        {
+            var lineRect = new Rect(keyRegionDrawRect);
+            lineRect.x = keyRegionDrawRect.x + time * Scale + 5;
+            lineRect.width = 1;
+            lineRect.height = keyRegionDrawRect.height;
+
+            using (new AlienEditorUtility.GUIColorScope(Color.cyan))
+                GUI.DrawTexture(lineRect, Texture2D.whiteTexture);
         }
 
         private void DrawInfo(Rect infoDrawRect)
@@ -43,7 +56,7 @@ namespace AlienUI.Editors.TimelineDrawer
             GUI.Box(keyRegionDrawRect, string.Empty);
             var keys = GetKeyTime(m_dataContext);
 
-            float totalTime = keys.Max()+4;
+            float totalTime = keys.Max() + 4;
 
             keyRegionScoll = GUI.BeginScrollView(keyRegionDrawRect, keyRegionScoll,
                 new Rect(keyRegionDrawRect)
@@ -52,9 +65,11 @@ namespace AlienUI.Editors.TimelineDrawer
                     height = keyRegionDrawRect.height - 20
                 });
 
+            DrawPlayCursorLine(PlayCursor, keyRegionDrawRect);
+
             xPos.Clear();
             //画刻度
-            for (int i = 0; i <= (int)(totalTime*10); i++)
+            for (int i = 0; i <= (int)(totalTime * 10); i++)
             {
                 var time = i * 0.1f;
 

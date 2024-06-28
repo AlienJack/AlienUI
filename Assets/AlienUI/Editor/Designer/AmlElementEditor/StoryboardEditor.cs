@@ -15,6 +15,7 @@ namespace AlienUI.Editors
     {
         private Dictionary<Storyboard, float> m_scaleMap = new Dictionary<Storyboard, float>();
         private Dictionary<Animation, AnimationTimelineUI> m_animationDrawerMap = new Dictionary<Animation, AnimationTimelineUI>();
+
         protected override void OnDraw(UIElement host, Storyboard element)
         {
             var anis = element.GetChildren<Animation>();
@@ -25,7 +26,7 @@ namespace AlienUI.Editors
 
                 foreach (var ani in anis)
                 {
-                    EditorGUILayout.LabelField(string.Empty, EditorStyles.helpBox, GUILayout.Height(100));
+                    EditorGUILayout.LabelField(string.Empty, EditorStyles.helpBox, GUILayout.Height(120));
                     if (Event.current.type != EventType.Used && Event.current.type != EventType.Layout)
                     {
                         var rect = GUILayoutUtility.GetLastRect();
@@ -35,6 +36,7 @@ namespace AlienUI.Editors
                         rect.yMax -= 4;
                         if (!m_animationDrawerMap.ContainsKey(ani)) m_animationDrawerMap[ani] = new AnimationTimelineUI(ani);
                         m_animationDrawerMap[ani].Scale = m_scaleMap[element];
+
                         m_animationDrawerMap[ani].Draw(rect);
                     }
                 }
@@ -129,7 +131,7 @@ namespace AlienUI.Editors
                 curveFieldRect.width = infoDrawRect.width - 7;
                 var temp1 = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 60 - 7;
-                animation.Curve = EditorGUI.CurveField(curveFieldRect, "Curve",new AnimationCurve(animation.Curve.keys));
+                animation.Curve = EditorGUI.CurveField(curveFieldRect, "Curve", new AnimationCurve(animation.Curve.keys));
                 EditorGUIUtility.labelWidth = temp1;
             }
 
@@ -160,18 +162,18 @@ namespace AlienUI.Editors
 
             var content = new GUIContent($"time:{key.Time + m_dataContext.Offset}");
             var timeRect = new Rect(position, default);
-            timeRect.width = content.text.Length * 7+10;
+            timeRect.width = content.text.Length * 7 + 10;
             timeRect.height = 18f;
-            
+
             m_dataContext.PrepareDatas();
-            var keyValue =$"value:{key.GetActualValue(m_dataContext.m_resolver).ToString()}";
+            var keyValue = $"value:{key.GetActualValue(m_dataContext.m_resolver).ToString()}";
             var valueRect = new Rect(timeRect);
             valueRect.width = keyValue.Length * 7 + 10;
             valueRect.height = 18f;
             valueRect.y += timeRect.height;
 
             var tipPosition = new Rect(position, default);
-            tipPosition.width = Mathf.Max(timeRect.width,valueRect.width);
+            tipPosition.width = Mathf.Max(timeRect.width, valueRect.width);
             tipPosition.height = timeRect.height + valueRect.height;
 
             using (new AlienEditorUtility.GUIColorScope(Color.black)) GUI.DrawTexture(tipPosition, Texture2D.whiteTexture);
