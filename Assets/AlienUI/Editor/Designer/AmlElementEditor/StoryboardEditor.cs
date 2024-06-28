@@ -64,7 +64,7 @@ namespace AlienUI.Editors
             }
             else
             {
-                var options = animation.Document.GetAllElements().Where(el => el is UIElement && !string.IsNullOrWhiteSpace(el.Name)).Select(el => el.Name).ToList();
+                var options = animation.Document.GetAllElements().Where(el => !string.IsNullOrWhiteSpace(el.Name)).Select(el => el.Name).ToList();
                 var index = options.IndexOf(animation.Target.GetUniqueTag());
                 index = EditorGUI.Popup(targetValueRect, index, options.ToArray());
                 if (index != -1)
@@ -129,7 +129,7 @@ namespace AlienUI.Editors
                 curveFieldRect.width = infoDrawRect.width - 7;
                 var temp1 = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 60 - 7;
-                animation.Curve = EditorGUI.CurveField(curveFieldRect, "Curve", animation.Curve);
+                animation.Curve = EditorGUI.CurveField(curveFieldRect, "Curve",new AnimationCurve(animation.Curve.keys));
                 EditorGUIUtility.labelWidth = temp1;
             }
 
