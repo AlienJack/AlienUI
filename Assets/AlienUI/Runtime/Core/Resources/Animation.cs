@@ -68,7 +68,7 @@ namespace AlienUI.Core.Resources
         private DependencyObject m_target;
 
         private SortedSet<AnimationKey> m_keys = new SortedSet<AnimationKey>();
-        private object m_defaultValue;
+        internal object m_defaultValue;
 
         public float Duration => Offset + m_keys.Max.Time;
 

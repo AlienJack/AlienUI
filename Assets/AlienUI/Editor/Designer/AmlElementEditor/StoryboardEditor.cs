@@ -181,5 +181,17 @@ namespace AlienUI.Editors
             GUI.Label(timeRect, content);
             GUI.Label(valueRect, keyValue);
         }
+
+        protected override void OnTimeChange(float time)
+        {
+            if (m_dataContext.m_defaultValue == null)
+                m_dataContext.StageDefaultValue();
+
+            if(m_dataContext.Evalution(time, out object value))
+            {
+                var target = m_dataContext.Target.Get(m_dataContext);
+                target.SetValue(m_dataContext.PropertyName, value);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToolKits;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,8 +27,29 @@ namespace AlienUI.Editors.TimelineDrawer
             keyRegionDrawRect.width = rect.width - infoDrawRect.width;
             keyRegionDrawRect.x += infoDrawRect.width;
 
+            drawTimeControl(new Rect(rect) { height = 20 });
             DrawInfo(infoDrawRect);
             DrawKeyRegion(keyRegionDrawRect);
+
+            Designer.Instance.Repaint();
+        }
+
+        private TimeControl m_tc = new TimeControl();
+        private void drawTimeControl(Rect rect)
+        {
+            m_tc.startTime = 0f;
+            m_tc.stopTime = GetKeyTime(m_dataContext).Max();
+            m_tc.DoTimeControl(rect);
+            if (Event.current.type == EventType.Repaint)
+            {
+                m_tc.Update();
+            }
+
+            if (PlayCursor != m_tc.currentTime)
+            {
+                PlayCursor = m_tc.currentTime;
+                OnTimeChange(m_tc.currentTime);
+            }
         }
 
         private void DrawPlayCursorLine(float time, Rect keyRegionDrawRect)
@@ -43,6 +65,7 @@ namespace AlienUI.Editors.TimelineDrawer
 
         private void DrawInfo(Rect infoDrawRect)
         {
+            GUI.changed = false;
             OnDrawInfo(infoDrawRect, m_dataContext);
         }
 
@@ -162,8 +185,6 @@ namespace AlienUI.Editors.TimelineDrawer
                     OnKeyTipDraw(startPos, hoverKeyIndex);
                 }
             }
-
-            Designer.Instance.Repaint();
         }
 
         private bool GetNearTime(float x, out float time)
@@ -183,10 +204,10 @@ namespace AlienUI.Editors.TimelineDrawer
             return false;
         }
 
+        protected abstract void OnTimeChange(float time);
         protected abstract void OnKeyTipDraw(Vector2 position, int keyIndex);
         protected abstract List<float> GetKeyTime(T target);
         protected abstract void OnDrawInfo(Rect infoDrawRect, T target);
-
         protected abstract void OnDragKey(int keyIndex, float time);
     }
 
