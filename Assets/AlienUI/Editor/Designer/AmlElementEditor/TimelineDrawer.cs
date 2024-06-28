@@ -128,7 +128,7 @@ namespace AlienUI.Editors.TimelineDrawer
 
                 if (Event.current.type == EventType.DragUpdated)
                 {
-                    if (GetNearTime(Event.current.mousePosition.x, out var nearTime))
+                    if (GetNearTime(Event.current.mousePosition.x + keyRegionScoll.x, out var nearTime))
                         OnDragKey(dragData.m_keyIndex, nearTime);
                 }
                 else if (Event.current.type == EventType.DragExited)
