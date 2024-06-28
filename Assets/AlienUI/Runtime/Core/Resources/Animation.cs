@@ -155,7 +155,10 @@ namespace AlienUI.Core.Resources
             }
             else if (left == null)
             {
-                progress = time / right.Time;
+                if (right.Time == 0)
+                    progress = 1f;
+                else
+                    progress = time / right.Time;
             }
         }
 
