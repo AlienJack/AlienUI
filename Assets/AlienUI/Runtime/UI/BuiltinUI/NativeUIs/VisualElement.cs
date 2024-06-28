@@ -1,8 +1,6 @@
 using AlienUI.Core.Resources;
 using AlienUI.Models;
 using AlienUI.Models.Attributes;
-using System;
-using UnityEditor.UI;
 using UnityEngine;
 
 namespace AlienUI.UIElements

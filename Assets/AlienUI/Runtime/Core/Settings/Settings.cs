@@ -43,6 +43,8 @@ namespace AlienUI
             assetName = string.Empty;
 #if UNITY_EDITOR
             return m_reference.GetUnityAssetPath(obj, out group, out assetName);
+#else
+            return true;
 #endif
         }
 
