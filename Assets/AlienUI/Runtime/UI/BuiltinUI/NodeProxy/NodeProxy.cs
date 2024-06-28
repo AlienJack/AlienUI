@@ -39,6 +39,8 @@ namespace AlienUI
         private CanvasGroup m_canvasRenderer;
         private Dictionary<Material, MaterialModifier> modifierMap = new Dictionary<Material, MaterialModifier>();
 
+        public event Action OnProxyDestroy;
+
         private void Awake()
         {
             m_graphElement = GetComponent<Graphic>();
@@ -46,6 +48,11 @@ namespace AlienUI
             m_canvasRenderer = gameObject.AddMissingComponemt<CanvasGroup>();
             m_graphElement.color = default;
             SetRaycast(true);
+        }
+
+        private void OnDestroy()
+        {
+            OnProxyDestroy?.Invoke();
         }
 
         public Canvas Canvas => m_graphElement.canvas;

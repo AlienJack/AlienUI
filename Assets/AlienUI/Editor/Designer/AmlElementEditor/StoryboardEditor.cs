@@ -60,7 +60,7 @@ namespace AlienUI.Editors
             if (animation.GetBinding(Animation.TargetProperty) is Binding targetbind)
             {
                 using (new AlienEditorUtility.GUIColorScope(Color.yellow))
-                    EditorGUI.LabelField(targetValueRect, targetbind.SourceCode);
+                    EditorGUI.LabelField(targetValueRect, targetbind.BindingCode);
             }
             else
             {
@@ -85,7 +85,7 @@ namespace AlienUI.Editors
                 if (animation.GetBinding(Animation.PropertyNameProperty) is Binding propertyBind)
                 {
                     using (new AlienEditorUtility.GUIColorScope(Color.yellow))
-                        EditorGUI.LabelField(propertyValueRect, propertyBind.SourceCode);
+                        EditorGUI.LabelField(propertyValueRect, propertyBind.BindingCode);
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace AlienUI.Editors
                     offsetValueRect.width = infoDrawRect.width - offsetFieldRect.width - 2;
 
                     using (new AlienEditorUtility.GUIColorScope(Color.yellow))
-                        EditorGUI.LabelField(offsetValueRect, offsetBind.SourceCode);
+                        EditorGUI.LabelField(offsetValueRect, offsetBind.BindingCode);
                 }
                 else
                 {
@@ -149,15 +149,13 @@ namespace AlienUI.Editors
             var keys = m_dataContext.GetChildren<AnimationKey>();
             var key = keys[hoverKeyIndex];
 
-
-
             var content = new GUIContent($"time:{key.Time + m_dataContext.Offset}");
             var timeRect = new Rect(position, default);
             timeRect.width = content.text.Length * 7+10;
             timeRect.height = 18f;
             
             m_dataContext.PrepareDatas();
-            var keyValue = key.GetActualValue(m_dataContext.m_resolver).ToString();
+            var keyValue =$"value:{key.GetActualValue(m_dataContext.m_resolver).ToString()}";
             var valueRect = new Rect(timeRect);
             valueRect.width = keyValue.Length * 7 + 10;
             valueRect.height = 18f;

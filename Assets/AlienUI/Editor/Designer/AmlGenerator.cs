@@ -59,7 +59,7 @@ namespace AlienUI.Editors
                 var value = element.GetValue(dp);
 
                 if (element.GetBinding(dp) is Binding binding)
-                    xmlEle.SetAttribute(dp.PropName, binding.SourceCode);
+                    xmlEle.SetAttribute(dp.PropName, binding.BindingCode);
                 else
                 {
                     if (value == null && dp.Meta.DefaultValue == null) continue;

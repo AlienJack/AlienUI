@@ -19,8 +19,7 @@ namespace AlienUI.UIElements
         {
             var evt = new OnShowEvent(this);
 
-            //不要在编辑器模式下触发show,避免一些trigger动画改变属性
-            if (UnityEngine.Application.isPlaying) OnEventForTriggerInvoke?.Invoke(this, evt);
+            OnEventForTriggerInvoke?.Invoke(this, evt);
             OnShow?.Invoke(this, evt);
 
             foreach (var child in UIChildren)

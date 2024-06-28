@@ -3,6 +3,7 @@ using AlienUI.Core.Resources;
 using AlienUI.Core.Triggers;
 using AlienUI.Models.Attributes;
 using AlienUI.UIElements.ToolsScript;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,8 +40,8 @@ namespace AlienUI.UIElements
         }
 
         public Canvas Canvas => NodeProxy.Canvas;
-
         internal NodeProxy NodeProxy => m_proxy;
+        internal event Action OnUnityDestory;
 
         protected override void OnAddChild(AmlNodeElement childObj)
         {
@@ -99,6 +100,7 @@ namespace AlienUI.UIElements
                 m_proxy = m_rectTransform.gameObject.AddComponent<NodeProxy>();
                 m_proxy.TargetObject = this;
                 m_proxy.hideFlags = HideFlags.HideInInspector;
+                m_proxy.OnProxyDestroy += OnUnityDestory;
 
                 CreateChildRoot();
             }
@@ -111,6 +113,11 @@ namespace AlienUI.UIElements
             }
 
             return m_rectTransform.gameObject;
+        }
+        
+        private void internal_OnUnityDestory()
+        {
+            OnUnityDestory?.Invoke();
         }
 
         private void CreateChildRoot()

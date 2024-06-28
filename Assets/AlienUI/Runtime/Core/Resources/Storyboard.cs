@@ -10,7 +10,7 @@ namespace AlienUI.Core.Resources
     {
         private float m_currentTime;
         private float m_totalDuration;
-        private Coroutine m_playCoroutine;
+        private UICoroutine m_playCoroutine;
 
         internal delegate void OnPlayHanlde(Storyboard sender);
         internal event OnPlayHanlde OnPlay;

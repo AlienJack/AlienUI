@@ -18,7 +18,6 @@ namespace AlienUI.Editors
         public override void OnPreviewGUI(Rect r, GUIStyle background)
         {
             base.OnPreviewGUI(r, background);
-
             if (Event.current.type == EventType.Repaint)
             {
                 preparePreview();
@@ -89,6 +88,8 @@ namespace AlienUI.Editors
                         break;
                 }
             }
+
+            Repaint();
         }
 
 

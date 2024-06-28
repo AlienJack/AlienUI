@@ -2,7 +2,7 @@
   <Image Content="DEMO/BG" Horizontal="Stretch" Vertical="Stretch" Name="bg">
     <r:BlurEffect Name="BGBlur" />
   </Image>
-  <VisualElement Color="#FFFFFF00" Horizontal="Stretch" Vertical="Stretch" Name="LoginControllers">
+  <VisualElement Color="#FFFFFF00" Horizontal="Stretch" Vertical="Stretch" Active="False" Name="LoginControllers">
     <Dock LayoutDirection="Vertical" Space="16">
       <Image Content="DEMO/Avatar" Width="200" Height="200" Name="head">
         <r:CircleMaskEffect />

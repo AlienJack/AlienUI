@@ -15,7 +15,7 @@ namespace AlienUI.Core
         public AmlNodeElement Target { get; private set; }
         public string TargetPropertyName { get; private set; }
         public DependencyProperty TargetProperty { get; private set; }
-        public string SourceCode { get; private set; }
+        public string BindingCode { get; private set; }
 
         private ConverterBase m_converter;
 
@@ -94,6 +94,18 @@ namespace AlienUI.Core
                         break;
                 }
             }
+            else
+            {
+                //如果找不到数据源(binding代码错误,或者在设计器模式下),使用一个默认值代替
+                if (TargetProperty.PropType == typeof(string))
+                {
+                    Target.FillDependencyValue(TargetProperty, BindingCode);
+                }
+                else
+                {
+                    Target.FillDependencyValue(TargetProperty, TargetProperty.Meta.DefaultValue);
+                }
+            }
 
             if (TargetProperty == null) Engine.LogError($"Binding Target Property {TargetPropertyName} not exist");
             else TargetProperty.SetBinding(this);
@@ -103,7 +115,7 @@ namespace AlienUI.Core
 
         public Binding(string sourceCode)
         {
-            SourceCode = sourceCode;
+            BindingCode = sourceCode;
         }
 
         public void Disconnect()

@@ -630,7 +630,7 @@ namespace AlienUI.Editors
             {
                 menu.AddItem(new GUIContent("Edit Binding"), false, () =>
                 {
-                    TextInputWindow.ShowWindow("Edit Binding", selection.GetBinding(property).SourceCode, mousePos, (inputSorce) =>
+                    TextInputWindow.ShowWindow("Edit Binding", selection.GetBinding(property).BindingCode, mousePos, (inputSorce) =>
                     {
                         selection.GetBinding(property).Disconnect();
                         SetBinding(selection, property, inputSorce);

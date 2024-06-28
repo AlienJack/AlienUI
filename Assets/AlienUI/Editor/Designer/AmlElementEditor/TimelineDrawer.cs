@@ -109,7 +109,7 @@ namespace AlienUI.Editors.TimelineDrawer
 
             if (hoverKeyIndex != -1)
             {
-                var startPos = hoverKeyRect.position;
+                var startPos = hoverKeyRect.position - keyRegionScoll;
                 startPos.x += 20;
                 startPos.y += 5;
                 OnKeyTipDraw(startPos, hoverKeyIndex);

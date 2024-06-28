@@ -28,26 +28,82 @@ namespace AlienUI.Core
             m_xmlAsset = xmlAsset;
         }
 
-        public void SetDocumentHost(UIElement root)
+        internal void SetDocumentHost(UIElement root)
         {
             m_rootElement = root;
+            m_rootElement.OnUnityDestory += rootElement_OnUnityDestory;
         }
 
-        public Coroutine StartCoroutine(IEnumerator itor)
+        private void rootElement_OnUnityDestory()
         {
+            StopAllCoroutine();
+        }
+
+#if UNITY_EDITOR
+        private List<UICoroutine> m_editorCoroutines = new List<UICoroutine>();
+#endif
+
+        public UICoroutine StartCoroutine(IEnumerator itor)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                if (!m_rootElement.NodeProxy.gameObject.activeInHierarchy) return null;
+                var cor = new UICoroutine(Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StartCoroutine(itor, m_rootElement.NodeProxy));
+
+                m_editorCoroutines.Add(cor);
+                return cor;
+            }
+            else
+            {
+                if (!m_rootElement.NodeProxy.gameObject.activeInHierarchy) return null;
+                return new UICoroutine(m_rootElement.NodeProxy.StartCoroutine(itor));
+            }
+#else
             if (!Application.isPlaying) return null;
             if (!m_rootElement.NodeProxy.gameObject.activeInHierarchy) return null;
-            return m_rootElement.NodeProxy.StartCoroutine(itor);
+            return new UICoroutine(m_rootElement.NodeProxy.StartCoroutine(itor));
+#endif
+
         }
 
-        public void StopCoroutine(Coroutine cor)
+        public void StopCoroutine(UICoroutine cor)
         {
-            m_rootElement.NodeProxy.StopCoroutine(cor);
+#if UNITY_EDITOR
+            if (cor.m_editorCoroutine != null)
+            {
+                Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StopCoroutine(cor.m_editorCoroutine);
+            }
+            else if (cor.m_runtimeCoroutine != null)
+            {
+                m_rootElement.NodeProxy.StopCoroutine(cor.m_runtimeCoroutine);
+            }
+#else
+            if (cor.m_runtimeCoroutine != null)
+            {
+                m_rootElement.NodeProxy.StopCoroutine(cor.m_runtimeCoroutine);
+            }
+#endif
         }
 
-        public void StopAllCoroutine()
+        private void StopAllCoroutine()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                foreach (var item in m_editorCoroutines)
+                {
+                    Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StopCoroutine(item.m_editorCoroutine);
+                }
+                m_editorCoroutines.Clear();
+            }
+            else
+            {
+                m_rootElement.NodeProxy.StopAllCoroutines();
+            }
+#else
             m_rootElement.NodeProxy.StopAllCoroutines();
+#endif
         }
 
         public void Dispose(UIElement element)

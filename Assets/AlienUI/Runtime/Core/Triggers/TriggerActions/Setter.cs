@@ -63,7 +63,7 @@ namespace AlienUI.Core.Resources
             base.OnInit(trigger);
         }
 
-        Coroutine m_smoothingCor;
+        UICoroutine m_smoothingCor;
         public override bool Excute()
         {
             var target = Target.Get(Document);
