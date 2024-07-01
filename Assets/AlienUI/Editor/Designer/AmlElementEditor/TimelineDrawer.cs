@@ -21,9 +21,9 @@ namespace AlienUI.Editors.TimelineDrawer
 
         public void Draw(Rect rect)
         {
-            var infoDrawRect = new Rect(rect) { height = rect.height - 20-5, y = rect.y + 20 + 5 };
+            var infoDrawRect = new Rect(rect) { height = rect.height - 20 - 5, y = rect.y + 20 + 5 };
             infoDrawRect.width = rect.width * 0.4f;
-            var keyRegionDrawRect = new Rect(rect) { height = rect.height - 20-5, y = rect.y + 20 + 5 };
+            var keyRegionDrawRect = new Rect(rect) { height = rect.height - 20 - 5, y = rect.y + 20 + 5 };
             keyRegionDrawRect.width = rect.width - infoDrawRect.width;
             keyRegionDrawRect.x += infoDrawRect.width;
 
@@ -187,6 +187,12 @@ namespace AlienUI.Editors.TimelineDrawer
                     startPos.x += 20;
                     startPos.y += 5;
                     OnKeyTipDraw(startPos, hoverKeyIndex);
+
+                    if (Event.current.type == EventType.ContextClick)
+                    {
+                        OnKeyContextClicked(hoverKeyIndex);
+                        Event.current.Use();
+                    }
                 }
             }
         }
@@ -213,6 +219,7 @@ namespace AlienUI.Editors.TimelineDrawer
         protected abstract List<float> GetKeyTime(T target);
         protected abstract void OnDrawInfo(Rect infoDrawRect, T target);
         protected abstract void OnDragKey(int keyIndex, float time);
+        protected abstract void OnKeyContextClicked(int keyIndex);
     }
 
     internal class KeyDragData

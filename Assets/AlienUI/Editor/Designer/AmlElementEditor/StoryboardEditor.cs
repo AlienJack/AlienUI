@@ -233,5 +233,19 @@ namespace AlienUI.Editors
                 target.SetValue(m_dataContext.PropertyName, value);
             }
         }
+
+        protected override void OnKeyContextClicked(int keyIndex)
+        {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Delelet"), false, () =>
+            {
+                var keys = m_dataContext.GetChildren<AnimationKey>();
+                var key = keys[keyIndex];
+                m_dataContext.RemoveChild(key);
+                Designer.SaveToAml();
+            });
+
+            menu.ShowAsContext();
+        }
     }
 }
