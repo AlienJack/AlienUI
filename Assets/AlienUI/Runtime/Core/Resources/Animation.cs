@@ -44,8 +44,6 @@ namespace AlienUI.Core.Resources
         public static readonly DependencyProperty OffsetProperty =
             DependencyProperty.Register("Offset", typeof(float), typeof(Animation), new PropertyMetadata(0f), OnOffsetChanged);
 
-
-
         public AnimationCurve Curve
         {
             get { return (AnimationCurve)GetValue(CurveProperty); }

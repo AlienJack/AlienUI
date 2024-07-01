@@ -51,6 +51,10 @@ namespace AlienUI.Editors.TimelineDrawer
                 OnTimeChange(m_tc.currentTime);
             }
         }
+        public void SetTimeControlTime(float time)
+        {
+            m_tc.currentTime = time;
+        }
 
         private void DrawPlayCursorLine(float time, Rect keyRegionDrawRect)
         {

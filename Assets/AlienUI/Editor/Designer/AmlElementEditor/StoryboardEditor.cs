@@ -5,6 +5,7 @@ using AlienUI.Models;
 using AlienUI.UIElements;
 using System.Collections.Generic;
 using System.Linq;
+using ToolKits;
 using UnityEditor;
 using UnityEngine;
 using Animation = AlienUI.Core.Resources.Animation;
@@ -14,6 +15,8 @@ namespace AlienUI.Editors
     public class StoryboardEditor : ElementExtraEdit<Storyboard>
     {
         private Dictionary<Storyboard, float> m_scaleMap = new Dictionary<Storyboard, float>();
+        private Dictionary<Storyboard, TimeControl> m_timeControls = new Dictionary<Storyboard, TimeControl>();
+        private Dictionary<Storyboard, float> m_timeSample = new Dictionary<Storyboard, float>();
         private Dictionary<Animation, AnimationTimelineUI> m_animationDrawerMap = new Dictionary<Animation, AnimationTimelineUI>();
 
         protected override void OnDraw(UIElement host, Storyboard element)
@@ -23,6 +26,8 @@ namespace AlienUI.Editors
             {
                 if (!m_scaleMap.TryGetValue(element, out var scale)) scale = 60f;
                 m_scaleMap[element] = EditorGUILayout.Slider(scale, 60f, 500);
+
+                DrawTimeControl(element, anis);
 
                 foreach (var ani in anis)
                 {
@@ -39,6 +44,41 @@ namespace AlienUI.Editors
 
                         m_animationDrawerMap[ani].Draw(rect);
                     }
+                }
+            }
+        }
+
+        private void DrawTimeControl(Storyboard sb, IReadOnlyList<Animation> anis)
+        {
+            if (!m_timeControls.ContainsKey(sb)) m_timeControls[sb] = new TimeControl();
+            if (!m_timeSample.ContainsKey(sb)) m_timeSample[sb] = 0f;
+
+            var sample = m_timeSample[sb];
+            var tc = m_timeControls[sb];
+            tc.startTime = 0;
+            tc.stopTime = anis.Max(a => a.Duration);
+
+            EditorGUILayout.LabelField(string.Empty, GUILayout.Height(28));
+            var totalTc = GUILayoutUtility.GetLastRect();
+            totalTc.xMin += 4;
+            totalTc.xMax -= 4;
+            totalTc.yMin += 4;
+            totalTc.yMax -= 4;
+            tc.DoTimeControl(totalTc);
+            if (Event.current.type == EventType.Repaint)
+            {
+                tc.Update();
+            }
+
+            if (tc.currentTime != m_timeSample[sb])
+            {
+                m_timeSample[sb] = tc.currentTime;
+                foreach (var ani in anis)
+                {
+                    m_animationDrawerMap.TryGetValue(ani, out AnimationTimelineUI subTimeUI);
+                    if (subTimeUI == null) return;
+
+                    subTimeUI.SetTimeControlTime(tc.currentTime);
                 }
             }
         }
@@ -187,7 +227,7 @@ namespace AlienUI.Editors
             if (m_dataContext.m_defaultValue == null)
                 m_dataContext.StageDefaultValue();
 
-            if(m_dataContext.Evalution(time, out object value))
+            if (m_dataContext.Evalution(time, out object value))
             {
                 var target = m_dataContext.Target.Get(m_dataContext);
                 target.SetValue(m_dataContext.PropertyName, value);
