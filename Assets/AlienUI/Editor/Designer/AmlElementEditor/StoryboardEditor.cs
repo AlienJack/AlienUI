@@ -3,6 +3,7 @@ using AlienUI.Core.Resources;
 using AlienUI.Editors.TimelineDrawer;
 using AlienUI.Models;
 using AlienUI.UIElements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToolKits;
@@ -268,7 +269,7 @@ namespace AlienUI.Editors
 
                     return 80;
                 });
-            });            
+            });
             menu.AddSeparator(string.Empty);
             menu.AddItem(new GUIContent("Delelet"), false, () =>
             {
@@ -279,6 +280,33 @@ namespace AlienUI.Editors
             });
 
             menu.ShowAsContext();
+        }
+
+        protected override void OnAddKey(float time)
+        {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Add Key"), false, () =>
+            {
+                var newKey = new AnimationKey();
+                newKey.Document = m_dataContext.Document;
+                newKey.Engine = m_dataContext.Engine;
+                newKey.Time = time;
+
+                var target = m_dataContext.Target.Get(m_dataContext);
+                var properties = new List<DependencyProperty>();
+                properties.AddRange(target.GetAllDependencyProperties());
+                properties.AddRange(target.GetAttachedProperties());
+                var targetProp = properties.FirstOrDefault(t => t.PropName == m_dataContext.PropertyName);
+                if (targetProp == null) return;
+
+                var defaultValue = Activator.CreateInstance(targetProp.PropType);
+                var resolver = Settings.Get().m_collector.GetAttributeResolver(targetProp.PropType);
+                newKey.Value = resolver.ToOriString(defaultValue);
+
+                m_dataContext.AddChild(newKey);
+
+                Designer.SaveToAml();
+            });
         }
     }
 }

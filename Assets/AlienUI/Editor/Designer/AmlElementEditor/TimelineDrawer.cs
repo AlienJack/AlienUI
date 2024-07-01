@@ -194,6 +194,17 @@ namespace AlienUI.Editors.TimelineDrawer
                         Event.current.Use();
                     }
                 }
+                else
+                {
+                    if (Event.current.type == EventType.ContextClick && keyRegionDrawRect.Contains(Event.current.mousePosition))
+                    {
+                        if (GetNearTime(Event.current.mousePosition.x + keyRegionScoll.x, out var nearTime))
+                        {
+                            OnAddKey(nearTime);
+                            Event.current.Use();
+                        }
+                    }
+                }
             }
         }
 
@@ -219,6 +230,7 @@ namespace AlienUI.Editors.TimelineDrawer
         protected abstract List<float> GetKeyTime(T target);
         protected abstract void OnDrawInfo(Rect infoDrawRect, T target);
         protected abstract void OnDragKey(int keyIndex, float time);
+        protected abstract void OnAddKey(float time);
         protected abstract void OnKeyContextClicked(int keyIndex);
     }
 
