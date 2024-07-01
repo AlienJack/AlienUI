@@ -663,7 +663,7 @@ namespace AlienUI.Editors
             }
         }
 
-        private static PropertyDrawerBase FindDrawer(Type propertyType)
+        internal static PropertyDrawerBase FindDrawer(Type propertyType)
         {
             if (m_defaultDrawers.TryGetValue(propertyType, out var drawer))
                 return drawer;

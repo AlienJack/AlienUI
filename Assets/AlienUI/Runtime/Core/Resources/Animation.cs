@@ -118,7 +118,7 @@ namespace AlienUI.Core.Resources
             object from = left != null ? left.GetActualValue(m_resolver) : m_defaultValue;
             object to = right != null ? right.GetActualValue(m_resolver) : from;
 
-            progress = Curve.Evaluate(Curve.length * progress);
+            progress = Curve.Evaluate(Curve.keys[^1].time * progress);
             value = m_resolver.Lerp(from, to, progress);
 
             return true;

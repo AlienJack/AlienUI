@@ -236,7 +236,40 @@ namespace AlienUI.Editors
 
         protected override void OnKeyContextClicked(int keyIndex)
         {
+            Vector2 mousePos = Event.current.mousePosition;
             GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("EditValue"), false, () =>
+            {
+                var keys = m_dataContext.GetChildren<AnimationKey>();
+                var key = keys[keyIndex];
+                var target = m_dataContext.Target.Get(m_dataContext);
+                var properties = new List<DependencyProperty>();
+                properties.AddRange(target.GetAllDependencyProperties());
+                properties.AddRange(target.GetAttachedProperties());
+                var targetProp = properties.FirstOrDefault(t => t.PropName == m_dataContext.PropertyName);
+                if (targetProp == null) return;
+                var drawer = Designer.FindDrawer(targetProp.PropType);
+                if (drawer == null) return;
+                var resolver = Settings.Get().m_collector.GetAttributeResolver(targetProp.PropType);
+                if (resolver == null) return;
+
+                FieldInputWinodw.ShowWindow("Edit Key", mousePos, () =>
+                {
+                    EditorGUI.BeginChangeCheck();
+                    key.Time = EditorGUILayout.FloatField("Time", key.Time);
+
+                    var resolvValue = resolver.Resolve(key.Value, targetProp.PropType);
+                    var newValue = drawer.Draw(key, "Value", resolvValue);
+                    var rawStr = resolver.ToOriString(newValue);
+                    key.Value = rawStr;
+
+                    if (EditorGUI.EndChangeCheck())
+                        Designer.SaveToAml();
+
+                    return 80;
+                });
+            });            
+            menu.AddSeparator(string.Empty);
             menu.AddItem(new GUIContent("Delelet"), false, () =>
             {
                 var keys = m_dataContext.GetChildren<AnimationKey>();
