@@ -1,4 +1,0 @@
-<Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.Window" TemplateRoot="Root" Width="800" Height="600">
-  <Image Content="Builtin/Blank" Horizontal="Stretch" Vertical="Stretch" />
-  <VisualElement Horizontal="Stretch" Vertical="Stretch" Name="Root" />
-</Template>

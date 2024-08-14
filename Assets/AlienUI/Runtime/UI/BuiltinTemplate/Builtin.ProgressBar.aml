@@ -1,7 +1,0 @@
-<Template xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources" Type="AlienUI.UIElements.ProgressBar" Width="200" Height="10" Name="Builtin.ProgressBar">
-  <Image ImageType="Sliced" Content="Builtin/Background" Horizontal="Stretch" Vertical="Stretch" Name="bg" />
-  <WeightDock Horizontal="Stretch" Vertical="Stretch">
-    <Image ImageType="Sliced" Content="Builtin/Border" Width="100" Horizontal="Left" Vertical="Stretch" Name="slideFill" Weight="{TemplateBinding Value}" />
-    <VisualElement Name="noFill" Weight="{TemplateBinding GapValue}" />
-  </WeightDock>
-</Template>

@@ -1,3 +1,0 @@
-<[CLASSNAME] xmlns="AlienUI.UIElements" xmlns:t="AlienUI.Core.Triggers" xmlns:r="AlienUI.Core.Resources"
-    Name="[FILENAME]" Title="[FILENAME]" Width="800" Height="600">
-</[CLASSNAME]>
