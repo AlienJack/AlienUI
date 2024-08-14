@@ -1,0 +1,3 @@
+[submodule "Assets/AlienUICore"]
+	path = Assets/AlienUICore
+	url = https://github.com/AlienJack/AlienUICore.git
